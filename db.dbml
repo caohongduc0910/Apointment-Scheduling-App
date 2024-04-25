@@ -1,0 +1,226 @@
+Table roles {
+  id bigint [pk , increment,note: "Id of the role"] 
+  uuid varchar [unique, note: "Uuid of the role"]
+  role_name varchar [note: "Name of the role"]
+  created_at timestamp [note: "When role created"]
+  updated_at timestamp [note: "When role updated"]
+  deleted_at timestamp [note: "When role deleted"]
+  note: "table 'roles' contains role information"
+}
+
+Table notification_types {
+  id bigint [pk, increment,note: "Id of the notification type"]
+  uuid varchar [unique, note: "Uuid of the notification type"]
+  type varchar [note: "Name of the notification type"]
+  description varchar [note: "Description of the notification type"]
+  created_at timestamp [note: "When the notification type created"]
+  updated_at timestamp [note: "When the notification type updated"]
+  deleted_at timestamp [note: "When the notification type deleted"]
+  note: "table 'notification_types' contains the main types of notification information"
+}
+
+Table notifications {
+  id bigint [pk, increment,note: "Id of the notification"]
+  uuid varchar [unique, note: "Uuid of the notification"]
+  url text [note: "Url of the notification"]
+  is_read bit  [note: "Mark read status of the notification"]
+  title varchar
+  description varchar
+  receiver_id bigint [note: "Id of the receiver"]
+  notification_type_id bigint [note: "Id of the notification type"]
+  created_at timestamp [note: "When the notification created"]
+  updated_at timestamp [note: "When the notification updated"]
+  deleted_at timestamp [note: "When the notification deleted"]
+  note: "table 'notifications' contains notification information"
+}
+Ref: notifications.receiver_id > users.id
+Ref: notifications.notification_type_id > notification_types.id
+
+Table users {
+  id bigint [pk, increment, note: "Id of the user"]
+  uuid varchar [unique, note: "Uuid of the user"]
+  username varchar [note: "Username of the user"]
+  password varchar [note: "Password of the user"]
+  email varchar [unique, note: "Email of the user"]
+  fullname varchar [note: "Fullname of the user"]
+  image text [note: "Contains url of the user's image"]
+  address varchar [note: "Address of the user"]
+  phone varchar [note: "Phone of the user"]
+  status bit [note: "Mark status of the user. Enum: 0: inactive, 1: verified, 2: blocked"]
+  role_id bigint [note: "Id of the role"]
+  verified_at timestamp [note: "When user verified"]
+  created_at timestamp [note: "When user created"]
+  updated_at timestamp [note: "When user updated"]
+  deleted_at timestamp [note: "When user deleted"]
+  note: "table 'users' contains user information"
+}
+Ref: users.role_id > roles.id
+
+Table categories {
+  id bigint [pk, increment, note: "Id of the category"]
+  uuid varchar [unique, note: "Uuid of the category"]
+  category_name varchar [note: "Name of the category"]
+  admin_id bigint [note: "Id of the admin"]
+  created_at timestamp [note: "When category created"]
+  updated_at timestamp [note: "When category updated"]
+  deleted_at timestamp [note: "When category deleted"]
+  note: "table 'categories' contains category information"
+}
+Ref: categories.admin_id > users.id
+
+Table services {
+  id bigint [pk, increment, note: "Id of the service"]
+  uuid varchar [unique, note: "Uuid of the service"]
+  name varchar [note: "Name of the service"]
+  description text
+  provider_id bigint
+  category_id bigint [note: "Id of the category"]
+  created_at timestamp [note: "When service created"]
+  updated_at timestamp [note: "When service updated"]
+  deleted_at timestamp [note: "When service deleted"]
+  note: "table 'services' contains service information"
+}
+Ref: services.category_id > categories.id
+Ref: services.provider_id > users.id
+
+Table statuses {
+  id bigint [pk, increment, note: "Id of the status"]
+  uuid varchar [unique, note: "Uuid of the status"]
+  status_name varchar [note: "Name of the status"]
+  created_at timestamp [note: "When status created"]
+  updated_at timestamp [note: "When status updated"]
+  deleted_at timestamp [note: "When status deleted"]
+  note: "table 'statuses' contains status information"
+}
+
+Table appointments {
+  id bigint [pk, increment, note: "Id of the appointment"]
+  uuid varchar [unique, note: "Uuid of the appointment"]
+  name varchar [note: "Name of the appointment"]
+  note varchar [note: "Note of the appointment"]
+  price double [note: "Price of the appointment"]
+  time datetime [note: "Timestamp of the meeting"]
+  status_id bigint [note: "Id of the status"]
+  service_id bigint [note: "Id of the service"]
+  method bit [note: "Id of the method meet"]
+  url text [note: "Url leading to online meetings"]
+  client_id bigint [note: "Id of the client"]
+  provider_id bigint [note: "Id of the provider"]
+  created_at timestamp [note: "When appointment created"]
+  updated_at timestamp [note: "When appointment updated"]
+  deleted_at timestamp [note: "When appointment deleted"]
+  note: "table 'appoinments' contain appointments information"
+}
+Ref: appointments.status_id > statuses.id
+Ref: appointments.service_id > services.id
+Ref: appointments.client_id > users.id
+Ref: appointments.provider_id > users.id
+
+Table feedbacks {
+  id bigint [pk, increment, note: "Id of the feedback"] 
+  uuid varchar [unique, note: "Uuid of the feedback"]
+  content text [note: "Content of the feedback"]
+  image_url text [note: "Url of the feedback image"]
+  rating int [note: "Rating of the feedback"]
+  client_id bigint [note: "Id of the client"]
+  appointment_id bigint [note: "Id of the appointment"]
+  created_at timestamp [note: "When feedback created"]
+  updated_at timestamp [note: "When feedback updated"]
+  deleted_at timestamp [note: "When feedback deleted"]
+  note: "table 'feedbacks' contains feedback information"
+}
+Ref: feedbacks.client_id - users.id
+Ref: feedbacks.appointment_id - appointments.id
+
+Table discounts {
+  id bigint [pk, increment, note: "Id of the discount"]
+  uuid varchar [unique, note: "Uuid of the discount event"]
+  type TINYINT [note: "Type of the discount. Enum: 0: percent, 1: fixed_amount"]
+  value DOUBLE [note: "Value of the discount"]
+  expiry datetime [note: "Expiry date of the discount"]
+  provider_id bigint [note: "Id of the provider"]
+  code varchar(20) [note: "discount code. Auto generate"]
+  created_at timestamp [note: "When discount event created"]
+  updated_at timestamp [note: "When discount event updated"]
+  deleted_at timestamp [note: "When discount event deleted"]
+  note: "table 'discounts' contains discount information"
+}
+Ref: discounts.provider_id > users.id
+
+Table orders {
+  id bigint [pk, increment, note: "Id of the order"]
+  uuid varchar [unique, note: "Uuid of the order"]
+  amount double [note: "Amount of the order"]
+  client_id bigint [note: "Id of the client"]
+  appointment_id bigint [note: "Id of the appointment"]
+  discount_id bigint [note: "If of the discount event"]
+  created_at timestamp [note: "When order created"]
+  updated_at timestamp [note: "When order updated"]
+  delete_at timestamp [note: "When order deleted"]
+  payment_method_id bigint [note: "Id of the payment method"]
+  note: "table 'orders' contains order information"
+}
+Ref: orders.client_id > users.id
+Ref: orders.appointment_id - appointments.id
+Ref: orders.discount_id > discounts.id
+Ref: orders.payment_method_id > payment_methods.id
+
+Table payment_methods {
+  id bigint [pk, increment, note: "Id of the payment"]
+  uuid varchar [unique, note: "Uuid of the payment method"]
+  payment_method varchar [note: "Method of the payment"]
+  created_at timestamp [note: "When payment method created"]
+  updated_at timestamp [note: "When payment method updated"]
+  deleted_at timestamp [note: "When payment method deleted"]
+  note: "table 'payment_methods' contains payment method information"
+}
+
+Table tokens {
+  id bigint [pk, increment, note: "Id of the token"]
+  token varchar [note: "Token corresponds to each user's email"]
+  user_id bigint [note: "Id of the user"]
+  created_at timestamp [note: "When token created"]
+  updated_at timestamp [note: "When token updated"]
+  deleted_at timestamp [note: "When token deleted"]
+  note: "table 'tokens' contains token information"
+}
+Ref: tokens.user_id > users.id
+
+Table favorite_appointments {
+  client_id bigint [note:"Id of the user"]
+  appointment_id bigint [note:"Id of the appointment"]
+  note: "table 'favorite_services' contains each user's favorite service information"
+}
+Ref: favorite_appointments.client_id > users.id
+Ref: favorite_appointments.appointment_id > appointments.id
+
+Table rooms {
+  uuid varchar [unique, note: "Uuid of the room"]
+  name varchar [note: "Name of the room"]
+  created_at timestamp [note: "When room created"]
+  updated_at timestamp [note: "When room upda"]
+  deleted_at timestamp [note: "When room deleted"]
+  note: "NoSQl collection 'room' contains chat room information"
+}
+
+Table room_members {
+  uuid varchar [unique, note: "Uuid of the room member"]
+  room_uuid int [note: "Uuid of the room"]
+  user_ids int [note: "Id of the user"]
+  created_at timestamp [note: "When room member created"]
+  updated_at timestamp [note: "When room member updated"]
+  deleted_at timestamp [note: "When room member deleted"]
+  note: "NoSQl collection 'room_member' contains room member information"
+}
+
+Table chats {
+  uuid varchar [pk, note: "Uuid of the message detail"]
+  message text [note: "Contains the content of the text message type"]
+  user_id int [note: "Id of the sender"]
+  pictures array [note: "List pictures"]
+  created_at timestamp [note: "When message created"]
+  updated_at timestamp [note: "When message updated"]
+  deleted_at timestamp [note: "When message deleted"]
+  room_uuid int [note: "Id of the room chat"]
+  note: "NoSQl collection 'message_detail' contains message detail information"
+}
