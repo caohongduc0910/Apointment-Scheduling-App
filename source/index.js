@@ -1,36 +1,37 @@
 //Express
-const express = require('express')
+import express from 'express'
 const app = express()
 
 //ENV
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 //PORT
 const port = process.env.PORT
 
 //CORS
-const cors = require("cors")
+import cors from 'cors'
 app.use(cors())
 
 //Body-parser
-const bodyParser = require('body-parser')
+import bodyParser from 'body-parser'
 //parse application/jsonnpm i 
 app.use(bodyParser.json())
 
 //Cookie-parser
-const cookieParser = require('cookie-parser')
+import cookieParser from 'cookie-parser'
 app.use(cookieParser())
 
 //DB connection
-const database = require('./config/databaseMongo.js')
-database.connectionMongo()
+import {connectionMongo} from './config/databaseMongo.js'
+connectionMongo()
 
 //Routing
-const routeAdminVer1 = require('./api/version1/routes/admin/index.js')
-const routeProviderVer1 = require('./api/version1/routes/provider/index.route.js')
-const routeUserVer1 = require('./api/version1/routes/user/index.route.js')
-routeAdminVer1(app)
-routeProviderVer1(app)
-routeUserVer1(app)
+import routeAdminV1 from './api/v1/routes/admin/index.route.js'
+import routeProviderV1 from './api/v1/routes/provider/index.route.js'
+import routeUserV1 from './api/v1/routes/user/index.route.js'
+routeAdminV1(app)
+routeProviderV1(app)
+routeUserV1(app)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

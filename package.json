@@ -1,11 +1,15 @@
 {
   "name": "be-nodejs",
-  "version": "1.0.0",
-  "description": "Hệ thống có 3 role:",
+  "version": "21.6.1",
+  "description": "Appointment Scheduling App - backend",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --inspect source/index.js"
+  },
+  "engines": {
+    "node": "^21.xxx.xxx"
   },
   "author": "",
   "license": "ISC",
@@ -15,10 +19,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "md5": "^2.3.0",
     "mongoose": "^8.3.2",
-    "mysql": "^2.18.1",
-    "nodemailer": "^6.9.13"
+    "mysql2": "^3.9.7",
+    "nodemailer": "^6.9.13",
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
