@@ -2,9 +2,6 @@
 import express from 'express'
 const app = express()
 
-//ENV
-import dotenv from 'dotenv'
-dotenv.config()
 //PORT
 const port = process.env.PORT
 
@@ -22,8 +19,10 @@ import cookieParser from 'cookie-parser'
 app.use(cookieParser())
 
 //DB connection
-import {connectionMongo} from './config/databaseMongo.js'
+import {connectionMongo} from './database/mongodb/databaseMongo.js'
+import {connectionMySQL} from './database/mysql/databaseMySQL.js'
 connectionMongo()
+connectionMySQL()
 
 //Routing
 import routeAdminV1 from './api/v1/routes/admin/index.route.js'

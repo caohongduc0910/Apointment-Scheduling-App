@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
+import {MONGO_URL} from '../../config/global.js'
 
 export const connectionMongo = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL)
+    await mongoose.connect(MONGO_URL)
     console.log("Connected successfully to MongoDB")
   }
   catch (error) {

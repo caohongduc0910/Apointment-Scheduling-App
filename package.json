@@ -1,32 +1,35 @@
 {
   "name": "be-nodejs",
-  "version": "21.6.1",
+  "version": "1.0.0",
   "description": "Appointment Scheduling App - backend",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect source/index.js"
+    "start": "nodemon --env-file=.env --exec babel-node --inspect source/index.js"
   },
   "engines": {
-    "node": "^21.xxx.xxx"
+    "node": "^21.6.1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.4",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "md5": "^2.3.0",
     "mongoose": "^8.3.2",
     "mysql2": "^3.9.7",
     "nodemailer": "^6.9.13",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "sequelize-cli": "^6.6.2"
   }
 }
