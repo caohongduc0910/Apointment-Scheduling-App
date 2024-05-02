@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Appointment Scheduling App - backend",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --env-file=.env --exec babel-node --inspect source/index.js"
+    "start": "nodemon --env-file=.env --inspect source/index.js"
   },
   "engines": {
     "node": "^21.6.1"
@@ -13,9 +14,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/node": "^7.23.9",
-    "@babel/preset-env": "^7.24.4",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

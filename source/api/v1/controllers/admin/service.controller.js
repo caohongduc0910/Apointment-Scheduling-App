@@ -1,4 +1,4 @@
-const Room = require('../../models/mongodb/room')
+// const Room = require('../../models/mongodb/room')
 
 export const indexService = async (req, res) => {
   // const newRoom = new Room({
