@@ -154,10 +154,10 @@ Table orders {
   client_id bigint [note: "Id of the client"]
   appointment_id bigint [note: "Id of the appointment"]
   discount_id bigint [note: "If of the discount event"]
+  payment_method_id bigint [note: "Id of the payment method"]
   created_at timestamp [note: "When order created"]
   updated_at timestamp [note: "When order updated"]
   delete_at timestamp [note: "When order deleted"]
-  payment_method_id bigint [note: "Id of the payment method"]
   note: "table 'orders' contains order information"
 }
 Ref: orders.client_id > users.id
