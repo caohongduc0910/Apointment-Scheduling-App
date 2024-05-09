@@ -14,10 +14,6 @@ import bodyParser from 'body-parser'
 //parse application/jsonnpm i 
 app.use(bodyParser.json())
 
-//Cookie-parser
-import cookieParser from 'cookie-parser'
-app.use(cookieParser())
-
 //DB connection
 import {connectionMongo} from './database/mongodb/connection.js'
 import {connectionMySQL} from './database/mysql/connection.js'
@@ -25,12 +21,6 @@ connectionMongo()
 connectionMySQL()
 
 //Routing
-import routeAdminV1 from './api/v1/routes/admin/index.route.js'
-import routeProviderV1 from './api/v1/routes/provider/index.route.js'
-import routeUserV1 from './api/v1/routes/user/index.route.js'
-routeAdminV1(app)
-routeProviderV1(app)
-routeUserV1(app)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
