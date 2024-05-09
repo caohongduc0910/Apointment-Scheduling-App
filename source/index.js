@@ -19,8 +19,8 @@ import cookieParser from 'cookie-parser'
 app.use(cookieParser())
 
 //DB connection
-import {connectionMongo} from './database/mongodb/databaseMongo.js'
-import {connectionMySQL} from './database/mysql/databaseMySQL.js'
+import {connectionMongo} from './database/mongodb/connection.js'
+import {connectionMySQL} from './database/mysql/connection.js'
 connectionMongo()
 connectionMySQL()
 
