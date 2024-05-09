@@ -1,4 +1,4 @@
-import {MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST} from '../../../config/global.js'
+import {MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST} from '../../config/global.js'
 
 export default {
   'development': {
