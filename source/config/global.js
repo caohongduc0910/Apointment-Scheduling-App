@@ -3,7 +3,7 @@ const MYSQL_USER = process.env.MYSQL_USER || 'root'
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || ''
 const MYSQL_DATABASE = process.env.MYSQL_DB || 'asa'
 
-const MONGO_URL = process.env.MONGO_UR
+const MONGO_URL = process.env.MONGO_URL
 
 const EMAIL_USER = process.env.EMAIL_USER
 const EMAIL_PASS = process.env.EMAIL_PASS
