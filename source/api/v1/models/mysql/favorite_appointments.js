@@ -24,6 +24,8 @@ Favorite_appointment.init({
 }, {
   sequelize,
   tableName: 'favorite_appointments',
+  paranoid: true,
+  deletedAt: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 })

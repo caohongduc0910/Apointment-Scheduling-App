@@ -36,7 +36,9 @@ User.init({
   deleted_at: DataTypes.DATE
 }, {
   sequelize,
-  deletedAT: 'deleted_at',
+  tableName: 'users',
+  paranoid: true,
+  deletedAt: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });

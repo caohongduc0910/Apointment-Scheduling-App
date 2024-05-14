@@ -31,6 +31,8 @@ Service.init({
 }, {
   sequelize,
   tableName: 'services',
+  paranoid: true,
+  deletedAt: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });
