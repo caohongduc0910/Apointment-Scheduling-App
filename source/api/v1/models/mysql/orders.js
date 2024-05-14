@@ -32,8 +32,6 @@ Order.init({
 }, {
   sequelize,
   tableName: 'orders',
-  paranoid: true,
-  deletedAT: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 })

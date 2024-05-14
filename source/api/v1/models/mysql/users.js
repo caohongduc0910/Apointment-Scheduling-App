@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../../../../database/mysql/connectiongit branc.js'
+import { sequelize } from '../../../../database/mysql/connection.js'
 
 class User extends Model {
   static associate(models) {
@@ -27,7 +27,7 @@ User.init({
   phone: DataTypes.STRING,
   status: {
     type: DataTypes.BOOLEAN,
-    defaultValue: 1
+    defaultValue: 0
   },
   role_id: DataTypes.BIGINT,
   created_at: DataTypes.DATE,
@@ -36,8 +36,6 @@ User.init({
   deleted_at: DataTypes.DATE
 }, {
   sequelize,
-  tableName: 'users',
-  paranoid: true,
   deletedAT: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'

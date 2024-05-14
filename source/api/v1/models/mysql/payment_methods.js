@@ -28,9 +28,8 @@ Payment_method.init({
 }, {
   sequelize,
   tableName: 'payment_methods',
-  paranoid: true,
-  deletedAT: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
+  
 })
 export default Payment_method

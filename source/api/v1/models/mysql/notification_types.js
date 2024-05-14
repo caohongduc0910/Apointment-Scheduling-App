@@ -29,8 +29,6 @@ Notification_type.init({
 }, {
   sequelize,
   tableName: 'notification_types',
-  paranoid: true,
-  deletedAT: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 })

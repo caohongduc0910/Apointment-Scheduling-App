@@ -3,7 +3,7 @@ import express from 'express'
 const app = express()
 
 //PORT
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 
 //CORS
 import cors from 'cors'
@@ -21,6 +21,8 @@ connectionMongo()
 connectionMySQL()
 
 //Routing
+import routeClientV1 from './api/v1/routes/client/index.route.js'
+app.use(routeClientV1)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

@@ -22,8 +22,6 @@ Role.init({
 }, {
   sequelize,
   tableName: 'roles',
-  paranoid: true,
-  deletedAT: 'deleted_at',
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 })
