@@ -4,7 +4,7 @@ import {
 } from '../../services/auth.service.js'
 
 
-export const loginCtr = async (req, res) => {
+export const loginAct = async (req, res) => {
   try {
     const msg = await login(req.body, 1)
     res.status(msg.status).json(msg.info)
@@ -17,7 +17,7 @@ export const loginCtr = async (req, res) => {
 }
 
 
-export const logoutCtr = async (req, res) => {
+export const logoutAct = async (req, res) => {
   try {
     const msg = await logout(req.headers.authorization)
     res.status(msg.status).json(msg.info)

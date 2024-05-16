@@ -2,19 +2,19 @@ import express from 'express'
 const router = express.Router()
 
 import {
-    registerCtr,
-    loginCtr, logoutCtr,
-    confirmCtr,
+    registerAct,
+    loginAct, logoutAct,
+    confirmAct,
 } from '../../controllers/provider/auth.controller.js'
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/register', registerCtr)
+router.post('/register', registerAct)
 
-router.post('/login', loginCtr)
+router.post('/login', loginAct)
 
-router.post('/logout', authToken, logoutCtr)
+router.post('/logout', authToken, logoutAct)
 
-router.post('/confirm', confirmCtr)
+router.post('/confirm', confirmAct)
 
 export default router
 
