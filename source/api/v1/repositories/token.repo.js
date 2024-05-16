@@ -9,6 +9,15 @@ const getTokenByToken = async (token) => {
     return existToken
 }
 
+const getTokenByUserId= async (id) => {
+    const existToken = await Token.findOne({
+        where: {
+            user_id: id
+        }
+    })
+    return existToken
+}
+
 const createToken = async (token, id) => {
     await Token.create({
         token: token,
@@ -16,6 +25,13 @@ const createToken = async (token, id) => {
     })
 }
 
+const deleteTokenByUserId = async (id) => {
+    await Token.destroy({
+        where: {
+            user_id: id
+        }
+    })
+}
 
 const deleleTokenByToken = async (token) => {
     await Token.destroy({
@@ -27,5 +43,7 @@ const deleleTokenByToken = async (token) => {
 
 export { createToken,
     getTokenByToken, 
+    getTokenByUserId, 
+    deleteTokenByUserId,
     deleleTokenByToken 
 }

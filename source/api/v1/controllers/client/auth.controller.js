@@ -1,7 +1,10 @@
 import {
   register,
+  login,
   confirm,
-  login, logout
+  logout,
+  forgetPassword,
+  resetPassword
 } from '../../services/auth.service.js'
 
 
@@ -56,9 +59,38 @@ const confirmCtr = async (req, res) => {
   }
 }
 
+const forgetPasswordCtr = async (req, res) => {
+  try {
+    const msg = await forgetPassword(req.body, 3)
+    res.status(msg.status).json(msg.info)
+  }
+  catch (error) {
+    console.error("Lỗi quên mật khẩu:", error);
+    res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
+    return
+  }
+
+}
+
+
+const resetPasswordCtr = async (req, res) => {
+  try {
+    const msg = await resetPassword(req)
+    res.status(msg.status).json(msg.info)
+  }
+  catch (error) {
+    console.error("Lỗi quên đặt lại mật khẩu:", error);
+    res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
+    return
+  }
+}
+
+
 
 export {
   registerCtr,
   confirmCtr,
-  loginCtr, logoutCtr
+  loginCtr, logoutCtr,
+  forgetPasswordCtr,
+  resetPasswordCtr
 }

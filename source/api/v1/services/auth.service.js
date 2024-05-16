@@ -1,17 +1,23 @@
 import {
   getUserByUsername,
+  getUserByEmail,
   createUser,
   updateUserStatus,
+  changePasswordById
 } from '../repositories/user.repo.js'
 
 import {
   createToken,
+  getTokenByUserId,
+  getTokenByToken,
+  deleteTokenByUserId,
   deleleTokenByToken
 } from '../repositories/token.repo.js'
 
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
 import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
+
 
 
 const register = async (data, role) => {
@@ -56,7 +62,7 @@ const register = async (data, role) => {
   const subject = "Email xác nhận kích hoạt tài khoản"
 
   let link = role == 3 ? `http://localhost:3000/api/v1/auth/confirm?token=${token}`
-  : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
+    : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
 
   const html = `
     <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
@@ -184,8 +190,79 @@ const confirm = async (data, role) => {
   }
 }
 
+const forgetPassword = async (data, role) => {
+
+  const email = data.email
+  const user = await getUserByEmail(email, role)
+
+  if (user) {
+    const token = await getTokenByUserId(user.id)
+
+    const subject = "Email xác nhận đặt lại mật khẩu"
+    let link = role == 3 ? `http://localhost:3000/api/v1/auth/reset?token=${token.token}`
+      : `http://localhost:3000/api/v1/provider/auth/reset?token=${token.token}`
+    const html = `
+      <p> Xin chào bạn ${user.username}, vui lòng nhấn vào nút bên dưới để đặt lại mật khẩu </p>
+      <a href=${link}>Reset your password!</a>
+      `
+    confirmEmail(email, subject, html)
+
+    const answer = {
+      status: 200,
+      info: {
+        msg: "Thành công, vui lòng kiểm tra email để đặt lại mật khẩu",
+        link: link
+      }
+    }
+    return answer
+  }
+  else {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Email không tồn tại"
+      }
+    }
+    return answer
+  }
+}
+
+const resetPassword = async (req) => {
+  const password = req.body.password
+  const token = req.query.token
+  const existToken = await getTokenByToken(token)
+
+  if (existToken) {
+    const salt = await bcrypt.genSalt(10)
+    const hashed = await bcrypt.hash(password, salt)
+
+    await changePasswordById(existToken.user_id, hashed)
+    await deleteTokenByUserId(existToken.user_id)
+
+    const answer = {
+      status: 200,
+      info: {
+        msg: "Đặt lại mật khẩu thành công"
+      }
+    }
+    return answer
+  }
+  else {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Không có quyền thực hiện hành động này"
+      }
+    }
+    return answer
+  }
+}
+
 export {
   register,
+  login,
   confirm,
-  login, logout
+  logout,
+  forgetPassword,
+  resetPassword,
 }
