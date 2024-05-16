@@ -6,7 +6,8 @@ import {
 
 import {
   createToken,
-  deleleTokenByToken
+  deleleTokenByToken,
+  countTokenByUserId
 } from '../repositories/token.repo.js'
 
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
@@ -14,7 +15,7 @@ import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
 
 
-const register = async (data, role) => {
+export const register = async (data, role) => {
 
   const existUser = await getUserByUsername(data.username, role)
 
@@ -75,7 +76,7 @@ const register = async (data, role) => {
   return answer
 }
 
-const login = async (data, role) => {
+export const login = async (data, role) => {
   const user = await getUserByUsername(data.username, role)
 
   if (!user) {
@@ -111,6 +112,17 @@ const login = async (data, role) => {
       }
     }
   }
+  
+  const count = await countTokenByUserId(user.id)
+  if(count >= 5) {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Tài khoản đã quá số lượng đăng nhập"
+      }
+    }
+    return answer
+  }
 
   const accessToken = createAccessToken(user.id)
   await createToken(accessToken, user.id)
@@ -133,7 +145,7 @@ const login = async (data, role) => {
   return answer
 }
 
-const logout = async (data) => {
+export const logout = async (data) => {
   console.log(data)
 
   await deleleTokenByToken(data.split(" ")[1])
@@ -147,7 +159,7 @@ const logout = async (data) => {
   return answer
 }
 
-const confirm = async (data, role) => {
+export const confirm = async (data, role) => {
   const token = data.token
   let answer = null
 
@@ -182,10 +194,4 @@ const confirm = async (data, role) => {
     }
     return answer
   }
-}
-
-export {
-  register,
-  confirm,
-  login, logout
 }

@@ -1,6 +1,6 @@
 import Token from '../models/mysql/tokens.js'
 
-const getTokenByToken = async (token) => {
+export const getTokenByToken = async (token) => {
     const existToken = await Token.findOne({
         where: {
             token: token
@@ -9,7 +9,7 @@ const getTokenByToken = async (token) => {
     return existToken
 }
 
-const createToken = async (token, id) => {
+export const createToken = async (token, id) => {
     await Token.create({
         token: token,
         user_id: id
@@ -17,7 +17,7 @@ const createToken = async (token, id) => {
 }
 
 
-const deleleTokenByToken = async (token) => {
+export const deleleTokenByToken = async (token) => {
     await Token.destroy({
         where: {
             token: token
@@ -25,7 +25,9 @@ const deleleTokenByToken = async (token) => {
     })
 }
 
-export { createToken,
-    getTokenByToken, 
-    deleleTokenByToken 
+export const countTokenByUserId = async (id) => {
+    const count = await Token.count({
+        user_id: id,
+    })
+    return count
 }

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET, JWT_EXPIRY } from '../config/global.js'
 
-const createAccessToken = (id) => {
+export const createAccessToken = (id) => {
     return jwt.sign({
        id: id
     }, JWT_SECRET, {
@@ -9,12 +9,8 @@ const createAccessToken = (id) => {
     })
 }
 
-const decodeAccessToken = (token) => {
+export const decodeAccessToken = (token) => {
     return jwt.verify(token, JWT_SECRET)
 }
 
-export {
-    createAccessToken,
-    decodeAccessToken
-} 
     
