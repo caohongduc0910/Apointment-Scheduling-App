@@ -8,7 +8,7 @@ import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.j
 import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
 
-const register = async (data, role) => {
+export const register = async (data, role) => {
 
   const existUser = await getUserByUsername(data.username, role)
 
@@ -50,7 +50,7 @@ const register = async (data, role) => {
   const subject = "Email xác nhận kích hoạt tài khoản"
 
   let link = role == 3 ? `http://localhost:3000/api/v1/auth/confirm?token=${token}`
-  : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
+    : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
 
   const html = `
     <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
@@ -69,7 +69,7 @@ const register = async (data, role) => {
   return answer
 }
 
-const confirm = async (data, role) => {
+export const confirm = async (data, role) => {
   const token = data.token
   let answer = null
 
@@ -104,9 +104,4 @@ const confirm = async (data, role) => {
     }
     return answer
   }
-}
-
-export {
-  register,
-  confirm,
 }

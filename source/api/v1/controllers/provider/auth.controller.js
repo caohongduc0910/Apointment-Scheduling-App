@@ -4,7 +4,7 @@ import {
 } from '../../services/auth.service.js'
 
 
-const registerCtr = async (req, res) => {
+export const registerAct = async (req, res) => {
   try {
     const msg = await register(req.body, 2)
     res.status(msg.status).json(msg.info)
@@ -16,7 +16,7 @@ const registerCtr = async (req, res) => {
   }
 }
 
-const confirmCtr = async (req, res) => {
+export const confirmAct = async (req, res) => {
   try {
     const msg = await confirm(req.query, 2)
     res.status(msg.status).json(msg.info)
@@ -26,9 +26,4 @@ const confirmCtr = async (req, res) => {
     res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
     return
   }
-}
-
-export {
-  registerCtr,
-  confirmCtr,
 }

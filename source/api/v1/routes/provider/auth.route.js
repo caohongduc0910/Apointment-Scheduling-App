@@ -2,13 +2,13 @@ import express from 'express'
 const router = express.Router()
 
 import {
-    registerCtr,
-    confirmCtr,
+    registerAct,
+    confirmAct,
 } from '../../controllers/provider/auth.controller.js'
 
-router.post('/register', registerCtr)
+router.post('/register', registerAct)
 
-router.post('/confirm', confirmCtr)
+router.post('/confirm', confirmAct)
 
 export default router
 
