@@ -11,7 +11,8 @@ import {
   getTokenByUserId,
   getTokenByToken,
   deleteTokenByUserId,
-  deleleTokenByToken
+  deleleTokenByToken,
+  countTokenByUserId
 } from '../repositories/token.repo.js'
 
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'

@@ -15,10 +15,13 @@ import bodyParser from 'body-parser'
 app.use(bodyParser.json())
 
 //DB connection
-import {connectionMongo} from './database/mongodb/connection.js'
-import {connectionMySQL} from './database/mysql/connection.js'
+import { connectionMongo } from './database/mongodb/connection.js'
+import { connectionMySQL } from './database/mysql/connection.js'
 connectionMongo()
-connectionMySQL()
+await connectionMySQL()
+// define associations
+import './api/v1/models/mysql/associations/index.js'
+
 
 //Routing
 import routeClientV1 from './api/v1/routes/client/index.route.js'

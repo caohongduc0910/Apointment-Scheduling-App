@@ -1,4 +1,19 @@
 import User from '../models/mysql/users.js'
+import Role from '../models/mysql/roles.js'
+
+export const getUserById = async (id) => {
+    const user = await User.findOne({
+        where: {
+            id: id,
+        },
+        attributes: { exclude: ['id', 'password', 'uuid', 'verified_at', 'deleted_at'] },
+        include: {
+            model: Role,
+            as: 'role'
+        }
+    })
+    return user
+}
 
 
 export const getUserByUsername = async (username, role) => {
