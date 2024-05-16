@@ -18,7 +18,7 @@ const registerCtr = async (req, res) => {
 
 const confirmCtr = async (req, res) => {
   try {
-    const msg = await confirm(req.query)
+    const msg = await confirm(req.query, 2)
     res.status(msg.status).json(msg.info)
   }
   catch (error) {

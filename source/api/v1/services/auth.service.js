@@ -48,10 +48,14 @@ const register = async (data, role) => {
   const token = createAccessToken(user.id)
 
   const subject = "Email xác nhận kích hoạt tài khoản"
+
+  let link = role == 3 ? `http://localhost:3000/api/v1/auth/confirm?token=${token}`
+  : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
+
   const html = `
-          <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
-          <a href="http://localhost:3000/api/v1/auth/confirm?token=${token}">Confirm your account!</a>
-        `
+    <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
+    <a href=${link}>Xác nhận tài khoản!</a>
+    `
   confirmEmail(newUser.email, subject, html)
 
   const answer = {
@@ -59,25 +63,37 @@ const register = async (data, role) => {
     info: {
       msg: 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản',
       user: newUser,
-      link: `http://localhost:3000/api/v1/auth/confirm?token=${token}`
+      link: link
     }
   }
   return answer
 }
 
-const confirm = async (data) => {
+const confirm = async (data, role) => {
   const token = data.token
+  let answer = null
 
   try {
     const decoded = decodeAccessToken(token)
-    await updateUserStatus(decoded.id)
-    answer = {
-      status: 200,
-      info: {
-        msg: "Kích hoạt tài khoản thành công"
+    if (role == 3) {
+      await updateUserStatus(decoded.id)
+      answer = {
+        status: 200,
+        info: {
+          msg: "Kích hoạt tài khoản thành công"
+        }
       }
+      return answer
     }
-    return answer
+    else {
+      answer = {
+        status: 200,
+        info: {
+          msg: "Kích hoạt tài khoản thành công, chờ admin phê duyệt"
+        }
+      }
+      return answer
+    }
   }
   catch (error) {
     answer = {
