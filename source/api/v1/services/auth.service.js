@@ -4,9 +4,15 @@ import {
   updateUserStatus,
 } from '../repositories/user.repo.js'
 
+import {
+  createToken,
+  deleleTokenByToken
+} from '../repositories/token.repo.js'
+
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
 import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
+
 
 const register = async (data, role) => {
 
@@ -69,6 +75,78 @@ const register = async (data, role) => {
   return answer
 }
 
+const login = async (data, role) => {
+  const user = await getUserByUsername(data.username, role)
+
+  if (!user) {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Tài khoản không tồn tại"
+      }
+    }
+    return answer
+  }
+  else {
+    const validPassword = await bcrypt.compare(data.password, user.password)
+
+    if (!validPassword) {
+      const answer = {
+        status: 400,
+        info: {
+          msg: "Sai mật khẩu"
+        }
+      }
+      return answer
+    }
+    else {
+      if (!user.status) {
+        const answer = {
+          status: 400,
+          info: {
+            msg: "Tài khoản chưa được kích hoạt"
+          }
+        }
+        return answer
+      }
+    }
+  }
+
+  const accessToken = createAccessToken(user.id)
+  await createToken(accessToken, user.id)
+
+  const returnUser = {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    role_id: user.role_id,
+  }
+
+  const answer = {
+    status: 200,
+    info: {
+      msg: "Đăng nhập thành công",
+      User: returnUser,
+      token: accessToken
+    }
+  }
+  return answer
+}
+
+const logout = async (data) => {
+  console.log(data)
+
+  await deleleTokenByToken(data.split(" ")[1])
+
+  const answer = {
+    status: 200,
+    info: {
+      msg: "Đăng xuất thành công",
+    }
+  }
+  return answer
+}
+
 const confirm = async (data, role) => {
   const token = data.token
   let answer = null
@@ -109,4 +187,5 @@ const confirm = async (data, role) => {
 export {
   register,
   confirm,
+  login, logout
 }

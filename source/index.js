@@ -23,9 +23,11 @@ connectionMySQL()
 //Routing
 import routeClientV1 from './api/v1/routes/client/index.route.js'
 import routeProviderV1 from './api/v1/routes/provider/index.route.js'
+import routeAdminV1 from './api/v1/routes/admin/index.route.js'
 
 app.use(routeClientV1)
 app.use(routeProviderV1)
+app.use(routeAdminV1)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
