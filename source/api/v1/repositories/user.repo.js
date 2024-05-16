@@ -27,6 +27,16 @@ export const getUserByUsername = async (username, role) => {
 }
 
 
+export const getUserDetailById = async (id) => {
+    const user = await User.findOne({
+        where: {
+            id: id,
+        },
+    })
+    return user
+}
+
+
 export const getUserByEmail = async (email, role) => {
     const user = await User.findOne({
         where: {

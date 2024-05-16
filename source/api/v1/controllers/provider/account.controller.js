@@ -1,4 +1,4 @@
-import { detail, update } from "../../services/user.service.js"
+import { detail, update, changePassword } from "../../services/user.service.js"
 
 export const detailAct = async (req, res) => {
     try {
@@ -20,6 +20,18 @@ export const updateAct = async (req, res) => {
     catch (error) {
         res.status(500).json({
             msg: "Lỗi cập nhật User"
+        })
+    }
+}
+
+export const changePasswordAct = async (req, res) => {
+    try {
+        const msg = await changePassword(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi đổi mật khẩu"
         })
     }
 }

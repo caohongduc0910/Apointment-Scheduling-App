@@ -1,14 +1,20 @@
+import { deleteTokenByUserId } from "../repositories/token.repo.js"
 import {
     getUserById,
     updateUserById,
+    getUserDetailById,
+    changePasswordById,
 } from "../repositories/user.repo.js"
+
+import bcrypt from 'bcrypt'
+
 
 
 export const detail = async (data) => {
 
     const id = data.id
     const user = await getUserById(id)
-    const detailUser =  {
+    const detailUser = {
         username: user.username,
         email: user.email,
         fullname: user.fullname,
@@ -39,6 +45,7 @@ export const detail = async (data) => {
     }
 }
 
+
 export const update = async (req) => {
     const id = req.user.id
 
@@ -61,6 +68,53 @@ export const update = async (req) => {
     }
     return answer
 }
+
+
+export const changePassword = async (req) => {
+    const id = req.user.id
+    const password = req.body.password
+    const newPassword = req.body.newpassword
+    const cfPassword = req.body.cfpassword
+
+    const user = await getUserDetailById(id)
+
+    const validPassword = await bcrypt.compare(password, user.password)
+    if (!validPassword) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Mật khẩu không chính xác",
+            }
+        }
+        return answer
+    }
+
+    if (newPassword != cfPassword) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Mật khẩu xác nhận không khớp",
+            }
+        }
+        return answer
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hashed = await bcrypt.hash(newPassword, salt)
+    await changePasswordById(id, hashed)
+    await deleteTokenByUserId(id)
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Đổi mật khẩu thành công",
+        }
+    }
+    return answer
+}
+
+
+
+
+
 
 
 
