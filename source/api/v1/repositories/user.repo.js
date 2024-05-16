@@ -1,7 +1,7 @@
 import User from '../models/mysql/users.js'
 
 
-const getUserByUsername = async (username, role) => {
+export const getUserByUsername = async (username, role) => {
     const user = await User.findOne({
         where: {
             username: username,
@@ -11,7 +11,8 @@ const getUserByUsername = async (username, role) => {
     return user
 }
 
-const getUserByEmail = async (email, role) => {
+
+export const getUserByEmail = async (email, role) => {
     const user = await User.findOne({
         where: {
             email: email,
@@ -21,12 +22,14 @@ const getUserByEmail = async (email, role) => {
     return user
 }
 
-const createUser = async (newUser) => {
+
+export const createUser = async (newUser) => {
     await User.create(newUser)
     return newUser
 }
 
-const updateUserStatus = async (id) => {
+
+export const updateUserStatus = async (id) => {
     await User.update({
         status: 1
     }, {
@@ -36,7 +39,8 @@ const updateUserStatus = async (id) => {
     })
 }
 
-const changePasswordById = async (id, password) => {
+
+export const changePasswordById = async (id, password) => {
     await User.update({
         password: password
     }, {
@@ -44,13 +48,4 @@ const changePasswordById = async (id, password) => {
             id: id
         }
     })
-}
-
-
-export {
-    getUserByUsername,
-    getUserByEmail,
-    createUser,
-    updateUserStatus,
-    changePasswordById
 }

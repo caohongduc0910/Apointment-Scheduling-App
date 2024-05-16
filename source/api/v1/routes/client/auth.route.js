@@ -2,25 +2,25 @@ import express from 'express'
 const router = express.Router()
 
 import {
-    registerCtr,
-    loginCtr, logoutCtr,
-    confirmCtr,
-    forgetPasswordCtr,
-    resetPasswordCtr
+    registerAct,
+    loginAct, logoutAct,
+    confirmAct,
+    forgetPasswordAct,
+    resetPasswordAct
 } from '../../controllers/client/auth.controller.js'
-import verifyToken from '../../middlewares/auth.middleware.js'
+import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/register', registerCtr)
+router.post('/register', registerAct)
 
-router.post('/login', loginCtr)
+router.post('/login', loginAct)
 
-router.post('/logout', verifyToken, logoutCtr)
+router.post('/logout', authToken, logoutAct)
 
-router.post('/confirm', confirmCtr)
+router.post('/confirm', confirmAct)
 
-router.post('/forget', forgetPasswordCtr)
+router.post('/forget', forgetPasswordAct)
 
-router.post('/reset', resetPasswordCtr)
+router.post('/reset', resetPasswordAct)
 
 export default router
 

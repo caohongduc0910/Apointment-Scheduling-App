@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { getTokenByToken } from '../repositories/token.repo.js'
 
-const verifyToken = (req, res, next) => {
+const authToken = (req, res, next) => {
     const token = req.headers.authorization
 
     if (token) {
@@ -32,4 +32,4 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-export default verifyToken
+export default authToken

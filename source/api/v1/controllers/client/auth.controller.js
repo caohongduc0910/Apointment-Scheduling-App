@@ -8,7 +8,7 @@ import {
 } from '../../services/auth.service.js'
 
 
-const registerCtr = async (req, res) => {
+export const registerAct = async (req, res) => {
   try {
     const msg = await register(req.body, 3)
     res.status(msg.status).json(msg.info)
@@ -21,7 +21,7 @@ const registerCtr = async (req, res) => {
 }
 
 
-const loginCtr = async (req, res) => {
+export const loginAct = async (req, res) => {
   try {
     const msg = await login(req.body, 3)
     res.status(msg.status).json(msg.info)
@@ -34,7 +34,7 @@ const loginCtr = async (req, res) => {
 }
 
 
-const logoutCtr = async (req, res) => {
+export const logoutAct = async (req, res) => {
   try {
     const msg = await logout(req.headers.authorization)
     res.status(msg.status).json(msg.info)
@@ -47,7 +47,7 @@ const logoutCtr = async (req, res) => {
 }
 
 
-const confirmCtr = async (req, res) => {
+export const confirmAct = async (req, res) => {
   try {
     const msg = await confirm(req.query, 3)
     res.status(msg.status).json(msg.info)
@@ -59,7 +59,8 @@ const confirmCtr = async (req, res) => {
   }
 }
 
-const forgetPasswordCtr = async (req, res) => {
+
+export const forgetPasswordAct = async (req, res) => {
   try {
     const msg = await forgetPassword(req.body, 3)
     res.status(msg.status).json(msg.info)
@@ -73,7 +74,7 @@ const forgetPasswordCtr = async (req, res) => {
 }
 
 
-const resetPasswordCtr = async (req, res) => {
+export const resetPasswordAct = async (req, res) => {
   try {
     const msg = await resetPassword(req)
     res.status(msg.status).json(msg.info)
@@ -83,14 +84,4 @@ const resetPasswordCtr = async (req, res) => {
     res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
     return
   }
-}
-
-
-
-export {
-  registerCtr,
-  confirmCtr,
-  loginCtr, logoutCtr,
-  forgetPasswordCtr,
-  resetPasswordCtr
 }
