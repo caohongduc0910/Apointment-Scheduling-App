@@ -1,4 +1,4 @@
-import { detail } from "../../services/user.service.js"
+import { detail, update } from "../../services/user.service.js"
 
 export const detailAct = async (req, res) => {
     try {
@@ -11,3 +11,16 @@ export const detailAct = async (req, res) => {
         })
     }
 }
+
+export const updateAct = async (req, res) => {
+    try {
+        const msg = await update(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi cập nhật User"
+        })
+    }
+}
+

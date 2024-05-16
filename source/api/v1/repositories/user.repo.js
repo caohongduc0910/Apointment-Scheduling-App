@@ -55,6 +55,15 @@ export const updateUserStatus = async (id) => {
 }
 
 
+export const updateUserById = async (id, user) => {
+    await User.update(user, {
+        where: {
+            id: id
+        }
+    })
+}
+
+
 export const changePasswordById = async (id, password) => {
     await User.update({
         password: password

@@ -1,5 +1,6 @@
 import {
     getUserById,
+    updateUserById,
 } from "../repositories/user.repo.js"
 
 
@@ -37,5 +38,29 @@ export const detail = async (data) => {
         return answer
     }
 }
+
+export const update = async (req) => {
+    const id = req.user.id
+
+    const user = {
+        email: req.body.email,
+        fullname: req.body.fullname,
+        image: `http://localhost:3000/images/${req.file.filename}`,
+        address: req.body.address,
+        phone: req.body.phone
+    }
+
+    await updateUserById(id, user)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Cập nhật thành công",
+            user: user
+        }
+    }
+    return answer
+}
+
 
 
