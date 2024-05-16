@@ -1,4 +1,4 @@
-import { detail, update, changePassword } from "../../services/user.service.js"
+import { detail, update, changePassword, deleteAcc } from "../../services/user.service.js"
 
 export const detailAct = async (req, res) => {
     try {
@@ -35,4 +35,17 @@ export const changePasswordAct = async (req, res) => {
         })
     }
 }
+
+export const deleteAct = async (req, res) => {
+    try {
+        const msg = await deleteAcc(req.user)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xóa User"
+        })
+    }
+}
+
 

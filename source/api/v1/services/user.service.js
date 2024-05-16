@@ -2,12 +2,12 @@ import { deleteTokenByUserId } from "../repositories/token.repo.js"
 import {
     getUserById,
     updateUserById,
+    deleteUserById,
     getUserDetailById,
     changePasswordById,
 } from "../repositories/user.repo.js"
 
 import bcrypt from 'bcrypt'
-
 
 
 export const detail = async (data) => {
@@ -110,6 +110,21 @@ export const changePassword = async (req) => {
     }
     return answer
 }
+
+
+export const deleteAcc = async (data) => {
+    const id = data.id
+    await deleteUserById(id)
+    await deleteTokenByUserId(id)
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa thành công",
+        }
+    }
+    return answer
+}
+
 
 
 

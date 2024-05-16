@@ -74,6 +74,15 @@ export const updateUserById = async (id, user) => {
 }
 
 
+export const deleteUserById = async (id) => {
+    await User.destroy({
+        where: {
+            id: id
+        }
+    })
+}
+
+
 export const changePasswordById = async (id, password) => {
     await User.update({
         password: password
