@@ -25,6 +25,10 @@ Service.init({
   description: DataTypes.TEXT,
   image: DataTypes.TEXT,
   price: DataTypes.DOUBLE,
+  status: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
   provider_id: DataTypes.BIGINT,
   category_id: DataTypes.BIGINT,
   created_at: DataTypes.DATE,

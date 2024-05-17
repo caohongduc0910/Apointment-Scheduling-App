@@ -5,6 +5,7 @@ export const createService = async (category) => {
     await Service.create(category)
 }
 
+
 export const detailService = async (uuid) => {
     const service = await Service.findOne({
         where: {
@@ -19,4 +20,14 @@ export const detailService = async (uuid) => {
     })
 
     return service
+}
+
+
+export const updateService = async (service, uuid) => {
+    console.log(service)
+    await Service.update(service, {
+        where: {
+            uuid: uuid
+        }
+    })
 }
