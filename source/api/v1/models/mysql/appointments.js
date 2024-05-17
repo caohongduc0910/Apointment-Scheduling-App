@@ -23,7 +23,6 @@ Appointment.init({
   },
   name: DataTypes.STRING,
   note: DataTypes.STRING,
-  price: DataTypes.DOUBLE,
   time: DataTypes.DATE,
   status_id: DataTypes.BIGINT,
   service_id: DataTypes.BIGINT,

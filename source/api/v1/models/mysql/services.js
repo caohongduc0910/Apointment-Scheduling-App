@@ -23,6 +23,8 @@ Service.init({
   },
   name: DataTypes.STRING,
   description: DataTypes.TEXT,
+  image: DataTypes.TEXT,
+  price: DataTypes.DOUBLE,
   provider_id: DataTypes.BIGINT,
   category_id: DataTypes.BIGINT,
   created_at: DataTypes.DATE,
