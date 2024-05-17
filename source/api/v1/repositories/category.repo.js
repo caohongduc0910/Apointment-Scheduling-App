@@ -13,3 +13,23 @@ export const detailCategory = async (id) => {
     })
     return category
 }
+
+
+export const updateCategory = async (id, name) => {
+    await Category.update({
+        category_name: name
+    }, {
+        where: {
+            id: id
+        }
+    })
+}
+
+
+export const deleteCategory = async (id) => {
+    await Category.destroy({
+        where: {
+            id: id
+        }
+    })
+}
