@@ -37,6 +37,17 @@ export const getUserDetailById = async (id) => {
 }
 
 
+export const getAllUserByRole = async (role) => {
+    const users = await User.findAll({
+        where: {
+            role_id: role
+        },
+        attributes: { exclude: ['id', 'password', 'uuid'] }
+    })
+    return users
+}
+
+
 export const getUserByEmail = async (email, role) => {
     const user = await User.findOne({
         where: {

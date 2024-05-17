@@ -73,6 +73,8 @@ Table services {
   uuid varchar [unique, note: "Uuid of the service"]
   name varchar [note: "Name of the service"]
   description text
+  image text
+  price double
   provider_id bigint
   category_id bigint [note: "Id of the category"]
   created_at timestamp [note: "When service created"]
@@ -98,7 +100,6 @@ Table appointments {
   uuid varchar [unique, note: "Uuid of the appointment"]
   name varchar [note: "Name of the appointment"]
   note varchar [note: "Note of the appointment"]
-  price double [note: "Price of the appointment"]
   time datetime [note: "Timestamp of the meeting"]
   status_id bigint [note: "Id of the status"]
   service_id bigint [note: "Id of the service"]

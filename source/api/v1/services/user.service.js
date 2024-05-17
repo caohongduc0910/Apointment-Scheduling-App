@@ -5,9 +5,11 @@ import {
     deleteUserById,
     getUserDetailById,
     changePasswordById,
+    getAllUserByRole
 } from "../repositories/user.repo.js"
 
 import bcrypt from 'bcrypt'
+
 
 
 export const detail = async (data) => {
@@ -120,6 +122,28 @@ export const deleteAcc = async (data) => {
         status: 200,
         info: {
             msg: "Xóa thành công",
+        }
+    }
+    return answer
+}
+
+
+export const getListUser = async (role) => {
+    const arr = await getAllUserByRole(role)
+    if(arr.length == 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách trống",
+            }
+        }
+        return answer
+    }
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Lấy danh sách thành công",
+            users: arr
         }
     }
     return answer

@@ -1,39 +1,25 @@
-import { detail, update, changePassword } from "../../services/user.service.js"
+import { getListUser } from "../../services/user.service.js"
 
-export const detailAct = async (req, res) => {
+export const getListProviderAct = async (req, res) => {
     try {
-        const msg = await detail(req.user)
+        const msg = await getListUser(2)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
         res.status(500).json({
-            msg: "Lỗi xem chi tiết User"
+            msg: "Lỗi lấy danh sách Provider"
         })
     }
 }
 
-export const updateAct = async (req, res) => {
+export const getListClientAct = async (req, res) => {
     try {
-        const msg = await update(req)
+        const msg = await getListUser(3)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
         res.status(500).json({
-            msg: "Lỗi cập nhật User"
+            msg: "Lỗi lấy danh sách Client"
         })
     }
 }
-
-export const changePasswordAct = async (req, res) => {
-    try {
-        const msg = await changePassword(req)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        res.status(500).json({
-            msg: "Lỗi đổi mật khẩu"
-        })
-    }
-}
-
-

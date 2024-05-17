@@ -5,7 +5,7 @@ import multer from 'multer'
 import storage from '../../../../helper/upload.js'
 const upload = multer({ storage: storage})
 
-import { detailAct, updateAct, changePasswordAct, deleteAct } from '../../controllers/provider/account.controller.js'
+import { detailAct, updateAct, changePasswordAct, deleteAct } from '../../controllers/common/account.controller.js'
 import authToken from '../../middlewares/auth.middleware.js'
 
 router.get('/detail', authToken, detailAct)
