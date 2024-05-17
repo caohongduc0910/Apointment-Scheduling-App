@@ -1,4 +1,4 @@
-import { create, detail, update, deleteCate } from '../../services/category.service.js'
+import { create, detail, update, deleteCate, getAll } from '../../services/category.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -25,6 +25,7 @@ export const detailAct = async (req, res) => {
     }
 }
 
+
 export const updateAct = async (req, res) => {
     try {
         const msg = await update(req)
@@ -46,6 +47,19 @@ export const deleteAct = async (req, res) => {
     catch (error) {
         res.status(500).json({
             msg: "Lỗi xóa danh mục"
+        })
+    }
+}
+
+
+export const getAllAct = async (req, res) => {
+    try {
+        const msg = await getAll()
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xem danh sách danh mục"
         })
     }
 }

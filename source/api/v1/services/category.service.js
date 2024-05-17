@@ -1,4 +1,9 @@
-import { createCategory, detailCategory, updateCategory, deleteCategory } from "../repositories/category.repo.js"
+import { createCategory, 
+    detailCategory, 
+    updateCategory, 
+    deleteCategory, 
+    getListCategory 
+} from "../repositories/category.repo.js"
 
 export const create = async (req) => {
     const categoryName = req.body.category_name
@@ -67,6 +72,7 @@ export const update = async (req) => {
     return answer
 }
 
+
 export const deleteCate = async (req) => {
     const categoryID = req.params.id
 
@@ -79,4 +85,29 @@ export const deleteCate = async (req) => {
         }
     }
     return answer
+}
+
+
+export const getAll = async (req) => {
+    const arr = await getListCategory()
+
+    if(arr.length == 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách trống",
+            }
+        }
+        return answer
+    }
+    else{
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy thành công danh sách danh mục",
+                category: arr
+            }
+        }
+        return answer
+    }
 }

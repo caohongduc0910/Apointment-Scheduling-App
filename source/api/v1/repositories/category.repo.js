@@ -4,6 +4,7 @@ export const createCategory = async (category) => {
     await Category.create(category)
 }
 
+
 export const detailCategory = async (id) => {
     const category = await Category.findOne({
         where: {
@@ -32,4 +33,12 @@ export const deleteCategory = async (id) => {
             id: id
         }
     })
+}
+
+
+export const getListCategory = async () => {
+    const category = await Category.findAll({
+        attributes: { exclude: ['admin_id'] }
+    })
+    return category
 }
