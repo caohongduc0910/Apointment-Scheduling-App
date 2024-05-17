@@ -1,4 +1,10 @@
-import { createService, detailService, updateService, deleteServiceByUUID } from '../repositories/service.repo.js'
+import {
+    createService,
+    detailService,
+    updateService,
+    deleteServiceByUUID,
+    getAllServiceByProviderID
+} from '../repositories/service.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -24,17 +30,26 @@ export const create = async (req) => {
 
 
 export const detail = async (data) => {
-
     const service = await detailService(data.uuid)
-
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Lấy chi tiết dịch vụ thành công",
-            service: service
+    if (service) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết dịch vụ thành công",
+                service: service
+            }
         }
+        return answer
     }
-    return answer
+    else {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Không tồn tại dịch vụ",
+            }
+        }
+        return answer
+    }
 }
 
 
@@ -61,8 +76,21 @@ export const update = async (req) => {
 }
 
 
-export const deleteService = async (data) => {
-    const serviceUUID = data.uuid
+export const deleteService = async (req) => {
+    const serviceUUID = req.params.uuid
+    const providerId = req.user.id
+
+    const service = await detailService(serviceUUID)
+
+    if (service.provider_id != providerId) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không có quyền xóa dịch vụ này",
+            }
+        }
+        return answer
+    }
 
     await deleteServiceByUUID(serviceUUID)
 
@@ -73,4 +101,29 @@ export const deleteService = async (data) => {
         }
     }
     return answer
+}
+
+
+export const myService = async (data) => {
+
+    const arr = await getAllServiceByProviderID(data.id)
+    if (arr) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết dịch vụ thành công",
+                service: arr
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách dịch vụ trống",
+            }
+        }
+        return answer
+    }
 }

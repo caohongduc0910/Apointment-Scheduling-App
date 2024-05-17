@@ -11,7 +11,7 @@ export const detailService = async (uuid) => {
         where: {
             uuid: uuid
         },
-        attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: Category,
             as: 'category',
@@ -36,7 +36,23 @@ export const updateService = async (service, uuid) => {
 export const deleteServiceByUUID = async (uuid) => {
     await Service.destroy({
         where: {
-            uuid: uuid
+            uuid: uuid,
         }
     })
+}
+
+
+export const getAllServiceByProviderID = async (id) => {
+    const service = await Service.findAll({
+        where: {
+            provider_id: id
+        },
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: Category,
+            as: 'category',
+            attributes: ['category_name']
+        }
+    })
+    return service
 }
