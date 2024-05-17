@@ -11,6 +11,6 @@ import authToken from '../../middlewares/auth.middleware.js'
 
 router.post('/create', authToken, upload.single('image'), createAct)
 
-router.get('/detail/:uuid', authToken, upload.single('image'), detailAct)
+router.get('/detail/:uuid', authToken, detailAct)
 
 export default router
