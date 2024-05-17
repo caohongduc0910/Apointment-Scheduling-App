@@ -1,4 +1,4 @@
-import {createService, detailService, updateService } from '../repositories/service.repo.js'
+import { createService, detailService, updateService } from '../repositories/service.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -26,15 +26,25 @@ export const create = async (req) => {
 export const detail = async (data) => {
 
     const service = await detailService(data.uuid)
-
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Lấy chi tiết dịch vụ thành công",
-            service: service
+    if (service) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết dịch vụ thành công",
+                service: service
+            }
         }
+        return answer
     }
-    return answer
+    else {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Không tồn tại dịch vụ",
+            }
+        }
+        return answer
+    }
 }
 
 
