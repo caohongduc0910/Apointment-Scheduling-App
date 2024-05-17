@@ -31,3 +31,12 @@ export const updateService = async (service, uuid) => {
         }
     })
 }
+
+
+export const deleteServiceByUUID = async (uuid) => {
+    await Service.destroy({
+        where: {
+            uuid: uuid
+        }
+    })
+}
