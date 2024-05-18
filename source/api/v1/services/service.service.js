@@ -1,6 +1,7 @@
 import {
     createService,
-    detailService,
+    detailServiceID,
+    detailServiceUUID,
     updateService,
     deleteServiceByUUID,
     getAllServiceByProviderID,
@@ -33,7 +34,16 @@ export const create = async (req) => {
 
 
 export const detail = async (data) => {
-    const service = await detailService(data.uuid)
+
+    let service = null
+
+    if (data.id) {
+        service = await detailServiceID(data.id)
+    }
+    else {
+        service = await detailServiceUUID(data.uuid)
+    }
+
     if (service) {
         const answer = {
             status: 200,
@@ -46,7 +56,7 @@ export const detail = async (data) => {
     }
     else {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Không tồn tại dịch vụ",
             }
@@ -54,7 +64,6 @@ export const detail = async (data) => {
         return answer
     }
 }
-
 
 export const update = async (req) => {
     const service = {
@@ -83,7 +92,7 @@ export const deleteService = async (req) => {
     const serviceUUID = req.params.uuid
     const providerId = req.user.id
 
-    const service = await detailService(serviceUUID)
+    const service = await detailServiceUUID(serviceUUID)
 
     if (service.provider_id != providerId) {
         const answer = {
@@ -108,8 +117,8 @@ export const deleteService = async (req) => {
 
 
 export const myService = async (data) => {
-
     const arr = await getAllServiceByProviderID(data.id)
+
     if (arr.length > 0) {
         const answer = {
             status: 200,
@@ -122,7 +131,7 @@ export const myService = async (data) => {
     }
     else {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Danh sách dịch vụ trống",
             }
@@ -133,12 +142,11 @@ export const myService = async (data) => {
 
 
 export const listService = async (req) => {
-
     let arr = []
+
     if (req.query.uuid) {
         const category = await getCategoryByUUID(req.query.uuid)
         const id = category.id
-        console.log("ID: ", id)
         arr = await getAllService(id)
     }
     else {
@@ -157,7 +165,7 @@ export const listService = async (req) => {
     }
     else {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Danh sách dịch vụ trống",
             }
