@@ -10,7 +10,7 @@ export const getTokenByToken = async (token) => {
 }
 
 
-export const getTokenByUserId= async (id) => {
+export const getTokenByUserId = async (id) => {
     const existToken = await Token.findOne({
         where: {
             user_id: id
@@ -30,7 +30,9 @@ export const createToken = async (token, id) => {
 
 export const countTokenByUserId = async (id) => {
     const count = await Token.count({
-        user_id: id,
+        where: {
+            user_id: id,
+        }
     })
     return count
 }

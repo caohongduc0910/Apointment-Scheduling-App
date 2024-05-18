@@ -149,6 +149,9 @@ export const listService = async (req) => {
         const id = category.id
         arr = await getAllService(id)
     }
+    else if (req.query.id) {
+        arr = await getAllService(req.query.id)
+    }
     else {
         arr = await getAllService(0)
     }
