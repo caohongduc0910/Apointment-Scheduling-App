@@ -13,6 +13,6 @@ router.post('/create', authToken, upload.single('image'), createAct)
 
 router.get('/detail/:uuid', authToken, detailAct)
 
-router.patch('/update/:uuid', authToken, upload.single('image'), updateAct)
+router.patch('/update/:uuid', authToken, updateAct)
 
 export default router

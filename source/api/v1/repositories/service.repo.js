@@ -6,10 +6,26 @@ export const createService = async (category) => {
 }
 
 
-export const detailService = async (uuid) => {
+export const detailServiceUUID = async (uuid) => {
     const service = await Service.findOne({
         where: {
             uuid: uuid
+        },
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: Category,
+            as: 'category',
+            attributes: ['category_name']
+        }
+    })
+
+    return service
+}
+
+export const detailServiceID = async (id) => {
+    const service = await Service.findOne({
+        where: {
+            id: id
         },
         attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
