@@ -3,7 +3,8 @@ import {
     detailService,
     updateService,
     deleteServiceByUUID,
-    getAllServiceByProviderID
+    getAllServiceByProviderID,
+    getAllService
 } from '../repositories/service.repo.js'
 
 export const create = async (req) => {
@@ -107,11 +108,35 @@ export const deleteService = async (req) => {
 export const myService = async (data) => {
 
     const arr = await getAllServiceByProviderID(data.id)
-    if (arr) {
+    if (arr.length > 0) {
         const answer = {
             status: 200,
             info: {
-                msg: "Lấy chi tiết dịch vụ thành công",
+                msg: "Lấy danh sách dịch vụ thành công",
+                service: arr
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách dịch vụ trống",
+            }
+        }
+        return answer
+    }
+}
+
+
+export const listService = async () => {
+    const arr = await getAllService()
+    if (arr.length > 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy danh sách dịch vụ thành công",
                 service: arr
             }
         }

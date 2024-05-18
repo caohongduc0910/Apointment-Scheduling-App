@@ -1,4 +1,10 @@
-import { create, detail, update, deleteService, myService } from '../../services/service.service.js'
+import { create, 
+    detail, 
+    update, 
+    deleteService, 
+    myService, 
+    listService 
+} from '../../services/service.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -41,7 +47,7 @@ export const updateAct = async (req, res) => {
 
 export const deleteAct = async (req, res) => {
     try {
-        const msg = await deleteService(req)
+        const msg = await deleteService()
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
@@ -60,6 +66,19 @@ export const myServiceAct = async (req, res) => {
     catch (error) {
         res.status(500).json({
             msg: "Lỗi xem danh sách dịch của tôi"
+        })
+    }
+}
+
+
+export const listServiceAct = async (req, res) => {
+    try {
+        const msg = await listService(req.user)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xem danh sách dịch vụ"
         })
     }
 }

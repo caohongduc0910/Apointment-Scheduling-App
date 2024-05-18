@@ -56,3 +56,16 @@ export const getAllServiceByProviderID = async (id) => {
     })
     return service
 }
+
+
+export const getAllService = async (id) => {
+    const service = await Service.findAll({
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: Category,
+            as: 'category',
+            attributes: ['category_name']
+        }
+    })
+    return service
+}
