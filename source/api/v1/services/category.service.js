@@ -2,7 +2,8 @@ import { createCategory,
     detailCategory, 
     updateCategory, 
     deleteCategory, 
-    getListCategory 
+    getListCategory,
+    detailCategoryUUID 
 } from "../repositories/category.repo.js"
 
 export const create = async (req) => {
@@ -52,6 +53,22 @@ export const detail = async (req) => {
         }
     }
 
+    return answer
+}
+
+
+export const detailUUID = async (req) => {
+    const categoryUUID = req.params.uuid
+
+    const detail = await detailCategoryUUID(categoryUUID)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Lấy danh mục thành công",
+            category: detail
+        }
+    }
     return answer
 }
 
@@ -111,3 +128,4 @@ export const getAll = async (req) => {
         return answer
     }
 }
+
