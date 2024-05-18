@@ -102,28 +102,3 @@ export const deleteService = async (req) => {
     }
     return answer
 }
-
-
-export const myService = async (data) => {
-
-    const arr = await getAllServiceByProviderID(data.id)
-    if (arr) {
-        const answer = {
-            status: 200,
-            info: {
-                msg: "Lấy chi tiết dịch vụ thành công",
-                service: arr
-            }
-        }
-        return answer
-    }
-    else {
-        const answer = {
-            status: 200,
-            info: {
-                msg: "Danh sách dịch vụ trống",
-            }
-        }
-        return answer
-    }
-}

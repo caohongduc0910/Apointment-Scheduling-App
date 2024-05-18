@@ -20,8 +20,4 @@ router.get('/detail/:uuid', authToken, detailAct)
 
 router.patch('/update/:uuid', authToken, upload.single('image'), updateAct)
 
-router.delete('/delete/:uuid', authToken, deleteAct)
-
-router.get('/my-all-service', authToken, myServiceAct)
-
 export default router
