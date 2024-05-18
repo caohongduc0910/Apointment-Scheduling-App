@@ -1,4 +1,4 @@
-import { create, detail, update, deleteService, myService } from '../../services/service.service.js'
+import { create, detail, update, deleteService } from '../../services/service.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -34,6 +34,19 @@ export const updateAct = async (req, res) => {
     catch (error) {
         res.status(500).json({
             msg: "Lỗi cập nhật dịch vụ"
+        })
+    }
+}
+
+
+export const deleteAct = async (req, res) => {
+    try {
+        const msg = await deleteService(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xóa dịch vụ"
         })
     }
 }

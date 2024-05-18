@@ -1,10 +1,11 @@
 import {
     createService,
-    detailService,
+    detailServiceID,
+    detailServiceUUID,
     updateService,
-    deleteServiceByUUID,
-    getAllServiceByProviderID
+    deleteServiceByUUID
 } from '../repositories/service.repo.js'
+
 
 export const create = async (req) => {
     const newService = {
@@ -30,7 +31,16 @@ export const create = async (req) => {
 
 
 export const detail = async (data) => {
-    const service = await detailService(data.uuid)
+
+    let service = null
+
+    if (data.id) {
+        service = await detailServiceID(data.id)
+    }
+    else {
+        service = await detailServiceUUID(data.uuid)
+    }
+
     if (service) {
         const answer = {
             status: 200,
@@ -43,7 +53,7 @@ export const detail = async (data) => {
     }
     else {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Không tồn tại dịch vụ",
             }
@@ -51,7 +61,6 @@ export const detail = async (data) => {
         return answer
     }
 }
-
 
 export const update = async (req) => {
     const service = {
@@ -80,7 +89,7 @@ export const deleteService = async (req) => {
     const serviceUUID = req.params.uuid
     const providerId = req.user.id
 
-    const service = await detailService(serviceUUID)
+    const service = await detailServiceUUID(serviceUUID)
 
     if (service.provider_id != providerId) {
         const answer = {
