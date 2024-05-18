@@ -59,7 +59,11 @@ export const getAllServiceByProviderID = async (id) => {
 
 
 export const getAllService = async (id) => {
+
+    const whereClause = id != 0 ? { category_id: id } : {}
+
     const service = await Service.findAll({
+        where: whereClause,
         attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: Category,

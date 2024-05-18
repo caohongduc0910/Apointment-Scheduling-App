@@ -1,4 +1,5 @@
 import Category from '../models/mysql/categories.js'
+import Service from '../models/mysql/services.js'
 
 export const createCategory = async (category) => {
     await Category.create(category)
@@ -10,7 +11,12 @@ export const detailCategory = async (id) => {
         where: {
             id: id
         },
-        attributes: { exclude: ['admin_id'] }
+        attributes: { exclude: ['admin_id'] },
+        include: {
+            model: Service,
+            as: 'service',
+            attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        }
     })
     return category
 }
@@ -39,6 +45,15 @@ export const deleteCategory = async (id) => {
 export const getListCategory = async () => {
     const category = await Category.findAll({
         attributes: { exclude: ['admin_id'] }
+    })
+    return category
+}
+
+export const getCategoryByUUID = async (uuid) => {
+    const category = await Category.findOne({
+        where: {
+            uuid: uuid
+        },
     })
     return category
 }

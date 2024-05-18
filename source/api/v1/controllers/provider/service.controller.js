@@ -73,7 +73,7 @@ export const myServiceAct = async (req, res) => {
 
 export const listServiceAct = async (req, res) => {
     try {
-        const msg = await listService(req.user)
+        const msg = await listService(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {

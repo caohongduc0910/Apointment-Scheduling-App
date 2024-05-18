@@ -7,6 +7,8 @@ import {
     getAllService
 } from '../repositories/service.repo.js'
 
+import { getCategoryByUUID } from '../repositories/category.repo.js'
+
 export const create = async (req) => {
     const newService = {
         name: req.body.name,
@@ -130,8 +132,19 @@ export const myService = async (data) => {
 }
 
 
-export const listService = async () => {
-    const arr = await getAllService()
+export const listService = async (req) => {
+
+    let arr = []
+    if (req.query.uuid) {
+        const category = await getCategoryByUUID(req.query.uuid)
+        const id = category.id
+        console.log("ID: ", id)
+        arr = await getAllService(id)
+    }
+    else {
+        arr = await getAllService(0)
+    }
+
     if (arr.length > 0) {
         const answer = {
             status: 200,
