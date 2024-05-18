@@ -14,6 +14,16 @@ export const detailCategory = async (id) => {
     return category
 }
 
+export const detailCategoryUUID = async (uuid) => {
+    const category = await Category.findOne({
+        where: {
+            uuid: uuid
+        },
+        attributes: { exclude: ['admin_id'] }
+    })
+    return category
+}
+
 
 export const updateCategory = async (id, name) => {
     await Category.update({
@@ -33,3 +43,4 @@ export const deleteCategory = async (id) => {
         }
     })
 }
+
