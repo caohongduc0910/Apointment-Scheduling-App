@@ -60,3 +60,29 @@ export const detailAppointmentID = async (id) => {
 
     return appointment
 }
+
+
+export const updateAppointmentClient = async (uuid, name, note, time, method) => {
+    await Appointment.update({
+        name: name,
+        note: note,
+        time: time,
+        method: method
+    }, {
+        where: {
+            uuid: uuid
+        },
+    })
+}
+
+
+export const updateAppointmentProvider = async (uuid, status, url) => {
+    await Appointment.update({
+        status_id: status,
+        url: url
+    }, {
+        where: {
+            uuid: uuid
+        },
+    })
+}

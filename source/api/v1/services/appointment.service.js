@@ -1,5 +1,5 @@
 import {
-    createAppointment, detailAppointmentID, detailAppointmentUUID, updateAppointment
+    createAppointment, detailAppointmentID, detailAppointmentUUID, updateAppointmentClient, updateAppointmentProvider
 } from "../repositories/appointment.repo.js"
 
 import {
@@ -68,26 +68,43 @@ export const detail = async (data) => {
 }
 
 
-export const update = async (req) => {
+export const updateClient = async (req) => {
 
-    const newAppointment = {
-        name: req.body.name,
-        note: req.body.note,
-        time: req.body.time,
-        status_id: 3,
-        service_id: service.id,
-        method: req.body.method,
-        client_id: req.user.id,
-        provider_id: service.provider_id
-    }
+    const name = req.body.name 
+    const note = req.body.note 
+    const time = req.body.time 
+    const method = req.body.method
 
-    await createAppointment(newAppointment)
+    await updateAppointmentClient(req.params.uuid, name, note, time, method)
 
     const answer = {
         status: 200,
         info: {
             msg: "Cập nhật lịch thành công",
-            appoitment: createAppointment
+        }
+    }
+    return answer
+}
+
+
+export const updateProvider = async (req) => {
+
+    const status = 4
+    let url = null
+    const appointment = await detailAppointmentUUID(req.params.uuid)
+
+    const method = appointment.method
+
+    if(method) {
+        url = req.body.url 
+    }
+
+    await updateAppointmentProvider(req.params.uuid, status, url)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Cập nhật lịch thành công",
         }
     }
     return answer

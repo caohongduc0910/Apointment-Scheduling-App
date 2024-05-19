@@ -1,4 +1,4 @@
-import { detail, update } from '../../services/appointment.service.js'
+import { detail, updateProvider } from '../../services/appointment.service.js'
 
 export const detailAct = async (req, res) => {
     try {
@@ -15,7 +15,7 @@ export const detailAct = async (req, res) => {
 
 export const updateAct = async (req, res) => {
     try {
-        const msg = await update(req)
+        const msg = await updateProvider(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
