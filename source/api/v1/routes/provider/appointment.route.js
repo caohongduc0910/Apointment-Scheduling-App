@@ -1,11 +1,9 @@
 import express from 'express'
 const router = express.Router()
 
-import { createAct, detailAct, updateAct } from '../../controllers/client/appointment.controller.js'
+import { detailAct, updateAct } from '../../controllers/provider/appointment.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
-
-router.post('/create/:uuid', authToken, createAct)
 
 router.get('/detail/:uuid', authToken, detailAct)
 

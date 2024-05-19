@@ -4,6 +4,7 @@ const router = express.Router()
 import authRouter from './auth.route.js'
 import accountRouter from './account.route.js'
 import serviceRouter from './service.route.js'
+import appointmentRouter from './appointment.route.js'
 import {prefixProvider} from '../../../../config/prefix.js'
 
 const v1 = `/api/v1/${prefixProvider}`
@@ -13,5 +14,7 @@ router.use(v1 + "/auth", authRouter)
 router.use(v1 + "/account", accountRouter)
 
 router.use(v1 + "/service", serviceRouter)
+
+router.use(v1 + "/appointment", appointmentRouter)
 
 export default router
