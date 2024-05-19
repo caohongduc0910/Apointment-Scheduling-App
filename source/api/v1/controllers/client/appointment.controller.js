@@ -1,4 +1,4 @@
-import { create, detail, updateClient } from '../../services/appointment.service.js'
+import { create, detail, updateClient, deleteApp } from '../../services/appointment.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -37,3 +37,15 @@ export const updateAct = async (req, res) => {
         })
     }
 }
+
+export const deleteAct = async (req, res) => {
+    try {
+        const msg = await deleteApp(req.params.uuid)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xóa cuộc hẹn",
+        })
+    }
+} 

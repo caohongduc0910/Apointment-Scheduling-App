@@ -1,5 +1,10 @@
 import {
-    createAppointment, detailAppointmentID, detailAppointmentUUID, updateAppointmentClient, updateAppointmentProvider
+    createAppointment, 
+    detailAppointmentID, 
+    detailAppointmentUUID, 
+    updateAppointmentClient, 
+    updateAppointmentProvider,
+    deleteAppointment
 } from "../repositories/appointment.repo.js"
 
 import {
@@ -105,6 +110,20 @@ export const updateProvider = async (req) => {
         status: 200,
         info: {
             msg: "Cập nhật lịch thành công",
+        }
+    }
+    return answer
+}
+
+
+export const deleteApp = async (uuid) => {
+
+    await deleteAppointment(uuid)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa lịch hẹn thành công",
         }
     }
     return answer
