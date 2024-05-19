@@ -11,7 +11,7 @@ export const detailServiceUUID = async (uuid) => {
         where: {
             uuid: uuid
         },
-        attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: Category,
             as: 'category',
