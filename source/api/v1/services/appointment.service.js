@@ -1,5 +1,5 @@
 import {
-    createAppointment, detailAppointmentID, detailAppointmentUUID, updateAppointment
+    createAppointment, detailAppointmentID, detailAppointmentUUID
 } from "../repositories/appointment.repo.js"
 
 import {
@@ -65,30 +65,4 @@ export const detail = async (data) => {
         }
         return answer
     }
-}
-
-
-export const update = async (req) => {
-
-    const newAppointment = {
-        name: req.body.name,
-        note: req.body.note,
-        time: req.body.time,
-        status_id: 3,
-        service_id: service.id,
-        method: req.body.method,
-        client_id: req.user.id,
-        provider_id: service.provider_id
-    }
-
-    await createAppointment(newAppointment)
-
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Cập nhật lịch thành công",
-            appoitment: createAppointment
-        }
-    }
-    return answer
 }
