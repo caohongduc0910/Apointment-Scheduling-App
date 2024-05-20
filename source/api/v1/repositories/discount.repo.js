@@ -43,3 +43,12 @@ export const updateDiscount = async (discount, uuid) => {
         }
     })
 }
+
+
+export const deleteDiscountByUUID = async (uuid) => {
+    await Discount.destroy({
+        where: {
+            uuid: uuid,
+        }
+    })
+}

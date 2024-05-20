@@ -1,5 +1,5 @@
 import {
-    createDiscount, detailDiscountID, detailDiscountUUID, updateDiscount
+    createDiscount, detailDiscountID, detailDiscountUUID, updateDiscount, deleteDiscountByUUID
 } from "../repositories/discount.repo.js"
 
 export const create = async (req) => {
@@ -73,6 +73,34 @@ export const update = async (req) => {
         info: {
             msg: "Cập nhật mã giảm giá thành công",
             discount: discount
+        }
+    }
+    return answer
+}
+
+
+export const deleteDiscount = async (req) => {
+    const discountUUID = req.params.uuid
+    const providerId = req.user.id
+
+    const discount = await detailDiscountUUID(discountUUID)
+
+    if (discount.provider_id != providerId) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không có quyền xóa dịch vụ này",
+            }
+        }
+        return answer
+    }
+
+    await deleteDiscountByUUID(discountUUID)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa dịch vụ thành công",
         }
     }
     return answer
