@@ -35,3 +35,11 @@ export const detailDiscountUUID  = async (uuid) => {
     })
     return discount
 }
+
+export const updateDiscount = async (discount, uuid) => {
+    await Discount.update(discount, {
+        where: {
+            uuid: uuid
+        }
+    })
+}

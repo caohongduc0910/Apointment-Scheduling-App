@@ -1,5 +1,5 @@
 import {
-    createDiscount, detailDiscountID, detailDiscountUUID
+    createDiscount, detailDiscountID, detailDiscountUUID, updateDiscount
 } from "../repositories/discount.repo.js"
 
 export const create = async (req) => {
@@ -57,3 +57,23 @@ export const detail = async (data) => {
     }
 }
 
+
+export const update = async (req) => {
+    const discount = {
+        type: req.body.type,
+        value: req.body.value,
+        expiry: req.body.expiry,
+        code: req.body.code
+    }
+
+    await updateDiscount(discount, req.params.uuid)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Cập nhật mã giảm giá thành công",
+            discount: discount
+        }
+    }
+    return answer
+}
