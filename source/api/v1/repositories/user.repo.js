@@ -37,6 +37,16 @@ export const getUserDetailById = async (id) => {
 }
 
 
+export const getUserByUUID = async (uuid) => {
+    const user = await User.findOne({
+        where: {
+            uuid: uuid,
+        },
+    })
+    return user
+}
+
+
 export const getAllUserByRole = async (role) => {
     const users = await User.findAll({
         where: {

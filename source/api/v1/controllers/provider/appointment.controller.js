@@ -1,4 +1,4 @@
-import { detail, updateProvider } from '../../services/appointment.service.js'
+import { detail, updateProvider, getAllByProviderID } from '../../services/appointment.service.js'
 
 export const detailAct = async (req, res) => {
     try {
@@ -24,3 +24,17 @@ export const updateAct = async (req, res) => {
         })
     }
 }
+
+
+export const getAllAct = async (req, res) => {
+    try {
+        const msg = await getAllByProviderID(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: "Lỗi xem danh sách cuộc hẹn",
+        })
+    }
+} 

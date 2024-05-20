@@ -95,3 +95,98 @@ export const deleteAppointment = async (uuid) => {
         },
     })
 }
+
+
+export const getAllAppointmentByClientID = async (clientID, serviceID) => {
+
+    const whereClause = serviceID ? {
+        client_id: clientID,
+        service_id: serviceID
+    } : {
+        client_id: clientID,
+    }
+
+    const arr = await Appointment.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: Status,
+                as: 'status',
+                attributes: ['status_name']
+            }, {
+                model: Service,
+                as: 'service',
+                attributes: ['name']
+            },
+            {
+                model: User,
+                as: 'provider',
+                attributes: ['fullname']
+            }
+        ]
+    })
+    return arr
+}
+
+
+export const getAllAppointmentByProviderID = async (providerID, serviceID) => {
+
+    const whereClause = serviceID ? {
+        provider_id: providerID,
+        service_id: serviceID
+    } : {
+        provider_id: providerID,
+    }
+
+    const arr = await Appointment.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: Status,
+                as: 'status',
+                attributes: ['status_name']
+            }, {
+                model: Service,
+                as: 'service',
+                attributes: ['name']
+            },
+            {
+                model: User,
+                as: 'provider',
+                attributes: ['fullname']
+            }
+        ]
+    })
+    return arr
+}
+
+
+export const getAllAppointment = async (serviceID, clientID, providerID) => {
+
+    const whereClause = {
+        ...(serviceID && { service_id: serviceID }),
+        ...(providerID && { provider_id: providerID }),
+        ...(clientID && { client_id: clientID })
+    }
+
+    const arr = await Appointment.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: Status,
+                as: 'status',
+                attributes: ['status_name']
+            }, {
+                model: Service,
+                as: 'service',
+                attributes: ['name']
+            },
+            {
+                model: User,
+                as: 'provider',
+                attributes: ['fullname']
+            }
+        ]
+    })
+    return arr
+}
