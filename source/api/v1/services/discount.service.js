@@ -1,5 +1,5 @@
 import { 
-    createDiscount, detailDiscount
+    createDiscount
 } from "../repositories/discount.repo.js"
 
 export const create = async (req) => {
@@ -23,19 +23,3 @@ export const create = async (req) => {
     }
     return answer
 }
-
-
-export const detail = async (req) => {
-
-    const discount = await detailDiscount(req.params.uuid)
-
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Lấy mã giảm giá thành công",
-            discount: discount
-        }
-    }
-    return answer
-}
-
