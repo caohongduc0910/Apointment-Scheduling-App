@@ -1,6 +1,9 @@
 import {
-    createDiscount, detailDiscountID, detailDiscountUUID, updateDiscount, deleteDiscountByUUID
+    createDiscount, detailDiscountID, detailDiscountUUID, updateDiscount, deleteDiscountByUUID,
+    getAllDiscountByProviderID, getAllDiscount
 } from "../repositories/discount.repo.js"
+
+import { getUserByUUID } from "../repositories/user.repo.js"
 
 export const create = async (req) => {
 
@@ -104,4 +107,67 @@ export const deleteDiscount = async (req) => {
         }
     }
     return answer
+}
+
+
+export const myDiscount = async (req) => {
+
+    const arr = await getAllDiscountByProviderID(req.user.id)
+
+    if (arr.length > 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy danh sách mã giảm giá thành công",
+                discount: arr
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Danh sách mã giảm giá trống",
+            }
+        }
+        return answer
+    }
+}
+
+
+export const listDiscount = async (req) => {
+    let arr = []
+
+    if (req.query.provider_uuid) {
+        const provider = await getUserByUUID(req.query.provider_uuid)
+        console.log(provider)
+        arr = await getAllDiscountByProviderID(provider.id)
+    }
+    else if (req.query.provider_id) {
+        arr = await getAllDiscountByProviderID(req.query.provider_id)
+    }
+    else {
+        arr = await getAllDiscount()
+    }
+
+    if (arr.length > 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy danh sách mã giảm giá thành công",
+                discount: arr
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Danh sách mã giảm giá trống",
+            }
+        }
+        return answer
+    }
 }

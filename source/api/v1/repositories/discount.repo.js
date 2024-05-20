@@ -36,6 +36,36 @@ export const detailDiscountUUID  = async (uuid) => {
     return discount
 }
 
+
+export const getAllDiscountByProviderID = async (id) => {
+    const discount = await Discount.findAll({
+        where: {
+            provider_id: id
+        },
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: User,
+            as: 'provider',
+            attributes: ['fullname'],
+        }
+    })
+    return discount
+}
+
+
+export const getAllDiscount = async (id) => {
+    const discount = await Discount.findAll({
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: User,
+            as: 'provider',
+            attributes: ['fullname'],
+        }
+    })
+    return discount
+}
+
+
 export const updateDiscount = async (discount, uuid) => {
     await Discount.update(discount, {
         where: {
