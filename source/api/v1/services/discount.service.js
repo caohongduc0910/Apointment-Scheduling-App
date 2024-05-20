@@ -1,5 +1,5 @@
-import { 
-    createDiscount, detailDiscount
+import {
+    createDiscount, detailDiscountID, detailDiscountUUID
 } from "../repositories/discount.repo.js"
 
 export const create = async (req) => {
@@ -25,17 +25,35 @@ export const create = async (req) => {
 }
 
 
-export const detail = async (req) => {
+export const detail = async (data) => {
 
-    const discount = await detailDiscount(req.params.uuid)
+    let discount = null
 
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Lấy mã giảm giá thành công",
-            discount: discount
-        }
+    if (data.id) {
+        discount = await detailDiscountID(data.id)
     }
-    return answer
+    else {
+        discount = await detailDiscountUUID(data.uuid)
+    }
+
+    if (discount) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết mã giảm giá thành công",
+                discount: discount
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không tồn tại mã giảm giá",
+            }
+        }
+        return answer
+    }
 }
 

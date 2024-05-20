@@ -5,8 +5,23 @@ export const createDiscount = async (discount) => {
     await Discount.create(discount)
 }
 
+export const detailDiscountID  = async (id) => {
+    const discount = await Discount.findOne({
+        where: {
+            id: id
+        },
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: User,
+            as: 'provider',
+            attributes: ['fullname'],
+        }
+    })
+    return discount
+}
 
-export const detailDiscount = async (uuid) => {
+
+export const detailDiscountUUID  = async (uuid) => {
     const discount = await Discount.findOne({
         where: {
             uuid: uuid
