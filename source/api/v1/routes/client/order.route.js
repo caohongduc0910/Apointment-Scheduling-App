@@ -1,14 +1,16 @@
-// import express from 'express'
-// const router = express.Router()
+import express from 'express'
+const router = express.Router()
 
-// import { 
-//     detailAct
-// } from '../../controllers/client/discount.controller.js'
+import { 
+    createAct, checkoutAct
+} from '../../controllers/client/order.controller.js'
 
-// import authToken from '../../middlewares/auth.middleware.js'
+import authToken from '../../middlewares/auth.middleware.js'
 
-// router.post('/create/:uuid', authToken, detailAct)
+router.post('/create/:uuid', authToken, createAct)
 
-// export default router
+router.post('/checkout/:uuid', authToken, checkoutAct)
+
+export default router
 
 

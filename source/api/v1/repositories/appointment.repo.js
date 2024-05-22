@@ -88,6 +88,17 @@ export const updateAppointmentProvider = async (uuid, status, url) => {
 }
 
 
+export const updateAppointmentStatus = async (uuid, status) => {
+    await Appointment.update({
+        status_id: status
+    }, {
+        where: {
+            uuid: uuid
+        },
+    })
+}
+
+
 export const deleteAppointment = async (uuid) => {
     await Appointment.destroy({
         where: {

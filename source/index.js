@@ -9,7 +9,11 @@ const port = process.env.PORT || 3000
 import cors from 'cors'
 app.use(cors())
 
-//Body-parser
+import { 
+  handleWebhookAct
+} from './api/v1/controllers/client/order.controller.js'
+app.post('/webhook', express.raw({ type: 'application/json' }), handleWebhookAct)
+
 import bodyParser from 'body-parser'
 //parse application/jsonnpm i 
 app.use(bodyParser.json())
@@ -35,7 +39,6 @@ import routeAdminV1 from './api/v1/routes/admin/index.route.js'
 app.use(routeClientV1)
 app.use(routeProviderV1)
 app.use(routeAdminV1)
-
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

@@ -25,7 +25,7 @@ export const create = async (req) => {
         name: req.body.name,
         note: req.body.note,
         time: req.body.time,
-        status_id: 3,
+        status_id: 1,
         service_id: service.id,
         method: req.body.method,
         client_id: req.user.id,
