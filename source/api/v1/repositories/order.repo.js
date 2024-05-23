@@ -71,3 +71,12 @@ export const detailOrderID = async (uuid) => {
     })
     return order
 }
+
+
+export const updateOrder = async (uuid, data) => {
+    await Order.update(data, {
+        where: {
+            uuid: uuid
+        }
+    })
+}

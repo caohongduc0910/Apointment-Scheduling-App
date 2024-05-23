@@ -1,4 +1,4 @@
-import { create, checkout, handleWebhook, detail } from '../../services/order.service.js'
+import { create, checkout, handleWebhook, detail, update } from '../../services/order.service.js'
 
 
 export const createAct = async (req, res) => {
@@ -52,6 +52,20 @@ export const detailAct = async (req, res) => {
         console.log(error)
         res.status(500).json({
             msg: "Lỗi xem chi tiết đơn hàng"
+        })
+    }
+}
+
+
+export const updateAct = async (req, res) => {
+    try {
+        const msg = await update(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: "Lỗi cập nhật đơn hàng"
         })
     }
 }
