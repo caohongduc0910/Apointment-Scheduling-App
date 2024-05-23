@@ -87,13 +87,13 @@ export const create = async (req) => {
 export const checkout = async (req) => {
 
     const order = await detailOrderUUID(req.params.uuid)
-    //nếu có mã giảm giá thì tính lại tiền hàng
+
     if (order.discount) {
         if (order.discount.type == 0) {
             order.appointment.service.price -= order.discount.value
         }
         else {
-            order.appointment.service.price *= order.discount.value / 100
+            order.appointment.service.price -= order.appointment.service.price * order.discount.value / 100
         }
     }
 
@@ -154,7 +154,7 @@ export const handleWebhook = async (req) => {
             process.env.WEBHOOK_SC
         );
     } catch (err) {
-        console.log(`⚠️ Xác thực chữ ki thất bại`, err.message);
+        console.log(`⚠️ Xác thực chữ kí thất bại`, err.message);
         const answer = {
             status: 400,
             info: {
