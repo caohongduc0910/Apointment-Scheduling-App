@@ -141,7 +141,6 @@ export const listDiscount = async (req) => {
 
     if (req.query.provider_uuid) {
         const provider = await getUserByUUID(req.query.provider_uuid)
-        console.log(provider)
         arr = await getAllDiscountByProviderID(provider.id)
     }
     else if (req.query.provider_id) {

@@ -6,6 +6,8 @@ import {
     detailAppointmentUUID, updateAppointmentStatus
 } from "../repositories/appointment.repo.js"
 
+import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
+
 import Stripe from 'stripe';
 const stripe = new Stripe(`${process.env.STRIPE_SK}`);
 
@@ -14,13 +16,60 @@ export const create = async (req) => {
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
 
-    const newOrder = {
-        amount: req.body.amount,
-        client_id: req.user.id,
-        appointment_id: appointment.id,
-        discount_id: req.body.discount_id,
-        payment_method_id: req.body.payment_method_id
+    if(!appointment) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Cuộc hẹn không tồn tại",
+            }
+        }
+        return answer
     }
+    // nếu cuộc hẹn đã được thanh toán
+    if(appointment.status_id >= 2) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không hợp lệ",
+            }
+        }
+        return answer
+    }
+
+    let discount = null
+    let newOrder = null
+    // nếu người dùng nhập code giảm giá
+    if (req.body.discount_code) {
+        discount = await getDiscountByCode(req.body.discount_code)
+        
+        if (discount == null ||discount.provider_id != appointment.provider_id) {
+            const answer = {
+                status: 400,
+                info: {
+                    msg: "Mã giảm giá không đúng",
+                }
+            }
+            return answer
+        }
+        newOrder = {
+            amount: req.body.amount,
+            client_id: req.user.id,
+            appointment_id: appointment.id,
+            discount_id: discount.id,
+            payment_method_id: req.body.payment_method_id
+        }
+    }
+    //nếu người dùng chọn mã giảm giá hoặc không chọn gì
+    else {
+        newOrder = {
+            amount: req.body.amount,
+            client_id: req.user.id,
+            appointment_id: appointment.id,
+            discount_id: req.body.discount_id || 0,
+            payment_method_id: req.body.payment_method_id
+        }
+    }
+
 
     await createOrder(newOrder)
 
@@ -38,6 +87,15 @@ export const create = async (req) => {
 export const checkout = async (req) => {
 
     const order = await detailOrderUUID(req.params.uuid)
+    //nếu có mã giảm giá thì tính lại tiền hàng
+    if (order.discount) {
+        if (order.discount.type == 0) {
+            order.appointment.service.price -= order.discount.value
+        }
+        else {
+            order.appointment.service.price *= order.discount.value / 100
+        }
+    }
 
     try {
         const session = await stripe.checkout.sessions.create({
@@ -58,7 +116,8 @@ export const checkout = async (req) => {
             success_url: `http://localhost:3000/success.html`,
             cancel_url: `http://localhost:3000/cancel.html`,
             metadata: {
-                orderUUID: order.appointment.uuid
+                appointmentUUID: order.appointment.uuid,
+                discountUUID: order.discount.uuid
             }
         })
 
@@ -109,7 +168,8 @@ export const handleWebhook = async (req) => {
     switch (event.type) {
         case 'checkout.session.completed':
             const sessionCompleted = event.data.object;
-            await updateAppointmentStatus(sessionCompleted.metadata.orderUUID, 2)
+            await updateAppointmentStatus(sessionCompleted.metadata.appointmentUUID, 2)
+            await deleteDiscountByUUID(sessionCompleted.metadata.discountUUID)
             console.log(`Checkout Session was completed!`)
             break
         case 'payment_intent.canceled':
