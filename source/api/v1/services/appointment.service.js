@@ -1,5 +1,6 @@
 import {
     createAppointment,
+    getAppointmentByClientIDandServiceID,
 } from "../repositories/appointment.repo.js"
 
 import {
@@ -16,6 +17,17 @@ export const create = async (req) => {
             status: 400,
             info: {
                 msg: "Không tồn tại dịch vụ, đặt lịch thất bại",
+            }
+        }
+        return answer
+    }
+
+    const appointment = await getAppointmentByClientIDandServiceID(req.user.id, service.id)
+    if(appointment && appointment.status_id == 1) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đã có hẹn với dịch vụ, vui lòng thanh toán trước khi đặt hẹn mới",
             }
         }
         return answer
