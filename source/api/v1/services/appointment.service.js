@@ -49,7 +49,7 @@ export const create = async (req) => {
     const answer = {
         status: 200,
         info: {
-            msg: "Đặt lịch thành công, chờ xác nhận từ người bán",
+            msg: "Đặt lịch thành công, vui lòng thanh toán",
             appoitment: createAppointment
         }
     }
