@@ -80,3 +80,14 @@ export const updateOrder = async (uuid, data) => {
         }
     })
 }
+
+
+export const deleteOrderByUUID = async (uuid) => {
+    await Order.destroy({
+        where: {
+            uuid: uuid
+        }
+    })
+}
+
+

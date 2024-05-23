@@ -1,9 +1,9 @@
 import {
-    createOrder, detailOrderUUID, detailOrderID, updateOrder
+    createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID
 } from "../repositories/order.repo.js"
 
 import {
-    detailAppointmentUUID, detailAppointmentID,  updateAppointmentStatus
+    detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus
 } from "../repositories/appointment.repo.js"
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
@@ -17,7 +17,7 @@ export const create = async (req) => {
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
 
-    if(!appointment) {
+    if (!appointment) {
         const answer = {
             status: 400,
             info: {
@@ -27,7 +27,7 @@ export const create = async (req) => {
         return answer
     }
     // nếu cuộc hẹn đã được thanh toán
-    if(appointment.status_id >= 2) {
+    if (appointment.status_id >= 2) {
         const answer = {
             status: 400,
             info: {
@@ -42,8 +42,8 @@ export const create = async (req) => {
     // nếu người dùng nhập code giảm giá
     if (req.body.discount_code) {
         discount = await getDiscountByCode(req.body.discount_code)
-        
-        if (discount == null ||discount.provider_id != appointment.provider_id) {
+
+        if (discount == null || discount.provider_id != appointment.provider_id) {
             const answer = {
                 status: 400,
                 info: {
@@ -90,7 +90,7 @@ export const checkout = async (req) => {
     const order = await detailOrderUUID(req.params.uuid)
     const appointment = await detailAppointmentID(order.appointment_id)
 
-    if(!appointment) {
+    if (!appointment) {
         const answer = {
             status: 400,
             info: {
@@ -100,7 +100,7 @@ export const checkout = async (req) => {
         return answer
     }
     // nếu cuộc hẹn đã được thanh toán
-    if(appointment.status_id >= 2) {
+    if (appointment.status_id >= 2) {
         const answer = {
             status: 400,
             info: {
@@ -257,9 +257,20 @@ export const update = async (req) => {
 
     const uuid = req.params.uuid
     const existOrder = await detailOrderUUID(req.params.uuid)
+
+    if (!existOrder) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không tồn tại",
+            }
+        }
+        return answer
+    }
+
     const appointment = await detailAppointmentID(existOrder.appointment_id)
 
-    if(!appointment) {
+    if (!appointment) {
         const answer = {
             status: 400,
             info: {
@@ -269,7 +280,7 @@ export const update = async (req) => {
         return answer
     }
     // nếu cuộc hẹn đã được thanh toán
-    if(appointment.status_id >= 2) {
+    if (appointment.status_id >= 2) {
         const answer = {
             status: 400,
             info: {
@@ -284,8 +295,8 @@ export const update = async (req) => {
     // nếu người dùng nhập code giảm giá
     if (req.body.discount_code) {
         discount = await getDiscountByCode(req.body.discount_code)
-        
-        if (discount == null ||discount.provider_id != appointment.provider_id) {
+
+        if (discount == null || discount.provider_id != appointment.provider_id) {
             const answer = {
                 status: 400,
                 info: {
@@ -317,6 +328,55 @@ export const update = async (req) => {
         info: {
             msg: "Cập nhật thành công, vui lòng thanh toán để hoàn tất dịch vụ",
             order: order
+        }
+    }
+    return answer
+}
+
+
+export const deleteOrder = async (req) => {
+
+    const uuid = req.params.uuid
+    const existOrder = await detailOrderUUID(req.params.uuid)
+
+    if (!existOrder) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không tồn tại",
+            }
+        }
+        return answer
+    }
+    
+    const appointment = await detailAppointmentID(existOrder.appointment_id)
+
+    if (!appointment) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Cuộc hẹn không tồn tại",
+            }
+        }
+        return answer
+    }
+    // nếu cuộc hẹn đã được thanh toán
+    if (appointment.status_id >= 2) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Cuộc hẹn đã được thanh toán, không thể xóa",
+            }
+        }
+        return answer
+    }
+
+    await deleteOrderByUUID(uuid)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa đơn hàng thành công",
         }
     }
     return answer
