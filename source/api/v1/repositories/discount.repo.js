@@ -1,11 +1,12 @@
 import Discount from '../models/mysql/discounts.js'
 import User from '../models/mysql/users.js'
+import { Op } from 'sequelize'
 
 export const createDiscount = async (discount) => {
     await Discount.create(discount)
 }
 
-export const detailDiscountID  = async (id) => {
+export const detailDiscountID = async (id) => {
     const discount = await Discount.findOne({
         where: {
             id: id
@@ -21,7 +22,7 @@ export const detailDiscountID  = async (id) => {
 }
 
 
-export const detailDiscountUUID  = async (uuid) => {
+export const detailDiscountUUID = async (uuid) => {
     const discount = await Discount.findOne({
         where: {
             uuid: uuid
@@ -40,9 +41,31 @@ export const detailDiscountUUID  = async (uuid) => {
 export const getAllDiscountByProviderID = async (id) => {
     const discount = await Discount.findAll({
         where: {
-            provider_id: id
+            provider_id: id,
+            expiry: {
+                [Op.gt]: new Date()
+            }
         },
         attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: User,
+            as: 'provider',
+            attributes: ['fullname'],
+        }
+    })
+    return discount
+}
+
+
+export const getDiscountByCode = async (code) => {
+    const discount = await Discount.findOne({
+        attributes: { exclude: ['uuid', 'created_at', 'updated_at', 'deleted_at'] },
+        where: {
+            code: code,
+            expiry: {
+                [Op.gt]: new Date()
+            }
+        },
         include: {
             model: User,
             as: 'provider',
@@ -56,6 +79,11 @@ export const getAllDiscountByProviderID = async (id) => {
 export const getAllDiscount = async (id) => {
     const discount = await Discount.findAll({
         attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        where: {
+            expiry: {
+                [Op.gt]: new Date()
+            }
+        },
         include: {
             model: User,
             as: 'provider',

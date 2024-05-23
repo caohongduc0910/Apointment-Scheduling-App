@@ -37,7 +37,7 @@ export const create = async (req) => {
     const answer = {
         status: 200,
         info: {
-            msg: "Đặt lịch thành công, chờ xác nhận từ người bán",
+            msg: "Đặt lịch thành công, vui lòng thanh toán",
             appoitment: createAppointment
         }
     }
@@ -99,7 +99,7 @@ export const updateClient = async (req) => {
 
 export const updateProvider = async (req) => {
 
-    const status = 4
+    const status = req.body.status
     let url = null
     const appointment = await detailAppointmentUUID(req.params.uuid)
 
