@@ -1,5 +1,5 @@
 import {
-    createOrder, detailOrderUUID
+    createOrder, detailOrderUUID, detailOrderID
 } from "../repositories/order.repo.js"
 
 import {
@@ -132,4 +132,37 @@ export const handleWebhook = async (req) => {
         }
     }
     return answer
+}
+
+
+export const detail = async (data) => {
+
+    let order = null
+
+    if (data.id) {
+        order = await detailOrderID(data.id)
+    }
+    else {
+        order = await detailOrderUUID(data.uuid)
+    }
+
+    if (order) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết đơn hàng thành công",
+                order: order
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không tồn tại đơn hàng",
+            }
+        }
+        return answer
+    }
 }
