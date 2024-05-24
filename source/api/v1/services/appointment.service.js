@@ -142,7 +142,6 @@ export const getAllByClientID = async (req) => {
 
     if (req.query.service_uuid) {
         const service = await detailServiceUUID(req.query.service_uuid)
-        console.log(service)
         serviceID = service.id
     }
 

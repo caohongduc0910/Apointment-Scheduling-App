@@ -1,12 +1,10 @@
-import {
-    createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID
-} from "../repositories/order.repo.js"
-
-import {
-    detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus
-} from "../repositories/appointment.repo.js"
-
+import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrderByClientID, 
+    getAllOrderByProviderID } from "../repositories/order.repo.js"
+import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus,getAllAppointment } 
+from "../repositories/appointment.repo.js"
+import { detailServiceUUID } from '../repositories/service.repo.js'
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
+import { getUserDetailById } from '../repositories/user.repo.js'
 
 import Stripe from 'stripe';
 const stripe = new Stripe(`${process.env.STRIPE_SK}`);
@@ -16,6 +14,7 @@ export const create = async (req) => {
 
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
+    const client = await getUserDetailById(req.user.id)
 
     if (!appointment) {
         const answer = {
@@ -26,6 +25,17 @@ export const create = async (req) => {
         }
         return answer
     }
+
+    if(appointment.client_id != client.id) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không phải cuộc hẹn của mình",
+            }
+        }
+        return answer
+    }
+
     // nếu cuộc hẹn đã được thanh toán
     if (appointment.status_id >= 2) {
         const answer = {
@@ -70,7 +80,6 @@ export const create = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-
 
     await createOrder(newOrder)
 
@@ -348,7 +357,7 @@ export const deleteOrder = async (req) => {
         }
         return answer
     }
-    
+
     const appointment = await detailAppointmentID(existOrder.appointment_id)
 
     if (!appointment) {
@@ -378,6 +387,97 @@ export const deleteOrder = async (req) => {
         info: {
             msg: "Xóa đơn hàng thành công",
         }
+    }
+    return answer
+}
+
+
+export const listOrderClient = async (req) => {
+    const userID = req.user.id
+    let serviceID = null
+    let arr = []
+    let appointments = []
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        serviceID = service.id
+    }
+
+    appointments = await getAllAppointment(serviceID, userID, null)
+
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đơn hàng trống",
+            }
+        }
+        return answer
+    }
+
+    for (const appointment of appointments) {
+        const orders = await getAllOrderByClientID(userID, appointment.id)
+        if(orders){
+            arr.push(orders)
+        }
+    }
+
+    const info = arr.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        orders: arr
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
+    }
+    return answer
+}
+
+
+export const listOrderProvider = async (req) => {
+    const userID = req.user.id
+    let serviceID = null
+    let arr = []
+    let appointments = []
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        serviceID = service.id
+    }
+
+    appointments = await getAllAppointment(serviceID, null, userID)
+
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đơn hàng trống",
+            }
+        }
+        return answer
+    }
+
+    for (const appointment of appointments) {
+        const orders = await getAllOrderByProviderID(userID, appointment.id)
+        if(orders){
+            arr.push(orders)
+        }
+    }
+
+
+    const info = arr.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        orders: arr
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
     }
     return answer
 }
