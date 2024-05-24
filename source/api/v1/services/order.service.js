@@ -1,10 +1,10 @@
-import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrderByClientID, 
-    getAllOrderByProviderID } from "../repositories/order.repo.js"
+import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder } 
+from "../repositories/order.repo.js"
 import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus,getAllAppointment } 
 from "../repositories/appointment.repo.js"
 import { detailServiceUUID } from '../repositories/service.repo.js'
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
-import { getUserDetailById } from '../repositories/user.repo.js'
+import { getUserByUUID, getUserDetailById } from '../repositories/user.repo.js'
 
 import Stripe from 'stripe';
 const stripe = new Stripe(`${process.env.STRIPE_SK}`);
@@ -97,6 +97,15 @@ export const create = async (req) => {
 export const checkout = async (req) => {
 
     const order = await detailOrderUUID(req.params.uuid)
+    if (!order) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không tồn tại",
+            }
+        }
+        return answer
+    }
     const appointment = await detailAppointmentID(order.appointment_id)
 
     if (!appointment) {
@@ -417,10 +426,67 @@ export const listOrderClient = async (req) => {
 
     for (const appointment of appointments) {
         const orders = await getAllOrderByClientID(userID, appointment.id)
-        if(orders){
-            arr.push(orders)
+        if(orders.length > 0){
+            arr = [...arr, ...orders]
         }
     }
+
+    const info = arr.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        orders: arr
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
+    }
+    return answer
+}
+
+
+export const listOrder = async (req) => {
+    let serviceID = null
+    let providerID = null
+    let clientID = null
+    let arr = []
+    let appointments = []
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        serviceID = service.id
+    }
+
+    if (req.query.client_uuid) {
+        const client = await getUserByUUID(req.query.client_uuid)
+        clientID = client.id
+    }
+
+    if (req.query.provider_id) {
+        const provider = await getUserByUUID(req.query.provider_id)
+        providerID = provider.id
+    }
+
+    appointments = await getAllAppointment(serviceID, clientID, providerID)
+
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đơn hàng trống",
+            }
+        }
+        return answer
+    }
+
+    for (const appointment of appointments) {
+        const orders = await getAllOrder(appointment.id)
+        if(orders.length > 0){
+            arr = [...arr, ...orders]
+        }
+    }
+
 
     const info = arr.length > 0 ? {
         msg: "Lấy danh sách đơn hàng thành công",
@@ -461,9 +527,9 @@ export const listOrderProvider = async (req) => {
     }
 
     for (const appointment of appointments) {
-        const orders = await getAllOrderByProviderID(userID, appointment.id)
-        if(orders){
-            arr.push(orders)
+        const orders = await getAllOrder(appointment.id)
+        if(orders.length > 0){
+            arr = [...arr, ...orders]
         }
     }
 

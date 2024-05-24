@@ -20,5 +20,3 @@ router.delete('/delete/:uuid', authToken, deleteAct)
 router.get('/all-order', authToken, listOrderAct)
 
 export default router
-
-
