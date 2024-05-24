@@ -42,3 +42,12 @@ export const detailFeedbackID = async (id) => {
 
     return feedback
 }
+
+
+export const updateFeedback = async (uuid, data) => {
+    await Feedback.update(data, {
+        where: {
+            uuid: uuid
+        }
+    })
+}

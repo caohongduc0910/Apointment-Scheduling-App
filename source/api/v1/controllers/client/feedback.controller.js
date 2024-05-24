@@ -1,4 +1,4 @@
-import { create, detail } from '../../services/feedback.service.js'
+import { create, detail, update } from '../../services/feedback.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -22,6 +22,20 @@ export const detailAct = async (req, res) => {
         console.log(error)
         res.status(500).json({
             msg: "Lỗi xem đánh giá"
+        })
+    }
+}
+
+
+export const updateAct = async (req, res) => {
+    try {
+        const msg = await update(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: "Lỗi cập nhật đánh giá"
         })
     }
 }
