@@ -7,7 +7,6 @@ import {
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-
 router.get('/detail/:id', authToken, detailAct)
 
 router.get('/all-order', authToken, listOrderAct)
