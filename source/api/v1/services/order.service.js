@@ -142,11 +142,11 @@ export const checkout = async (req) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card', 'alipay', "amazon_pay"],
+            payment_method_types: ['card'],
             mode: 'payment',
             line_items: [{
                 price_data: {
-                    currency: 'usd',
+                    currency: 'vnd',
                     product_data: {
                         name: order.appointment.service.name,
                         description: order.appointment.service.description,
