@@ -1,4 +1,4 @@
-import { create, detail, update } from '../../services/feedback.service.js'
+import { create, detail, update, deleteFeedback } from '../../services/feedback.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -36,6 +36,20 @@ export const updateAct = async (req, res) => {
         console.log(error)
         res.status(500).json({
             msg: "Lỗi cập nhật đánh giá"
+        })
+    }
+}
+
+
+export const deleteAct = async (req, res) => {
+    try {
+        const msg = await deleteFeedback(req.params)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: "Lỗi xóa đánh giá"
         })
     }
 }

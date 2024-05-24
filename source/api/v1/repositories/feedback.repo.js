@@ -51,3 +51,12 @@ export const updateFeedback = async (uuid, data) => {
         }
     })
 }
+
+
+export const deleteFeedbackByUUID = async (uuid) => {
+    await Feedback.destroy({
+        where: {
+            uuid: uuid
+        }
+    })
+}

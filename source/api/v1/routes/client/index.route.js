@@ -7,7 +7,7 @@ import serviceRouter from './service.route.js'
 import appointmentRouter from './appointment.route.js'
 import discountRouter from './discount.route.js'
 import orderRouter from './order.route.js'
-import feedbackRouter from './feeedback.route.js'
+import feedbackRouter from './feedback.route.js'
 
 const v1 = `/api/v1`
 

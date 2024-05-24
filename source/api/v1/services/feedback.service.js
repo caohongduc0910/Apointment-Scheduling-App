@@ -1,6 +1,6 @@
 import { detailAppointmentUUID } from "../repositories/appointment.repo.js"
 import {
-    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback
+    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback, deleteFeedbackByUUID
 } from "../repositories/feedback.repo.js"
 
 export const create = async (req) => {
@@ -119,6 +119,33 @@ export const update = async (req) => {
         info: {
             msg: "Sửa đánh giá thành công",
             feedback: feedback
+        }
+    }
+    return answer
+}
+
+
+export const deleteFeedback = async (data) => {
+
+    const uuid = data.uuid
+    const existFeedback = await detailFeedbackUUID(uuid)
+
+    if (!existFeedback) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Không tồn tại đánh giá",
+            }
+        }
+        return answer
+    }
+
+    await deleteFeedbackByUUID(uuid)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa đánh giá thành công",
         }
     }
     return answer
