@@ -69,3 +69,9 @@ export const deleteFeedbackByUUID = async (uuid) => {
         }
     })
 }
+
+
+export const getAllFeedback = async () => {
+    const feedback = await Feedback.findAll()
+    return feedback
+}

@@ -1,7 +1,11 @@
-import { detailAppointmentUUID } from "../repositories/appointment.repo.js"
+import { detailAppointmentUUID, getAllAppointment } from "../repositories/appointment.repo.js"
 import {
-    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback, deleteFeedbackByUUID, getFeedbackByAppointmentID,
+    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback,
+    deleteFeedbackByUUID, getFeedbackByAppointmentID, getAllFeedback
 } from "../repositories/feedback.repo.js"
+import { detailServiceUUID } from "../repositories/service.repo.js"
+import { getUserByUUID } from "../repositories/user.repo.js"
+
 
 export const create = async (req) => {
 
@@ -9,7 +13,7 @@ export const create = async (req) => {
     const appointment = await detailAppointmentUUID(uuid)
     const existFeedback = await getFeedbackByAppointmentID(appointment.id)
 
-    if(existFeedback) {
+    if (existFeedback) {
         const answer = {
             status: 400,
             info: {
@@ -29,7 +33,7 @@ export const create = async (req) => {
         return answer
     }
 
-    if (appointment.status_id !=4) {
+    if (appointment.status_id != 4) {
         const answer = {
             status: 400,
             info: {
@@ -39,7 +43,7 @@ export const create = async (req) => {
         return answer
     }
 
-    if(appointment.client_id != req.user.id) {
+    if (appointment.client_id != req.user.id) {
         const answer = {
             status: 400,
             info: {
@@ -171,3 +175,187 @@ export const deleteFeedback = async (data) => {
     }
     return answer
 }
+
+
+export const listFeedbackClient = async (req) => {
+    let appointments = []
+    let feedbacks = []
+    let serviceID = null
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        if (!service) {
+            const answer = {
+                status: 200,
+                info: {
+                    msg: "Không tồn tại dịch vụ",
+                }
+            }
+            return answer
+        }
+
+        serviceID = service.id
+    }
+
+    appointments = await getAllAppointment(serviceID, req.user.id, null)
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đánh giá trống",
+            }
+        }
+        return answer
+    }
+
+
+    for (const appointment of appointments) {
+        const feedback = await getFeedbackByAppointmentID(appointment.id)
+        if (feedback) {
+            feedbacks.push(feedback)
+        }
+    }
+
+    const info = feedbacks.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        feedbacks: feedbacks
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
+    }
+    return answer
+}
+
+
+export const listFeedbackProvider = async (req) => {
+    let appointments = []
+    let feedbacks = []
+    let serviceID = null
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        if (!service) {
+            const answer = {
+                status: 200,
+                info: {
+                    msg: "Không tồn tại dịch vụ",
+                }
+            }
+            return answer
+        }
+
+        serviceID = service.id
+    }
+
+    appointments = await getAllAppointment(serviceID, null, req.user.id)
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đánh giá trống",
+            }
+        }
+        return answer
+    }
+
+
+    for (const appointment of appointments) {
+        const feedback = await getFeedbackByAppointmentID(appointment.id)
+        if (feedback) {
+            feedbacks.push(feedback)
+        }
+    }
+
+    const info = feedbacks.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        feedbacks: feedbacks
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
+    }
+    return answer
+}
+
+
+export const listFeedbackAdmin = async (req) => {
+
+    if(!req.query.client_uuid && !req.query.service_uuid) {
+        const arr = getAllFeedback()
+    }
+
+    let appointments = []
+    let feedbacks = []
+    let serviceID = null
+    let clientID = null
+
+    if (req.query.service_uuid) {
+        const service = await detailServiceUUID(req.query.service_uuid)
+        if (!service) {
+            const answer = {
+                status: 200,
+                info: {
+                    msg: "Không tồn tại dịch vụ",
+                }
+            }
+            return answer
+        }
+
+        serviceID = service.id
+    }
+
+    if (req.query.client_uuid) {
+        const client = await getUserByUUID(req.query.client_uuid)
+        if (!client) {
+            const answer = {
+                status: 200,
+                info: {
+                    msg: "Không tồn tại người dùng",
+                }
+            }
+            return answer
+        }
+
+        clientID = client.id
+    }
+
+    appointments = await getAllAppointment(serviceID, clientID, null)
+    if (appointments.length < 1) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách đánh giá trống",
+            }
+        }
+        return answer
+    }
+
+
+    for (const appointment of appointments) {
+        const feedback = await getFeedbackByAppointmentID(appointment.id)
+        if (feedback) {
+            feedbacks.push(feedback)
+        }
+    }
+
+    const info = feedbacks.length > 0 ? {
+        msg: "Lấy danh sách đơn hàng thành công",
+        feedbacks: feedbacks
+    } : {
+        msg: "Danh sách đơn hàng trống",
+    }
+
+    const answer = {
+        status: 200,
+        info: info
+    }
+    return answer
+}
+
