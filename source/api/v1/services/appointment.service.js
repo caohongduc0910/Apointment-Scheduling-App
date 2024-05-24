@@ -21,9 +21,10 @@ export const create = async (req) => {
         }
         return answer
     }
+    
 
     const appointment = await getAppointmentByClientIDandServiceID(req.user.id, service.id)
-    if(appointment && appointment.status_id == 1) {
+    if(appointment && appointment.status_id == 1 && appointment.time == req.body.time) {
         const answer = {
             status: 400,
             info: {
