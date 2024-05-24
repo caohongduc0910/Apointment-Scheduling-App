@@ -87,6 +87,38 @@ export const create = async (req) => {
 export const checkout = async (req) => {
 
     const order = await detailOrderUUID(req.params.uuid)
+    if (!order) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không tồn tại",
+            }
+        }
+        return answer
+    }
+    const appointment = await detailAppointmentID(order.appointment_id)
+
+    if (!appointment) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Cuộc hẹn không tồn tại",
+            }
+        }
+        return answer
+    }
+    // nếu cuộc hẹn đã được thanh toán
+    if (appointment.status_id >= 2) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Cuộc hẹn đã được thanh toán, không thể thanh toán",
+            }
+        }
+        return answer
+    }
+
+    let discountUUID = null
 
     if (order.discount) {
         if (order.discount.type == 0) {
@@ -95,6 +127,7 @@ export const checkout = async (req) => {
         else {
             order.appointment.service.price -= order.appointment.service.price * order.discount.value / 100
         }
+        discountUUID = order.discount.uuid
     }
 
     try {
@@ -117,7 +150,7 @@ export const checkout = async (req) => {
             cancel_url: `http://localhost:3000/cancel.html`,
             metadata: {
                 appointmentUUID: order.appointment.uuid,
-                discountUUID: order.discount.uuid
+                discountUUID: discountUUID
             }
         })
 
