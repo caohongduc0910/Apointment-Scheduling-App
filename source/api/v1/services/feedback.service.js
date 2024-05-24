@@ -1,6 +1,6 @@
 import { detailAppointmentUUID } from "../repositories/appointment.repo.js"
 import {
-    createFeedback,
+    createFeedback, detailFeedbackID, detailFeedbackUUID
 } from "../repositories/feedback.repo.js"
 
 export const create = async (req) => {
@@ -56,4 +56,36 @@ export const create = async (req) => {
         }
     }
     return answer
+}
+
+
+export const detail = async (data) => {
+    let feedback = null
+
+    if (data.id) {
+        feedback = await detailFeedbackID(data.id)
+    }
+    else {
+        feedback = await detailFeedbackUUID(data.uuid)
+    }
+
+    if (feedback) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy chi tiết đánh giá thành công",
+                feedback: feedback
+            }
+        }
+        return answer
+    }
+    else {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không tồn tại đánh giá",
+            }
+        }
+        return answer
+    }
 }

@@ -8,6 +8,7 @@ import serviceRouter from './service.route.js'
 import appointmentRouter from './appointment.route.js'
 import discountRouter from './discount.route.js'
 import orderRouter from './order.route.js'
+import feedbackRouter from './feedback.route.js'
 
 import {prefixAdmin} from '../../../../config/prefix.js'
 
@@ -26,5 +27,7 @@ router.use(v1 + "/appointment", appointmentRouter)
 router.use(v1 + "/discount", discountRouter)
 
 router.use(v1 + "/order", orderRouter)
+
+router.use(v1 + "/feedback", feedbackRouter)
 
 export default router
