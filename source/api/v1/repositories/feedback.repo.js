@@ -5,6 +5,15 @@ export const createFeedback = async (feedback) => {
     await Feedback.create(feedback)
 }
 
+export const getFeedbackByAppointmentID = async (id) => {
+    const feedback = await Feedback.findOne({
+        where: {
+            appointment_id: id
+        },
+    })
+    return feedback
+}
+
 
 export const detailFeedbackUUID = async (uuid) => {
     const feedback = await Feedback.findOne({

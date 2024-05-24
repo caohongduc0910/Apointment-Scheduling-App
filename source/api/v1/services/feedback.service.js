@@ -1,16 +1,27 @@
 import { detailAppointmentUUID } from "../repositories/appointment.repo.js"
 import {
-    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback, deleteFeedbackByUUID
+    createFeedback, detailFeedbackID, detailFeedbackUUID, updateFeedback, deleteFeedbackByUUID, getFeedbackByAppointmentID,
 } from "../repositories/feedback.repo.js"
 
 export const create = async (req) => {
 
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
+    const existFeedback = await getFeedbackByAppointmentID(appointment.id)
+
+    if(existFeedback) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không thể đánh giá 2 lần trong 1 lượt hẹn",
+            }
+        }
+        return answer
+    }
 
     if (!appointment) {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Không tồn tại lịch hẹn",
             }
@@ -20,7 +31,7 @@ export const create = async (req) => {
 
     if (appointment.status_id !=4) {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Cuộc hẹn chưa hoàn tất, không thể đánh giá",
             }
@@ -28,9 +39,19 @@ export const create = async (req) => {
         return answer
     }
 
+    if(appointment.client_id != req.user.id) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Không thể đánh giá cuộc hẹn của người khác",
+            }
+        }
+        return answer
+    }
+
     if (!appointment.service) {
         const answer = {
-            status: 200,
+            status: 400,
             info: {
                 msg: "Không tồn tại dịch vụ",
             }
