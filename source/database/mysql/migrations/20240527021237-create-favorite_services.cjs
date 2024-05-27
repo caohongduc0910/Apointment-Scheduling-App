@@ -1,7 +1,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('favorite_appointments', {
+    await queryInterface.createTable('favorite_services', {
       id: {
         type: Sequelize.BIGINT,
         allowNull: false,
@@ -11,7 +11,7 @@ module.exports = {
       client_id: {
         type: Sequelize.BIGINT
       },
-      appointment_id: {
+      service_id: {
         type: Sequelize.BIGINT
       },
       created_at: {
@@ -25,6 +25,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('favorite_appointments');
+    await queryInterface.dropTable('favorite_services');
   }
 };

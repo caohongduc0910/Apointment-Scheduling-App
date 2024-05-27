@@ -1,16 +1,10 @@
 import { DataTypes, Model } from 'sequelize'
 import {sequelize} from '../../../../database/mysql/connection.js'
+
 class Service extends Model {
-  /**
-   * Helper method for defining associations.
-   * This method is not a part of Sequelize lifecycle.
-   * The `models/index` file will call this method automatically.
-   */
-  static associate(models) {
-    models
-      
-  }
+  static associate(models) {}
 }
+
 Service.init({
   id: {
     type: DataTypes.BIGINT,

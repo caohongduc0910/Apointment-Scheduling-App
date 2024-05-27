@@ -1,11 +1,8 @@
 import { DataTypes, Model } from 'sequelize'
 import {sequelize} from '../../../../database/mysql/connection.js'
 
-import User from './user.js'
-
 class Notification extends Model {
-  static associate(models) {
-  }
+  static associate(models) {}
 }
 
 Notification.init({

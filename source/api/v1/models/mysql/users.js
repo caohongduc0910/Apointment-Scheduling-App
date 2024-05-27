@@ -2,10 +2,7 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../../../../database/mysql/connection.js'
 
 class User extends Model {
-  static associate(models) {
-    User.belongsTo(models.Role)
-    User.hasOne(models.Token)
-  }
+  static associate(models) {}
 }
 
 User.init({

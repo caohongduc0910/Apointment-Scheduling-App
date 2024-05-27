@@ -1,10 +1,10 @@
 import { DataTypes, Model } from 'sequelize'
 import {sequelize} from '../../../../database/mysql/connection.js'
+
 class Token extends Model {
-  static associate(models) {
-    Token.belongsTo(models.User) 
-  }
+  static associate(models) {}
 }
+
 Token.init({
   id: {
     type: DataTypes.BIGINT,

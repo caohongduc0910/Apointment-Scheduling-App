@@ -1,10 +1,10 @@
 import { DataTypes, Model } from 'sequelize'
 import {sequelize} from '../../../../database/mysql/connection.js'
+
 class Role extends Model {
-  static associate(models) {
-      Role.hasMany(models.User)
-  }
+  static associate(models) {}
 }
+
 Role.init({
   id: {
     type: DataTypes.BIGINT,
