@@ -27,3 +27,21 @@ export const detailNotificationID = async (id) => {
     })
     return notification
 }
+
+
+export const deleteNotificationByID = async (id) => {
+    await Notification.destroy({
+        where: {
+            id: id
+        }
+    })
+}
+
+
+export const deleteNotificationByUUID = async (uuid) => {
+    await Notification.destroy({
+        where: {
+            uuid: uuid
+        }
+    })
+}

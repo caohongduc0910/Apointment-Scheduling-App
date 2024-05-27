@@ -1,5 +1,5 @@
 import {
-    detailNotificationID, detailNotificationUUID
+    detailNotificationID, detailNotificationUUID, deleteNotificationByID, deleteNotificationByUUID
 } from "../repositories/notification.repo.js"
 
 export const detail = async (data) => {
@@ -13,7 +13,7 @@ export const detail = async (data) => {
         notification = await detailNotificationUUID(data.uuid)
     }
 
-    if(notification.receiver_id != req.user.id) {
+    if (notification.receiver_id != req.user.id) {
         const answer = {
             status: 200,
             info: {
@@ -42,4 +42,24 @@ export const detail = async (data) => {
         }
         return answer
     }
+}
+
+
+
+export const deleteNotification = async (data) => {
+
+    if (data.id) {
+        deleteNotificationByID(data.id)
+    }
+    else {
+        deleteNotificationByUUID(data.uuid)
+    }
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa thông báo thành công",
+        }
+    }
+    return answer
 }
