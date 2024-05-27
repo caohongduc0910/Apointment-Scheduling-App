@@ -18,7 +18,6 @@ export const detailServiceUUID = async (uuid) => {
             attributes: ['category_name']
         }
     })
-    console.log(service)
     return service
 }
 
