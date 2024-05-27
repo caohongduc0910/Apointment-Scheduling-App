@@ -13,6 +13,16 @@ export const detail = async (data) => {
         notification = await detailNotificationUUID(data.uuid)
     }
 
+    if(notification.receiver_id != req.user.id) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Không có quyền đọc thông báo này",
+            }
+        }
+        return answer
+    }
+
     if (notification) {
         const answer = {
             status: 200,
