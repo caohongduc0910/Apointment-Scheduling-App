@@ -45,3 +45,11 @@ export const deleteNotificationByUUID = async (uuid) => {
         }
     })
 }
+
+
+export const getAllNotification = async (id) => {
+    const notifications = await Notification.findAll({
+        receiver_id: id
+    })
+    return notifications
+}

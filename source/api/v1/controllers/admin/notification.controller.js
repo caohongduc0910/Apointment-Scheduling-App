@@ -1,5 +1,5 @@
 import { 
-    detail, deleteNotification
+    detail, deleteNotification, getAll
 } from '../../services/notification.service.js'
 
 export const detailAct = async (req, res) => {
@@ -27,3 +27,15 @@ export const deleteAct = async (req, res) => {
     }
 }
 
+
+export const listNotificationAct = async (req, res) => {
+    try {
+        const msg = await getAll(req)
+        res.status(msg.status).json(msg.info)
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: "Lỗi xem danh sách thông báo",
+        })
+    }
+}

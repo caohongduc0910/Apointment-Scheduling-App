@@ -1,5 +1,5 @@
 import {
-    detailNotificationID, detailNotificationUUID, deleteNotificationByID, deleteNotificationByUUID
+    detailNotificationID, detailNotificationUUID, deleteNotificationByID, deleteNotificationByUUID, getAllNotification
 } from "../repositories/notification.repo.js"
 
 export const detail = async (data) => {
@@ -63,3 +63,21 @@ export const deleteNotification = async (data) => {
     }
     return answer
 }
+
+
+export const getAll = async (req) => {
+
+    const arr = await getAllNotification(req.user.id)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Xóa thông báo thành công",
+            notifications: arr
+        }
+    }
+    return answer
+}
+
+
+
