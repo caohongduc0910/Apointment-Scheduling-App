@@ -57,7 +57,36 @@ export const detailAppointmentID = async (id) => {
             }
         ]
     })
+    return appointment
+}
 
+
+export const detailAppointment = async (clientID, providerID, serviceID, time) => {
+    const appointment = await Appointment.findOne({
+        where: {
+            client_id: clientID,
+            provider_id: providerID,
+            service_id: serviceID,
+            time: time
+        },
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        include: [
+            {
+                model: Status,
+                as: 'status',
+                attributes: ['status_name']
+            }, {
+                model: Service,
+                as: 'service',
+                attributes: ['name']
+            },
+            {
+                model: User,
+                as: 'provider',
+                attributes: ['fullname']
+            }
+        ]
+    })
     return appointment
 }
 

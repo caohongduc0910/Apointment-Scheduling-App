@@ -2,6 +2,7 @@ import {
     createAppointment,
     detailAppointmentID,
     detailAppointmentUUID,
+    detailAppointment,
     updateAppointmentClient,
     updateAppointmentProvider,
     deleteAppointment,
@@ -9,6 +10,7 @@ import {
     getAllAppointmentByProviderID,
     getAllAppointment
 } from "../repositories/appointment.repo.js"
+import { createNotification } from "../repositories/notification.repo.js"
 
 import {
     detailServiceUUID
@@ -33,6 +35,24 @@ export const create = async (req) => {
     }
 
     await createAppointment(newAppointment)
+
+    const appointment = await detailAppointment(req.user.id, service.provider_id, service.id, req.body.time)
+
+    const newNotification = {
+        url: `http://localhost:3000/api/v1/appointment/detail/${appointment.uuid}`,
+        is_read: 0,
+        title: "Lịch hẹn mới",
+        description: "Bạn có lịch hẹn mới",
+        receiver_id: service.provider_id,
+        notification_type_id: "1"
+    }
+
+    await createNotification(newNotification)
+
+    _io.on('connection', (socket) => {
+        socket.join(service.provider_id)
+        io.to(service.provider_id).emit('notification', newNotification)
+    })
 
     const answer = {
         status: 200,

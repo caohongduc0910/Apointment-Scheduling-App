@@ -9,6 +9,7 @@ import discountRouter from './discount.route.js'
 import orderRouter from './order.route.js'
 import feedbackRouter from './feedback.route.js'
 import favoriteServiceRouter from './favorite-service.route.js'
+import notificationRouter from './notification.route.js'
 
 const v1 = `/api/v1`
 
@@ -27,5 +28,7 @@ router.use(v1 + "/order", orderRouter)
 router.use(v1 + "/feedback", feedbackRouter)
 
 router.use(v1 + "/favorite-service", favoriteServiceRouter)
+
+router.use(v1 + "/notification", notificationRouter)
 
 export default router

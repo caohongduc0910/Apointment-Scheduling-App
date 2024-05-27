@@ -1,9 +1,19 @@
 //Express
 import express from 'express'
+import { createServer } from "http"
 const app = express()
+const httpServer = createServer(app)
+
 
 //PORT
 const port = process.env.PORT || 3000
+
+//SOCKET.IO
+import { Server } from "socket.io"
+
+const io = new Server(httpServer)
+global._io = io 
+
 
 //CORS
 import cors from 'cors'
@@ -40,6 +50,6 @@ app.use(routeClientV1)
 app.use(routeProviderV1)
 app.use(routeAdminV1)
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
