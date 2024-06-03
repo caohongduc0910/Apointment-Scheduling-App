@@ -3,18 +3,18 @@ from "../repositories/order.repo.js"
 import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus,getAllAppointment } 
 from "../repositories/appointment.repo.js"
 import { detailServiceUUID } from '../repositories/service.repo.js'
-import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
-import { getUserByUUID, getUserDetailById } from '../repositories/user.repo.js'
+import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js"
+import { getUserByUUID, getUserById } from '../repositories/user.repo.js'
 
-import Stripe from 'stripe';
-const stripe = new Stripe(`${process.env.STRIPE_SK}`);
+import Stripe from 'stripe'
+const stripe = new Stripe(`${process.env.STRIPE_SK}`)
 
 
 export const create = async (req) => {
 
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
-    const client = await getUserDetailById(req.user.id)
+    const client = await getUserById(req.user.id)
 
     if (!appointment) {
         const answer = {

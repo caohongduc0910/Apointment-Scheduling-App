@@ -88,3 +88,13 @@ export const getAllService = async (id) => {
     })
     return service
 }
+
+
+export const countServiceByCategoryID = async (id) => {
+    const answer = await Service.count({
+        where: {
+            category_id: id
+        }
+    })
+    return answer
+}

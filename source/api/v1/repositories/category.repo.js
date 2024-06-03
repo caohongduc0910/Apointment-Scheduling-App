@@ -12,15 +12,17 @@ export const detailCategoryID = async (id) => {
         where: {
             id: id
         },
-        attributes: { exclude: ['admin_id'] },
+        attributes: {
+            exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'],
+        },
         include: {
             model: Service,
             as: 'service',
-            attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+            attributes: ['name'],
             include: {
                 model: User,
                 as: 'provider',
-                attributes: { exclude: ['password', 'status', 'verified_at', 'created_at', 'updated_at', 'deleted_at'] }
+                attributes: { exclude: ['password', 'verified_at', 'created_at', 'updated_at', 'deleted_at'] }
             }
         }
     })
@@ -33,7 +35,9 @@ export const detailCategoryUUID = async (uuid) => {
         where: {
             uuid: uuid
         },
-        attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: {
+            exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'],
+        },
         include: {
             model: Service,
             as: 'service',
@@ -41,7 +45,7 @@ export const detailCategoryUUID = async (uuid) => {
             include: {
                 model: User,
                 as: 'provider',
-                attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] }
+                attributes: { exclude: ['password', 'verified_at', 'created_at', 'updated_at', 'deleted_at'] }
             }
         }
     })

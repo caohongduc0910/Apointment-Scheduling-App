@@ -3,13 +3,11 @@ import {
     getUserById,
     updateUserById,
     deleteUserById,
-    getUserDetailById,
     changePasswordById,
     getAllUserByRole
 } from "../repositories/user.repo.js"
 
 import bcrypt from 'bcrypt'
-
 
 
 export const detail = async (data) => {
@@ -78,7 +76,7 @@ export const changePassword = async (req) => {
     const newPassword = req.body.newpassword
     const cfPassword = req.body.cfpassword
 
-    const user = await getUserDetailById(id)
+    const user = await getUserById(id)
 
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {

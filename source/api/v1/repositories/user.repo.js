@@ -7,31 +7,10 @@ export const getUserById = async (id) => {
         where: {
             id: id,
         },
-        attributes: { exclude: ['id', 'password', 'uuid', 'verified_at', 'deleted_at'] },
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: Role,
             as: 'role'
-        }
-    })
-    return user
-}
-
-
-export const getUserByUsername = async (username, role) => {
-    const user = await User.findOne({
-        where: {
-            username: username,
-            role_id: role
-        }
-    })
-    return user
-}
-
-
-export const getUserDetailById = async (id) => {
-    const user = await User.findOne({
-        where: {
-            id: id,
         },
         include: {
             model: Service,
@@ -49,9 +28,39 @@ export const getUserByUUID = async (uuid) => {
             uuid: uuid,
         },
         include: {
+            model: Role,
+            as: 'role'
+        },
+        include: {
             model: Service,
             as: 'services',
             attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+        }
+    })
+    return user
+}
+
+
+// export const getUserDetailById = async (id) => {
+//     const user = await User.findOne({
+//         where: {
+//             id: id,
+//         },
+//         include: {
+//             model: Service,
+//             as: 'services',
+//             attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+//         }
+//     })
+//     return user
+// }
+
+
+export const getUserByUsername = async (username, role) => {
+    const user = await User.findOne({
+        where: {
+            username: username,
+            role_id: role
         }
     })
     return user

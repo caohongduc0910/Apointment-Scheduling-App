@@ -9,7 +9,7 @@ import {
 } from '../repositories/service.repo.js'
 
 import { detailCategoryUUID } from '../repositories/category.repo.js'
-import { getUserByUUID, getUserDetailById } from '../repositories/user.repo.js'
+import { getUserByUUID, getUserById } from '../repositories/user.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -158,7 +158,7 @@ export const listService = async (req) => {
         arr = provider.services
     }
     else if (req.query.provider_id) {
-        const provider = await getUserDetailById(req.query.provider_id)
+        const provider = await getUserById(req.query.provider_id)
         arr = provider.services
     }
     else {
@@ -185,28 +185,3 @@ export const listService = async (req) => {
         return answer
     }
 }
-
-
-// export const listServiceOfProvider = async (req) => {
-//     const arr = getAllServiceByProviderID(req.user.id)
-
-//     if (arr.length > 0) {
-//         const answer = {
-//             status: 200,
-//             info: {
-//                 msg: "Lấy danh sách dịch vụ thành công",
-//                 service: arr
-//             }
-//         }
-//         return answer
-//     }
-//     else {
-//         const answer = {
-//             status: 400,
-//             info: {
-//                 msg: "Danh sách dịch vụ trống",
-//             }
-//         }
-//         return answer
-//     }
-// }

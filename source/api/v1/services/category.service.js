@@ -1,12 +1,13 @@
-import { createCategory, 
-    detailCategoryID, 
-    updateCategory, 
-    deleteCategory, 
+import {
+    createCategory,
+    detailCategoryID,
+    updateCategory,
+    deleteCategory,
     getListCategory,
-    detailCategoryUUID 
+    detailCategoryUUID
 } from "../repositories/category.repo.js"
 
-import {getAllServiceByProviderID} from '../repositories/service.repo.js'
+import { getAllServiceByProviderID, countServiceByCategoryID } from '../repositories/service.repo.js'
 
 export const create = async (req) => {
     const categoryName = req.body.category_name
@@ -34,6 +35,7 @@ export const detailID = async (req) => {
     const categoryID = req.params.id
 
     const detail = await detailCategoryID(categoryID)
+    const numberOfService = await countServiceByCategoryID(req.params.id)
 
     let answer = null
 
@@ -42,7 +44,8 @@ export const detailID = async (req) => {
             status: 200,
             info: {
                 msg: "Lấy danh mục thành công",
-                category: detail
+                category: detail,
+                countService: numberOfService
             }
         }
     }
@@ -63,14 +66,29 @@ export const detailUUID = async (req) => {
     const categoryUUID = req.params.uuid
 
     const detail = await detailCategoryUUID(categoryUUID)
+    const numberOfService = await countServiceByCategoryID(detail.id)
 
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Lấy danh mục thành công",
-            category: detail
+    let answer = null
+    
+    if (detail) {
+        answer = {
+            status: 200,
+            info: {
+                msg: "Lấy danh mục thành công",
+                category: detail,
+                countService: numberOfService
+            }
         }
     }
+    else {
+        answer = {
+            status: 200,
+            info: {
+                msg: "Không tồn tại danh mục",
+            }
+        }
+    }
+
     return answer
 }
 
@@ -110,7 +128,7 @@ export const deleteCate = async (req) => {
 export const getAll = async (req) => {
     const arr = await getListCategory()
 
-    if(arr.length == 0) {
+    if (arr.length == 0) {
         const answer = {
             status: 200,
             info: {
@@ -119,7 +137,7 @@ export const getAll = async (req) => {
         }
         return answer
     }
-    else{
+    else {
         const answer = {
             status: 200,
             info: {
@@ -141,7 +159,7 @@ export const getAllOfProvider = async (req) => {
 
     const arrUnique = [...new Set(arr)]
 
-    if(arrUnique.length == 0) {
+    if (arrUnique.length == 0) {
         const answer = {
             status: 200,
             info: {
@@ -150,7 +168,7 @@ export const getAllOfProvider = async (req) => {
         }
         return answer
     }
-    else{
+    else {
         const answer = {
             status: 200,
             info: {
