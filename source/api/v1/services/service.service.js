@@ -8,7 +8,7 @@ import {
     getAllService
 } from '../repositories/service.repo.js'
 
-import { getCategoryByUUID } from '../repositories/category.repo.js'
+import { detailCategoryUUID } from '../repositories/category.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -145,7 +145,7 @@ export const listService = async (req) => {
     let arr = []
 
     if (req.query.uuid) {
-        const category = await getCategoryByUUID(req.query.uuid)
+        const category = await detailCategoryUUID(req.query.uuid)
         const id = category.id
         arr = await getAllService(id)
     }
@@ -176,3 +176,28 @@ export const listService = async (req) => {
         return answer
     }
 }
+
+
+// export const listServiceOfProvider = async (req) => {
+//     const arr = getAllServiceByProviderID(req.user.id)
+
+//     if (arr.length > 0) {
+//         const answer = {
+//             status: 200,
+//             info: {
+//                 msg: "Lấy danh sách dịch vụ thành công",
+//                 service: arr
+//             }
+//         }
+//         return answer
+//     }
+//     else {
+//         const answer = {
+//             status: 400,
+//             info: {
+//                 msg: "Danh sách dịch vụ trống",
+//             }
+//         }
+//         return answer
+//     }
+// }

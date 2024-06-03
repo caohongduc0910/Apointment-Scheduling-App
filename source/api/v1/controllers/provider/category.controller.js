@@ -1,4 +1,4 @@
-import { create, detailID, update, deleteCate, getAll } from '../../services/category.service.js'
+import { create, detailUUID, getAllOfProvider } from '../../services/category.service.js'
 
 export const createAct = async (req, res) => {
     try {
@@ -12,10 +12,9 @@ export const createAct = async (req, res) => {
     }
 }
 
-
 export const detailAct = async (req, res) => {
     try {
-        const msg = await detailID(req)
+        const msg = await detailUUID(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
@@ -26,35 +25,9 @@ export const detailAct = async (req, res) => {
 }
 
 
-export const updateAct = async (req, res) => {
-    try {
-        const msg = await update(req)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        res.status(500).json({
-            msg: "Lỗi cập nhật danh mục"
-        })
-    }
-}
-
-
-export const deleteAct = async (req, res) => {
-    try {
-        const msg = await deleteCate(req)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        res.status(500).json({
-            msg: "Lỗi xóa danh mục"
-        })
-    }
-}
-
-
 export const getAllAct = async (req, res) => {
     try {
-        const msg = await getAll()
+        const msg = await getAllOfProvider(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {

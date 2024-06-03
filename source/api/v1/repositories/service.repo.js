@@ -66,7 +66,7 @@ export const getAllServiceByProviderID = async (id) => {
         include: {
             model: Category,
             as: 'category',
-            attributes: ['category_name']
+            attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
         }
     })
     return service

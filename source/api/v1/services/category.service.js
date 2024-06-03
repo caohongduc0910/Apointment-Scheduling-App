@@ -2,8 +2,11 @@ import { createCategory,
     detailCategory, 
     updateCategory, 
     deleteCategory, 
-    getListCategory 
+    getListCategory,
+    detailCategoryUUID 
 } from "../repositories/category.repo.js"
+
+import {getAllServiceByProviderID} from '../repositories/service.repo.js'
 
 export const create = async (req) => {
     const categoryName = req.body.category_name
@@ -27,7 +30,7 @@ export const create = async (req) => {
 }
 
 
-export const detail = async (req) => {
+export const detailID = async (req) => {
     const categoryID = req.params.id
 
     const detail = await detailCategory(categoryID)
@@ -52,6 +55,22 @@ export const detail = async (req) => {
         }
     }
 
+    return answer
+}
+
+
+export const detailUUID = async (req) => {
+    const categoryUUID = req.params.uuid
+
+    const detail = await detailCategoryUUID(categoryUUID)
+
+    const answer = {
+        status: 200,
+        info: {
+            msg: "Lấy danh mục thành công",
+            category: detail
+        }
+    }
     return answer
 }
 
@@ -106,6 +125,37 @@ export const getAll = async (req) => {
             info: {
                 msg: "Lấy thành công danh sách danh mục",
                 category: arr
+            }
+        }
+        return answer
+    }
+}
+
+
+export const getAllOfProvider = async (req) => {
+    const services = await getAllServiceByProviderID(req.user.id)
+
+    const arr = services.map(service => {
+        return service.category
+    })
+
+    const arrUnique = [...new Set(arr)]
+
+    if(arrUnique.length == 0) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Danh sách trống",
+            }
+        }
+        return answer
+    }
+    else{
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Lấy thành công danh sách danh mục",
+                category: arrUnique
             }
         }
         return answer
