@@ -9,6 +9,7 @@ import {
 } from '../repositories/service.repo.js'
 
 import { detailCategoryUUID } from '../repositories/category.repo.js'
+import { getUserByUUID, getUserDetailById } from '../repositories/user.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -144,13 +145,21 @@ export const myService = async (data) => {
 export const listService = async (req) => {
     let arr = []
 
-    if (req.query.uuid) {
-        const category = await detailCategoryUUID(req.query.uuid)
+    if (req.query.category_uuid) {
+        const category = await detailCategoryUUID(req.query.category_uuid)
         const id = category.id
         arr = await getAllService(id)
     }
-    else if (req.query.id) {
-        arr = await getAllService(req.query.id)
+    else if (req.query.category_id) {
+        arr = await getAllService(req.query.category_id)
+    }
+    else if (req.query.provider_uuid) {
+        const provider = await getUserByUUID(req.query.provider_uuid)
+        arr = provider.services
+    }
+    else if (req.query.provider_id) {
+        const provider = await getUserDetailById(req.query.provider_id)
+        arr = provider.services
     }
     else {
         arr = await getAllService(0)

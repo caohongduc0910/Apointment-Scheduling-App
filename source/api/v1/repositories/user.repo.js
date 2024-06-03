@@ -1,5 +1,6 @@
 import User from '../models/mysql/users.js'
 import Role from '../models/mysql/roles.js'
+import Service from '../models/mysql/services.js'
 
 export const getUserById = async (id) => {
     const user = await User.findOne({
@@ -32,6 +33,11 @@ export const getUserDetailById = async (id) => {
         where: {
             id: id,
         },
+        include: {
+            model: Service,
+            as: 'services',
+            attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+        }
     })
     return user
 }
@@ -42,6 +48,11 @@ export const getUserByUUID = async (uuid) => {
         where: {
             uuid: uuid,
         },
+        include: {
+            model: Service,
+            as: 'services',
+            attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+        }
     })
     return user
 }

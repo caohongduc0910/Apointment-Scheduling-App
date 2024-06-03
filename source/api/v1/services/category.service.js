@@ -1,5 +1,5 @@
 import { createCategory, 
-    detailCategory, 
+    detailCategoryID, 
     updateCategory, 
     deleteCategory, 
     getListCategory,
@@ -33,7 +33,7 @@ export const create = async (req) => {
 export const detailID = async (req) => {
     const categoryID = req.params.id
 
-    const detail = await detailCategory(categoryID)
+    const detail = await detailCategoryID(categoryID)
 
     let answer = null
 

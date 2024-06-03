@@ -1,12 +1,13 @@
 import Category from '../models/mysql/categories.js'
 import Service from '../models/mysql/services.js'
+import User from '../models/mysql/users.js'
 
 export const createCategory = async (category) => {
     await Category.create(category)
 }
 
 
-export const detailCategory = async (id) => {
+export const detailCategoryID = async (id) => {
     const category = await Category.findOne({
         where: {
             id: id
@@ -16,6 +17,11 @@ export const detailCategory = async (id) => {
             model: Service,
             as: 'service',
             attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+            include: {
+                model: User,
+                as: 'provider',
+                attributes: { exclude: ['password', 'status', 'verified_at', 'created_at', 'updated_at', 'deleted_at'] }
+            }
         }
     })
     return category
@@ -27,7 +33,17 @@ export const detailCategoryUUID = async (uuid) => {
         where: {
             uuid: uuid
         },
-        attributes: { exclude: ['admin_id'] }
+        attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] },
+        include: {
+            model: Service,
+            as: 'service',
+            attributes: ['name'],
+            include: {
+                model: User,
+                as: 'provider',
+                attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] }
+            }
+        }
     })
     return category
 }
@@ -66,7 +82,7 @@ export const getListCategoryProviderID = async (providerID) => {
         where: {
             provider_id: providerID
         }
-    },{
+    }, {
         attributes: { exclude: ['admin_id'] }
     })
     return category
