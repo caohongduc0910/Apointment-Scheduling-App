@@ -59,7 +59,7 @@ export const create = async (req) => {
     await createAppointment(newAppointment)
 
     const newNotification = {
-        url: `http://localhost:3000/api/v1/appointment/detail/${appointment.uuid}`,
+        url: `${process.env.BASE_URL}/appointment/detail/${appointment.uuid}`,
         is_read: 0,
         title: "Lịch hẹn mới",
         description: "Bạn có lịch hẹn mới",
