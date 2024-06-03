@@ -156,12 +156,12 @@ export const getAllAppointmentByClientID = async (clientID, serviceID) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name']
+                attributes: ['name', 'price']
             },
             {
                 model: User,
                 as: 'provider',
-                attributes: ['fullname']
+                attributes: ['fullname', 'email', 'image', 'address', 'phone']
             }
         ]
     })
@@ -188,12 +188,12 @@ export const getAllAppointmentByProviderID = async (providerID, serviceID) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name']
+                attributes: ['name', 'price']
             },
             {
                 model: User,
                 as: 'provider',
-                attributes: ['fullname']
+                attributes: ['fullname', 'email', 'image', 'address', 'phone']
             }
         ]
     })
