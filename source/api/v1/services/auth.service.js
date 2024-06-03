@@ -137,6 +137,8 @@ export const login = async (data, role) => {
   const returnUser = {
     id: user.id,
     username: user.username,
+    fullName: user.fullname,
+    image: user.image,
     email: user.email,
     role_id: user.role_id,
   }

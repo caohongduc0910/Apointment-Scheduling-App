@@ -2,6 +2,7 @@ import Appointment from '../models/mysql/appointments.js'
 import Status from '../models/mysql/statuses.js'
 import Service from '../models/mysql/services.js'
 import User from '../models/mysql/users.js'
+import Category from '../models/mysql/categories.js'
 
 export const createAppointment = async (appointment) => {
     await Appointment.create(appointment)
@@ -21,12 +22,17 @@ export const detailAppointmentUUID = async (uuid) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
                 as: 'provider',
-                attributes: ['fullname']
+                attributes: ['fullname', 'email', 'image', 'address', 'phone']
             }
         ]
     })
@@ -48,12 +54,17 @@ export const detailAppointmentID = async (id) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
                 as: 'provider',
-                attributes: ['fullname']
+                attributes: ['fullname', 'email', 'image', 'address', 'phone']
             }
         ]
     })
@@ -78,12 +89,17 @@ export const detailAppointment = async (clientID, providerID, serviceID, time) =
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
                 as: 'provider',
-                attributes: ['fullname']
+                attributes: ['fullname', 'email', 'image', 'address', 'phone']
             }
         ]
     })
@@ -156,7 +172,12 @@ export const getAllAppointmentByClientID = async (clientID, serviceID) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name', 'price']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
@@ -188,7 +209,12 @@ export const getAllAppointmentByProviderID = async (providerID, serviceID) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name', 'price']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
@@ -219,7 +245,12 @@ export const getAllAppointment = async (serviceID, clientID, providerID) => {
             }, {
                 model: Service,
                 as: 'service',
-                attributes: ['name', 'price']
+                attributes: ['name', 'price'],
+                include: {
+                    model: Category,
+                    as: 'category',
+                    attributes: { exclude: ['admin_id', 'created_at', 'updated_at', 'deleted_at'] }
+                }
             },
             {
                 model: User,
