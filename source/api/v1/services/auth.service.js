@@ -62,8 +62,8 @@ export const register = async (data, role) => {
 
   const subject = "Email xác nhận kích hoạt tài khoản"
 
-  let link = role == 3 ? `http://localhost:3000/api/v1/auth/confirm?token=${token}`
-    : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
+  let link = role == 3 ? `${process.env.BASE_URL}/auth/confirm?token=${token}`
+    : `${process.env.BASE_URL}/provider/auth/confirm?token=${token}`
 
   const html = `
     <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
@@ -217,8 +217,8 @@ export const forgetPassword = async (data, role) => {
     const token = await getTokenByUserId(user.id)
 
     const subject = "Email xác nhận đặt lại mật khẩu"
-    let link = role == 3 ? `http://localhost:3000/api/v1/auth/reset?token=${token.token}`
-      : `http://localhost:3000/api/v1/provider/auth/reset?token=${token.token}`
+    let link = role == 3 ? `${process.env.BASE_URL}/auth/reset?token=${token.token}`
+      : `${process.env.BASE_URL}/provider/auth/reset?token=${token.token}`
     const html = `
       <p> Xin chào bạn ${user.username}, vui lòng nhấn vào nút bên dưới để đặt lại mật khẩu </p>
       <a href=${link}>Reset your password!</a>
