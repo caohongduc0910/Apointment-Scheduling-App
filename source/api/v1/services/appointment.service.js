@@ -49,9 +49,10 @@ export const create = async (req) => {
 
     await createNotification(newNotification)
 
-    _io.on('connection', (socket) => {
-        socket.join(service.provider_id)
-        io.to(service.provider_id).emit('notification', newNotification)
+    _io.once('connection', (socket) => {
+        console.log("OK FINE")
+        // socket.join(service.provider_id)
+        _io.emit('notification', newNotification)
     })
 
     const answer = {
