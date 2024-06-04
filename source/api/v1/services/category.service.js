@@ -69,7 +69,7 @@ export const detailUUID = async (req) => {
     const numberOfService = await countServiceByCategoryID(detail.id)
 
     let answer = null
-    
+
     if (detail) {
         answer = {
             status: 200,
@@ -153,13 +153,16 @@ export const getAll = async (req) => {
 export const getAllOfProvider = async (req) => {
     const services = await getAllServiceByProviderID(req.user.id)
 
-    const arr = services.map(service => {
-        return service.category
-    })
+    const ids = [...new Set(services.map(service => service.category.id))]
+    
+    let categories = []
+    for (const id of ids) {
+        const category = await detailCategoryID(id);
+        console.log(category);
+        categories = [...categories, category];
+    }
 
-    const arrUnique = [...new Set(arr)]
-
-    if (arrUnique.length == 0) {
+    if (categories.length == 0) {
         const answer = {
             status: 200,
             info: {
@@ -173,7 +176,7 @@ export const getAllOfProvider = async (req) => {
             status: 200,
             info: {
                 msg: "Lấy thành công danh sách danh mục",
-                category: arrUnique
+                category: categories
             }
         }
         return answer
