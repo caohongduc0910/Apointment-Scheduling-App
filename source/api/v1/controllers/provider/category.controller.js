@@ -1,4 +1,4 @@
-import { detailUUID, getAllOfProvider } from '../../services/category.service.js'
+import { detailUUID, getAll } from '../../services/category.service.js'
 
 export const detailAct = async (req, res) => {
     try {
@@ -16,7 +16,7 @@ export const detailAct = async (req, res) => {
 
 export const getAllAct = async (req, res) => {
     try {
-        const msg = await getAllOfProvider(req)
+        const msg = await getAll()
         res.status(msg.status).json(msg.info)
     }
     catch (error) {

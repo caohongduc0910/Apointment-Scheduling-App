@@ -150,35 +150,44 @@ export const getAll = async (req) => {
 }
 
 
-export const getAllOfProvider = async (req) => {
-    const services = await getAllServiceByProviderID(req.user.id)
+// export const getAllOfProvider = async (req) => {
+//     const services = await getAllServiceByProviderID(req.user.id)
 
-    const ids = [...new Set(services.map(service => service.category.id))]
-    
-    let categories = []
-    for (const id of ids) {
-        const category = await detailCategoryID(id);
-        console.log(category);
-        categories = [...categories, category];
-    }
+//     const ids = [...new Set(services.map(service => service.category.id))]
 
-    if (categories.length == 0) {
-        const answer = {
-            status: 200,
-            info: {
-                msg: "Danh sách trống",
-            }
-        }
-        return answer
-    }
-    else {
-        const answer = {
-            status: 200,
-            info: {
-                msg: "Lấy thành công danh sách danh mục",
-                category: categories
-            }
-        }
-        return answer
-    }
-}
+//     if (ids.length == 0) {
+//         const answer = {
+//             status: 200,
+//             info: {
+//                 msg: "Danh sách trống",
+//             }
+//         }
+//         return answer
+//     }
+
+//     let categories = []
+//     for (const id of ids) {
+//         const category = await detailCategoryID(id);
+//         console.log(category);
+//         categories = [...categories, category];
+//     }
+
+//     if (categories.length == 0) {
+//         const answer = {
+//             status: 200,
+//             info: {
+//                 msg: "Danh sách trống",
+//             }
+//         }
+//         return answer
+//     }
+
+//     const answer = {
+//         status: 200,
+//         info: {
+//             msg: "Lấy thành công danh sách danh mục",
+//             category: categories
+//         }
+//     }
+//     return answer
+// }
