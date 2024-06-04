@@ -7,7 +7,7 @@ import {
     detailCategoryUUID
 } from "../repositories/category.repo.js"
 
-import { getAllServiceByProviderID, countServiceByCategoryID } from '../repositories/service.repo.js'
+import { countServiceByCategoryID } from '../repositories/service.repo.js'
 
 export const create = async (req) => {
     const categoryName = req.body.category_name
@@ -148,46 +148,3 @@ export const getAll = async (req) => {
         return answer
     }
 }
-
-
-// export const getAllOfProvider = async (req) => {
-//     const services = await getAllServiceByProviderID(req.user.id)
-
-//     const ids = [...new Set(services.map(service => service.category.id))]
-
-//     if (ids.length == 0) {
-//         const answer = {
-//             status: 200,
-//             info: {
-//                 msg: "Danh sách trống",
-//             }
-//         }
-//         return answer
-//     }
-
-//     let categories = []
-//     for (const id of ids) {
-//         const category = await detailCategoryID(id);
-//         console.log(category);
-//         categories = [...categories, category];
-//     }
-
-//     if (categories.length == 0) {
-//         const answer = {
-//             status: 200,
-//             info: {
-//                 msg: "Danh sách trống",
-//             }
-//         }
-//         return answer
-//     }
-
-//     const answer = {
-//         status: 200,
-//         info: {
-//             msg: "Lấy thành công danh sách danh mục",
-//             category: categories
-//         }
-//     }
-//     return answer
-// }
