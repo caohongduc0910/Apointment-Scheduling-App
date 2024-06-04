@@ -13,6 +13,7 @@ export const createAct = async (req, res) => {
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({
             msg: "Lỗi tạo dịch vụ"
         })
@@ -48,7 +49,7 @@ export const updateAct = async (req, res) => {
 
 export const deleteAct = async (req, res) => {
     try {
-        const msg = await deleteService()
+        const msg = await deleteService(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {

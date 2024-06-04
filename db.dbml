@@ -61,6 +61,7 @@ Table categories {
   uuid varchar [unique, note: "Uuid of the category"]
   category_name varchar [note: "Name of the category"]
   admin_id bigint [note: "Id of the admin"]
+  image text
   created_at timestamp [note: "When category created"]
   updated_at timestamp [note: "When category updated"]
   deleted_at timestamp [note: "When category deleted"]

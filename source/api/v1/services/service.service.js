@@ -16,7 +16,7 @@ export const create = async (req) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        image: `http://localhost:3000/images/${req.file.filename}`,
+        image: req.body.image,
         provider_id: req.user.id,
         category_id: req.body.category_id,
     }
@@ -67,11 +67,18 @@ export const detail = async (data) => {
 }
 
 export const update = async (req) => {
-    const service = {
+
+    let service = req.body.image ? {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        image: `http://localhost:3000/images/${req.file.filename}`,
+        image: req.body.image,
+        category_id: req.body.category_id,
+        status: req.body.status
+    } : {
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
         category_id: req.body.category_id,
         status: req.body.status
     }
