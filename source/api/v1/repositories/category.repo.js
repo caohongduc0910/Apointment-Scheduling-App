@@ -18,7 +18,7 @@ export const detailCategoryID = async (id) => {
         include: {
             model: Service,
             as: 'service',
-            attributes: ['name'],
+            exclude: ['created_at', 'updated_at', 'deleted_at'],
             include: {
                 model: User,
                 as: 'provider',
@@ -41,7 +41,7 @@ export const detailCategoryUUID = async (uuid) => {
         include: {
             model: Service,
             as: 'service',
-            attributes: ['name'],
+            exclude: ['created_at', 'updated_at', 'deleted_at'],
             include: {
                 model: User,
                 as: 'provider',
