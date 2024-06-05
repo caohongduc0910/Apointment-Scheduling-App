@@ -20,11 +20,11 @@ export const detailOrderUUID = async (uuid) => {
                 model: Appointment,
                 as: 'appointment',
                 attributes: { exclude: ['id', 'created_at', 'updated_at', 'deleted_at'] },
-                include: [{
+                include: {
                     model: Service,
                     as: 'service',
                     attributes: { exclude: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at'] },
-                }]
+                }
             }, {
                 model: Discount,
                 as: 'discount',
@@ -52,11 +52,11 @@ export const detailOrderID = async (uuid) => {
                 model: Appointment,
                 as: 'appointment',
                 attributes: { exclude: ['id', 'created_at', 'updated_at', 'deleted_at'] },
-                include: [{
+                include: {
                     model: Service,
                     as: 'service',
                     attributes: { exclude: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at'] },
-                }]
+                }
             }, {
                 model: Discount,
                 as: 'discount',
@@ -102,11 +102,11 @@ export const getAllOrder = async (appID) => {
                 model: Appointment,
                 as: 'appointment',
                 attributes: { exclude: ['id', 'created_at', 'updated_at', 'deleted_at'] },
-                include: [{
+                include: {
                     model: Service,
                     as: 'service',
                     attributes: { exclude: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at'] },
-                }]
+                }
             }, {
                 model: Discount,
                 as: 'discount',

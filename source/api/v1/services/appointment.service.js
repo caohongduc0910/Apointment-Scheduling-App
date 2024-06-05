@@ -135,18 +135,21 @@ export const detail = async (data) => {
 
 
 export const updateClient = async (req) => {
+    
+    const newAppointment = {
+        name: req.body.name,
+        note: req.body.note,
+        time: new Date(req.body.time),
+        method: req.body.method,
+    }
 
-    const name = req.body.name
-    const note = req.body.note
-    const time = req.body.time
-    const method = req.body.method
-
-    await updateAppointmentClient(req.params.uuid, name, note, time, method)
+    await updateAppointmentClient(req.params.uuid, newAppointment)
 
     const answer = {
         status: 200,
         info: {
             msg: "Cập nhật lịch thành công",
+            appointment: newAppointment
         }
     }
     return answer
