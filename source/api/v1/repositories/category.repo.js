@@ -53,10 +53,8 @@ export const detailCategoryUUID = async (uuid) => {
 }
 
 
-export const updateCategory = async (id, name) => {
-    await Category.update({
-        category_name: name
-    }, {
+export const updateCategory = async (id, newCategory) => {
+    await Category.update(newCategory, {
         where: {
             id: id
         }

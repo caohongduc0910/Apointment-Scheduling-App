@@ -49,12 +49,24 @@ export const detail = async (data) => {
 export const update = async (req) => {
     const id = req.user.id
 
-    const user = {
-        email: req.body.email,
-        fullname: req.body.fullname,
-        image: `http://localhost:3000/images/${req.file.filename}`,
-        address: req.body.address,
-        phone: req.body.phone
+    let user
+
+    if (req.body.image) {
+        user = {
+            email: req.body.email,
+            fullname: req.body.fullname,
+            image: req.body.image,
+            address: req.body.address,
+            phone: req.body.phone
+        }
+    }
+    else {
+        user = {
+            email: req.body.email,
+            fullname: req.body.fullname,
+            address: req.body.address,
+            phone: req.body.phone
+        }
     }
 
     await updateUserById(id, user)
@@ -128,7 +140,7 @@ export const deleteAcc = async (data) => {
 
 export const getListUser = async (role) => {
     const arr = await getAllUserByRole(role)
-    if(arr.length == 0) {
+    if (arr.length == 0) {
         const answer = {
             status: 200,
             info: {

@@ -10,12 +10,21 @@ import {
 import { countServiceByCategoryID } from '../repositories/service.repo.js'
 
 export const create = async (req) => {
-    const categoryName = req.body.category_name
-    const adminID = req.user.id
 
-    const newCategory = {
-        category_name: categoryName,
-        admin_id: adminID
+    let newCategory
+
+    if (req.body.image) {
+        newCategory = {
+            category_name: req.body.category_name,
+            admin_id: req.user.id,
+            image: req.body.image
+        }
+    }
+    else {
+        newCategory = {
+            category_name: req.body.category_name,
+            admin_id: req.user.id,
+        }
     }
 
     await createCategory(newCategory)
@@ -95,15 +104,28 @@ export const detailUUID = async (req) => {
 
 export const update = async (req) => {
     const categoryID = req.params.id
-    const categoryName = req.body.category_name
 
-    await updateCategory(categoryID, categoryName)
+    let newCategory
+
+    if (req.body.image) {
+        newCategory = {
+            category_name: req.body.category_name,
+            image: req.body.image
+        }
+    }
+    else {
+        newCategory = {
+            category_name: req.body.category_name,
+        }
+    }
+
+    await updateCategory(categoryID, newCategory)
 
     const answer = {
         status: 200,
         info: {
             msg: "Cập nhật danh mục thành công",
-            category: categoryName
+            category: newCategory
         }
     }
     return answer

@@ -69,11 +69,8 @@ export const create = async (req) => {
 
     await createNotification(newNotification)
 
-    _io.once('connection', (socket) => {
-        console.log("OK FINE")
-        // socket.join(service.provider_id)
-        _io.emit('notification', newNotification)
-    })
+    _io.emit('notification', newNotification)
+
     const provider = await getUserById(service.provider_id)
 
     const subject = "Email thông báo lịch hẹn mới"

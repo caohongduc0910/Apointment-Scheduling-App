@@ -10,16 +10,19 @@ const port = process.env.PORT || 3000
 
 //SOCKET.IO
 import { Server } from "socket.io"
-
 const io = new Server(httpServer)
-global._io = io 
+global._io = io
+_io.on('connection', (socket) => {
+  console.log(socket.id)
+  // socket.join(service.provider_id)
+})
 
 
 //CORS
 import cors from 'cors'
 app.use(cors())
 
-import { 
+import {
   handleWebhookAct
 } from './api/v1/controllers/client/order.controller.js'
 app.post('/webhook', express.raw({ type: 'application/json' }), handleWebhookAct)
