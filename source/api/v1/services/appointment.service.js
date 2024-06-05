@@ -1,3 +1,5 @@
+import moment from "moment"
+
 import {
     createAppointment,
     detailAppointmentID,
@@ -24,6 +26,8 @@ export const create = async (req) => {
     const uuid = req.params.uuid
     const service = await detailServiceUUID(uuid)
 
+    const date = new Date(req.body.time)
+
     if (!service) {
         const answer = {
             status: 400,
@@ -37,7 +41,7 @@ export const create = async (req) => {
     const newAppointment = {
         name: req.body.name,
         note: req.body.note,
-        time: req.body.time,
+        time: date,
         status_id: 1,
         service_id: service.id,
         method: req.body.method,
@@ -45,8 +49,10 @@ export const create = async (req) => {
         provider_id: service.provider_id
     }
 
-    const appointment = await detailAppointment(req.user.id, service.provider_id, service.id, req.body.time)
-    if (appointment && appointment.status_id == 1 && appointment.time == req.body.time) {
+
+    const existAppointment = await detailAppointment(req.user.id, service.provider_id, service.id, date)
+    
+    if (existAppointment && existAppointment.status_id == 1 && moment(existAppointment.time).isSame(date)) {
         const answer = {
             status: 400,
             info: {
@@ -57,6 +63,8 @@ export const create = async (req) => {
     }
 
     await createAppointment(newAppointment)
+
+    const appointment = await detailAppointment(req.user.id, service.provider_id, service.id, date)
 
     const newNotification = {
         url: `${process.env.BASE_URL}/appointment/detail/${appointment.uuid}`,
