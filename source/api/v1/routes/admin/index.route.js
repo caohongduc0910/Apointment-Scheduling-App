@@ -9,6 +9,6 @@ const v1 = `/api/v1/${prefixAdmin}`
 
 router.use(v1 + "/auth", authRouter)
 
-router.use(v1 + "/account", accountRouter)
+router.use(v1 + "/accounts", accountRouter)
 
 export default router

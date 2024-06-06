@@ -1,28 +1,18 @@
 import {
-    getUserById,
+    getUserByID, getUserByUUID
 } from "../repositories/user.repo.js"
 
 
-export const detail = async (data) => {
+export const detail = async (req) => {
 
-    const id = data.id
-    const user = await getUserById(id)
-    const detailUser =  {
-        username: user.username,
-        email: user.email,
-        fullname: user.fullname,
-        image: user.image,
-        address: user.address,
-        phone: user.phone,
-        role: user.role.role_name
-    }
+    const user = req.params.id ? await getUserByID(req.params.id) : await getUserByUUID(req.params.uuid)
 
-    if (detailUser) {
+    if (user) {
         const answer = {
             status: 200,
             info: {
                 msg: "Lấy thành công chi tiết User",
-                user: detailUser
+                user: user
             }
         }
         return answer
