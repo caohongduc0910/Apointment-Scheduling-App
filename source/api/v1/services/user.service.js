@@ -3,15 +3,16 @@ import {
     deleteUserById, getAllUserByRole
 } from "../repositories/user.repo.js"
 
-export const detail = async (req) => {
 
+export const detail = async (req) => {
+    
     let user
-    if(req.params.id) {
-        user = await getUserByID(req.params.id) 
+    if (req.params.id) {
+        user = await getUserByID(req.params.id)
     }
-    else{
+    else {
         const existUser = await getUserByUUID(req.params.uuid)
-        if(existUser.id != req.user.id) {
+        if (existUser.id != req.user.id) {
             const answer = {
                 status: 401,
                 info: {
@@ -20,7 +21,7 @@ export const detail = async (req) => {
             }
             return answer
         }
-        else{
+        else {
             user = existUser
         }
     }
@@ -90,10 +91,23 @@ export const update = async (req) => {
 }
 
 
-export const deleteAcc = async (data) => {
-    const id = data.id
-    await deleteUserById(id)
-    await deleteTokenByUserId(id)
+export const deleteAcc = async (req) => {
+
+    const uuid = req.params.uuid
+    const existUser = await getUserByUUID(uuid)
+
+    if (existUser.id != req.user.id) {
+        const answer = {
+            status: 401,
+            info: {
+                msg: "Không có quyền",
+            }
+        }
+        return answer
+    }
+
+    await deleteUserById(existUser.id)
+    await deleteTokenByUserId(existUser.id)
     const answer = {
         status: 200,
         info: {

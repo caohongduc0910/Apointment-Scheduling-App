@@ -29,7 +29,7 @@ export const updateAct = async (req, res) => {
 
 export const deleteAct = async (req, res) => {
     try {
-        const msg = await deleteAcc(req.user)
+        const msg = await deleteAcc(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
