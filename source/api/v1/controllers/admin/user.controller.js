@@ -1,11 +1,12 @@
-import { detail, update, changePassword, deleteAcc } from "../../services/user.service.js"
+import { detail, update, getListUser } from "../../services/user.service.js"
 
 export const detailAct = async (req, res) => {
     try {
-        const msg = await detail(req.user)
+        const msg = await detail(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({
             msg: "Lỗi xem chi tiết User"
         })
@@ -18,32 +19,24 @@ export const updateAct = async (req, res) => {
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({
             msg: "Lỗi cập nhật User"
         })
     }
 }
 
-export const changePasswordAct = async (req, res) => {
+
+export const listUserAct = async (req, res) => {
     try {
-        const msg = await changePassword(req)
+        const msg = await getListUser(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
+        console.log(error)
         res.status(500).json({
-            msg: "Lỗi đổi mật khẩu"
+            msg: "Lỗi xem danh sách User"
         })
     }
 }
 
-export const deleteAct = async (req, res) => {
-    try {
-        const msg = await deleteAcc(req.user)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        res.status(500).json({
-            msg: "Lỗi xóa User"
-        })
-    }
-}
