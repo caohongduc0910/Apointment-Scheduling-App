@@ -19,6 +19,6 @@ router.get('/:uuid', authToken, detailAct)
 
 router.patch('/:uuid', upload.single('image'), authToken, updateAct)
 
-router.delete('/delete/:uuid', authToken, deleteAct)
+router.delete('/:uuid', authToken, deleteAct)
 
 export default router
