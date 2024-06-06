@@ -1,6 +1,7 @@
 import {
   login,
   logout,
+  changePassword
 } from '../../services/auth.service.js'
 
 
@@ -26,5 +27,18 @@ export const logoutAct = async (req, res) => {
     console.error("Lỗi đăng xuất:", error);
     res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
     return
+  }
+}
+
+
+export const changePasswordAct = async (req, res) => {
+  try {
+      const msg = await changePassword(req)
+      res.status(msg.status).json(msg.info)
+  }
+  catch (error) {
+      res.status(500).json({
+          msg: "Lỗi đổi mật khẩu"
+      })
   }
 }

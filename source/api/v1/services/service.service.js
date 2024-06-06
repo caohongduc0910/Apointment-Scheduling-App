@@ -63,16 +63,22 @@ export const detail = async (data) => {
 }
 
 export const update = async (req) => {
-    const service = {
+    const service = req.file ? {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
         image: `http://localhost:3000/images/${req.file.filename}`,
         category_id: req.body.category_id,
         status: req.body.status
+    } : {
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        category_id: req.body.category_id,
+        status: req.body.status
     }
 
-    await updateService(service, req.params.uuid)
+    await updateService(req.params.uuid, service)
 
     const answer = {
         status: 200,

@@ -39,7 +39,7 @@ export const detailServiceID = async (id) => {
 }
 
 
-export const updateService = async (service, uuid) => {
+export const updateService = async (uuid, service) => {
     console.log(service)
     await Service.update(service, {
         where: {

@@ -13,11 +13,11 @@ import { createAct,
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create', authToken, upload.single('image'), createAct)
+router.post('/', authToken, upload.single('image'), createAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.patch('/update/:uuid', authToken, updateAct)
+router.patch('/:uuid', upload.single('image'), authToken, updateAct)
 
 router.delete('/delete/:uuid', authToken, deleteAct)
 
