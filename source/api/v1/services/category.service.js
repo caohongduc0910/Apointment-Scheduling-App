@@ -1,4 +1,4 @@
-import { createCategory, detailCategoryUUID } from "../repositories/category.repo.js"
+import { createCategory, detailCategoryID, detailCategoryUUID } from "../repositories/category.repo.js"
 
 export const create = async (req) => {
     const categoryName = req.body.category_name
@@ -24,7 +24,7 @@ export const create = async (req) => {
 export const detail = async (req) => {
     const categoryID = req.params.id
 
-    const detail = await detailCategory(categoryID)
+    const detail = await detailCategoryID(categoryID)
 
     const answer = {
         status: 200,

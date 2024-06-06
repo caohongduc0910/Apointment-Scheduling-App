@@ -30,10 +30,13 @@ export const createToken = async (token, id) => {
 
 export const countTokenByUserId = async (id) => {
     const count = await Token.count({
-        user_id: id,
+        where: {
+            user_id: id,
+        }
     })
     return count
 }
+
 
 
 export const deleteTokenByUserId = async (id) => {

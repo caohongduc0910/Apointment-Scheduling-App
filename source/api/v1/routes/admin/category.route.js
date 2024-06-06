@@ -5,8 +5,8 @@ import { createAct, detailAct } from '../../controllers/admin/category.controlle
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create', authToken, createAct)
+router.post('/', authToken, createAct)
 
-router.get('/detail/:id', authToken, detailAct)
+router.get('/:id', authToken, detailAct)
 
 export default router
