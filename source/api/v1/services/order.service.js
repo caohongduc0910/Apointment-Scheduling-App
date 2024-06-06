@@ -1,9 +1,9 @@
-import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder } 
-from "../repositories/order.repo.js"
-import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus,getAllAppointment } 
-from "../repositories/appointment.repo.js"
+import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder }
+    from "../repositories/order.repo.js"
+import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus, getAllAppointment }
+    from "../repositories/appointment.repo.js"
 import { detailServiceUUID } from '../repositories/service.repo.js'
-import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js"
+import { detailDiscountID, deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js"
 import { getUserByUUID, getUserById } from '../repositories/user.repo.js'
 
 import Stripe from 'stripe'
@@ -26,7 +26,7 @@ export const create = async (req) => {
         return answer
     }
 
-    if(appointment.client_id != client.id) {
+    if (appointment.client_id != client.id) {
         const answer = {
             status: 400,
             info: {
@@ -49,6 +49,7 @@ export const create = async (req) => {
 
     let discount = null
     let newOrder = null
+
     // nếu người dùng nhập code giảm giá
     if (req.body.discount_code) {
         discount = await getDiscountByCode(req.body.discount_code)
@@ -70,13 +71,36 @@ export const create = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-    //nếu người dùng chọn mã giảm giá hoặc không chọn gì
+
+    //nếu người dùng chọn mã giảm giá 
+    else if (req.body.discount_uuid) {
+        discount = await detailDiscountID(req.body.discount_uuid)
+
+        if (discount == null || discount.provider_id != appointment.provider_id) {
+            const answer = {
+                status: 400,
+                info: {
+                    msg: "Mã giảm giá không đúng",
+                }
+            }
+            return answer
+        }
+        newOrder = {
+            amount: req.body.amount,
+            client_id: req.user.id,
+            appointment_id: appointment.id,
+            discount_id: discount.id,
+            payment_method_id: req.body.payment_method_id
+        }
+    }
+
+    //nếu không chọn gì
     else {
         newOrder = {
             amount: req.body.amount,
             client_id: req.user.id,
             appointment_id: appointment.id,
-            discount_id: req.body.discount_id || 0,
+            discount_id: null,
             payment_method_id: req.body.payment_method_id
         }
     }
@@ -131,13 +155,25 @@ export const checkout = async (req) => {
     let discountUUID = null
 
     if (order.discount) {
-        if (order.discount.type == 0) {
-            order.appointment.service.price -= order.discount.value
+        const existDiscount = await detailDiscountID(order.discount.id)
+        if (existDiscount) {
+            if (order.discount.type == 0) {
+                order.appointment.service.price -= order.discount.value
+            }
+            else {
+                order.appointment.service.price -= order.appointment.service.price * order.discount.value / 100
+            }
+            discountUUID = order.discount.uuid
         }
         else {
-            order.appointment.service.price -= order.appointment.service.price * order.discount.value / 100
+            const answer = {
+                status: 400,
+                info: {
+                    msg: "Mã giảm giá đã được sử dụng",
+                }
+            }
+            return answer
         }
-        discountUUID = order.discount.uuid
     }
 
     try {
@@ -426,7 +462,7 @@ export const listOrderClient = async (req) => {
 
     for (const appointment of appointments) {
         const orders = await getAllOrderByClientID(userID, appointment.id)
-        if(orders.length > 0){
+        if (orders.length > 0) {
             arr = [...arr, ...orders]
         }
     }
@@ -482,7 +518,7 @@ export const listOrder = async (req) => {
 
     for (const appointment of appointments) {
         const orders = await getAllOrder(appointment.id)
-        if(orders.length > 0){
+        if (orders.length > 0) {
             arr = [...arr, ...orders]
         }
     }
@@ -528,7 +564,7 @@ export const listOrderProvider = async (req) => {
 
     for (const appointment of appointments) {
         const orders = await getAllOrder(appointment.id)
-        if(orders.length > 0){
+        if (orders.length > 0) {
             arr = [...arr, ...orders]
         }
     }

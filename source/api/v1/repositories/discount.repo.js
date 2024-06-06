@@ -46,7 +46,7 @@ export const getAllDiscountByProviderID = async (id) => {
                 [Op.gt]: new Date()
             }
         },
-        attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: User,
             as: 'provider',
@@ -59,7 +59,7 @@ export const getAllDiscountByProviderID = async (id) => {
 
 export const getDiscountByCode = async (code) => {
     const discount = await Discount.findOne({
-        attributes: { exclude: ['uuid', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
         where: {
             code: code,
             expiry: {
@@ -78,7 +78,7 @@ export const getDiscountByCode = async (code) => {
 
 export const getAllDiscount = async (id) => {
     const discount = await Discount.findAll({
-        attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
         where: {
             expiry: {
                 [Op.gt]: new Date()

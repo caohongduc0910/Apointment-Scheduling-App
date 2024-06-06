@@ -28,7 +28,7 @@ export const detailOrderUUID = async (uuid) => {
             }, {
                 model: Discount,
                 as: 'discount',
-                attributes: { exclude: ['id', 'created_at', 'updated_at', 'deleted_at'] },
+                attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
             },
             {
                 model: Payment_method,
@@ -60,7 +60,7 @@ export const detailOrderID = async (uuid) => {
             }, {
                 model: Discount,
                 as: 'discount',
-                attributes: { exclude: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at'] },
+                attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
             },
             {
                 model: Payment_method,
