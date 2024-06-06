@@ -5,6 +5,6 @@ import { detailAct } from '../../controllers/client/service.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
 export default router
