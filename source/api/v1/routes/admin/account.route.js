@@ -8,9 +8,9 @@ const upload = multer({ storage: storage})
 import { detailAct, updateAct, } from '../../controllers/admin/account.controller.js'
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail', authToken, detailAct)
+router.get('/:id', authToken, detailAct)
 
-router.patch('/update', authToken, upload.single('image'), updateAct)
+router.patch('/:id', authToken, upload.single('image'), updateAct)
 
 export default router
 
