@@ -5,7 +5,25 @@ import {
 
 export const detail = async (req) => {
 
-    const user = req.params.id ? await getUserByID(req.params.id) : await getUserByUUID(req.params.uuid)
+    let user
+    if(req.params.id) {
+        user = await getUserByID(req.params.id) 
+    }
+    else{
+        const existUser = await getUserByUUID(req.params.uuid)
+        if(existUser.id != req.user.id) {
+            const answer = {
+                status: 401,
+                info: {
+                    msg: "Không có quyền",
+                }
+            }
+            return answer
+        }
+        else{
+            user = existUser
+        }
+    }
 
     if (user) {
         const answer = {
@@ -47,8 +65,8 @@ export const update = async (req) => {
         await updateUserByID(req.params.id, user)
     }
     else {
-        const user = await getUserByUUID(req.params.uuid)
-        if (req.params.uuid != user.id) {
+        const existUser = await getUserByUUID(req.params.uuid)
+        if (req.user.id != existUser.id) {
             const answer = {
                 status: 401,
                 info: {

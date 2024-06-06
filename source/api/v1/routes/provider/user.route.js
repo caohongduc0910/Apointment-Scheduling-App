@@ -5,12 +5,12 @@ import multer from 'multer'
 import storage from '../../../../helper/upload.js'
 const upload = multer({ storage: storage})
 
-import { detailAct, updateAct, } from '../../controllers/admin/account.controller.js'
+import { detailAct, updateAct } from '../../controllers/provider/user.controller.js'
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/:id', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.patch('/:id', authToken, upload.single('image'), updateAct)
+router.patch('/:uuid', authToken, upload.single('image'), updateAct)
 
 export default router
 
