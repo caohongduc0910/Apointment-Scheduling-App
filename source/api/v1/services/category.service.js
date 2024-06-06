@@ -1,7 +1,7 @@
 import { createCategory, 
-    detailCategory, 
     updateCategory, 
     deleteCategory, 
+    detailCategoryID,
     detailCategoryUUID 
 } from "../repositories/category.repo.js"
 
@@ -30,7 +30,7 @@ export const create = async (req) => {
 export const detail = async (req) => {
     const categoryID = req.params.id
 
-    const detail = await detailCategory(categoryID)
+    const detail = await detailCategoryID(categoryID)
 
     let answer = null
 

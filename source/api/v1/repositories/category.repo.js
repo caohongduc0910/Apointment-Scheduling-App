@@ -4,7 +4,7 @@ export const createCategory = async (category) => {
     await Category.create(category)
 }
 
-export const detailCategory = async (id) => {
+export const detailCategoryID = async (id) => {
     const category = await Category.findOne({
         where: {
             id: id

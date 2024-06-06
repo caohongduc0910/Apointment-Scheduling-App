@@ -5,12 +5,12 @@ import { createAct, detailAct, updateAct, deleteAct } from '../../controllers/ad
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create', authToken, createAct)
+router.post('/', authToken, createAct)
 
-router.get('/detail/:id', authToken, detailAct)
+router.get('/:id', authToken, detailAct)
 
-router.patch('/update/:id', authToken, updateAct)
+router.patch('/:id', authToken, updateAct)
 
-router.delete('/delete/:id', authToken, deleteAct)
+router.delete('/:id', authToken, deleteAct)
 
 export default router
