@@ -5,8 +5,8 @@ import { detailAct, listServiceAct } from '../../controllers/admin/service.contr
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail/:id', authToken, detailAct)
+router.get('/:id', authToken, detailAct)
 
-router.get('/all-service', authToken, listServiceAct)
+router.get('/', authToken, listServiceAct)
 
 export default router
