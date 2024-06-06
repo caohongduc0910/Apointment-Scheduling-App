@@ -1,9 +1,10 @@
-import { createCategory, 
-    detailCategory, 
-    updateCategory, 
-    deleteCategory, 
+import {
+    createCategory,
+    updateCategory,
+    deleteCategory,
     getListCategory,
-    detailCategoryUUID 
+    detailCategoryID,
+    detailCategoryUUID
 } from "../repositories/category.repo.js"
 
 export const create = async (req) => {
@@ -31,7 +32,7 @@ export const create = async (req) => {
 export const detail = async (req) => {
     const categoryID = req.params.id
 
-    const detail = await detailCategory(categoryID)
+    const detail = await detailCategoryID(categoryID)
 
     let answer = null
 
@@ -105,10 +106,10 @@ export const deleteCate = async (req) => {
 }
 
 
-export const getAll = async (req) => {
+export const getAll = async () => {
     const arr = await getListCategory()
 
-    if(arr.length == 0) {
+    if (arr.length == 0) {
         const answer = {
             status: 200,
             info: {
@@ -117,7 +118,7 @@ export const getAll = async (req) => {
         }
         return answer
     }
-    else{
+    else {
         const answer = {
             status: 200,
             info: {
