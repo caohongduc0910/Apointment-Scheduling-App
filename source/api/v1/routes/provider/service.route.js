@@ -9,6 +9,6 @@ import { createAct } from '../../controllers/provider/service.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create', authToken, upload.single('image'), createAct)
+router.post('/', authToken, upload.single('image'), createAct)
 
 export default router
