@@ -1,0 +1,23 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.io Notification</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const socket = io();
+
+      // Nhận thông báo từ server
+      socket.on('notification', (msg) => {
+        const messageElement = document.createElement('p');
+        messageElement.textContent = msg;
+        document.body.appendChild(messageElement);
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Real-time Notification</h1>
+</body>
+</html>
