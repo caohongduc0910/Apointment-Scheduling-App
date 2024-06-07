@@ -13,13 +13,3 @@ export const createAct = async (req, res) => {
         })
     }
 }
-
-
-
-
-
-
-
-
-
-

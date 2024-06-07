@@ -1,14 +1,10 @@
 import express from 'express'
 const router = express.Router()
 
-import { 
-    createAct, 
-} from '../../controllers/provider/discount.controller.js'
+import { detailAct } from '../../controllers/client/category.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/', authToken, createAct)
+router.get('/:uuid', authToken, detailAct)
 
 export default router
-
-
