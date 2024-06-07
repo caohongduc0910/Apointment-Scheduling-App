@@ -4,7 +4,8 @@ import {
   confirm,
   logout,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  changePassword
 } from '../../services/auth.service.js'
 
 export const registerAct = async (req, res) => {
@@ -82,6 +83,19 @@ export const resetPasswordAct = async (req, res) => {
     console.error("Lỗi quên đặt lại mật khẩu:", error);
     res.status(500).json({ msg: "Lỗi kết nối đến cơ sở dữ liệu" })
     return
+  }
+}
+
+
+export const changePasswordAct = async (req, res) => {
+  try {
+      const msg = await changePassword(req)
+      res.status(msg.status).json(msg.info)
+  }
+  catch (error) {
+      res.status(500).json({
+          msg: "Lỗi đổi mật khẩu"
+      })
   }
 }
 

@@ -15,13 +15,3 @@ export const detailAct = async (req, res) => {
         })
     }
 }
-
-
-
-
-
-
-
-
-
-

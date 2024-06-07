@@ -2,6 +2,7 @@ import {
     create, detail, update
 } from '../../services/discount.service.js'
 
+
 export const createAct = async (req, res) => {
     try {
         const msg = await create(req)
