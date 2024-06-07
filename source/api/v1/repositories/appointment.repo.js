@@ -7,6 +7,18 @@ export const createAppointment = async (appointment) => {
     await Appointment.create(appointment)
 }
 
+
+export const getAppointmentByClientIDandServiceID = async (clID, svID) => {
+    const appointment = await Appointment.findOne({
+        where: {
+            client_id: clID,
+            service_id: svID
+        }
+    })
+    return appointment
+}
+
+
 export const detailAppointmentUUID = async (uuid) => {
     const appointment = await Appointment.findOne({
         where: {
@@ -57,30 +69,12 @@ export const detailAppointmentID = async (id) => {
             }
         ]
     })
-
     return appointment
 }
 
 
-export const updateAppointmentClient = async (uuid, name, note, time, method) => {
-    await Appointment.update({
-        name: name,
-        note: note,
-        time: time,
-        method: method
-    }, {
-        where: {
-            uuid: uuid
-        },
-    })
-}
-
-
-export const updateAppointmentProvider = async (uuid, status, url) => {
-    await Appointment.update({
-        status_id: status,
-        url: url
-    }, {
+export const updateAppointment = async (uuid, data) => {
+    await Appointment.update(data, {
         where: {
             uuid: uuid
         },

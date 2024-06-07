@@ -5,12 +5,10 @@ import { createAct, detailAct, updateAct } from '../../controllers/client/appoin
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create/:uuid', authToken, createAct)
+router.post('/', authToken, createAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.patch('/update/:uuid', authToken, updateAct)
+router.patch('/:uuid', authToken, updateAct)
 
 export default router
-
-
