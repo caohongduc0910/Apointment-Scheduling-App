@@ -11,8 +11,6 @@ router.post('/:uuid', authToken, createAct)
 
 router.post('/:uuid', authToken, checkoutAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
 export default router
-
-

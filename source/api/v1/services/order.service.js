@@ -70,7 +70,6 @@ export const create = async (req) => {
         }
     }
 
-
     await createOrder(newOrder)
 
     const answer = {
