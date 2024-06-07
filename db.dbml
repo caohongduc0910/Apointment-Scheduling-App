@@ -64,6 +64,7 @@ Table categories {
   created_at timestamp [note: "When category created"]
   updated_at timestamp [note: "When category updated"]
   deleted_at timestamp [note: "When category deleted"]
+  image text
   note: "table 'categories' contains category information"
 }
 Ref: categories.admin_id > users.id

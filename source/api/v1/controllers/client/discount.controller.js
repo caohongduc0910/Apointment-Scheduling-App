@@ -29,14 +29,3 @@ export const listDiscountAct = async (req, res) => {
         })
     }
 }
-
-
-
-
-
-
-
-
-
-
-

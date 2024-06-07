@@ -3,7 +3,7 @@ import {
 } from "../repositories/order.repo.js"
 
 import {
-    detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus
+    detailAppointmentID, detailAppointmentUUID, updateAppointmentStatus
 } from "../repositories/appointment.repo.js"
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
@@ -71,7 +71,6 @@ export const create = async (req) => {
         }
     }
 
-
     await createOrder(newOrder)
 
     const answer = {
@@ -88,6 +87,15 @@ export const create = async (req) => {
 export const checkout = async (req) => {
 
     const order = await detailOrderUUID(req.params.uuid)
+    if (!order) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Đơn hàng không tồn tại",
+            }
+        }
+        return answer
+    }
     const appointment = await detailAppointmentID(order.appointment_id)
 
     if (!appointment) {
@@ -319,7 +327,6 @@ export const update = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-
 
     await updateOrder(uuid, order)
 

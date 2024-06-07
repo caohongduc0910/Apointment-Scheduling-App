@@ -9,22 +9,19 @@ import { createAct,
     detailAct, 
     updateAct, 
     deleteAct,
-    myServiceAct,
     listServiceAct
 } from '../../controllers/provider/service.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create', authToken, upload.single('image'), createAct)
+router.post('/', authToken, upload.single('image'), createAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.patch('/update/:uuid', authToken, updateAct)
+router.patch('/:uuid', upload.single('image'), authToken, updateAct)
 
-router.delete('/delete/:uuid', authToken, deleteAct)
+router.delete('/:uuid', authToken, deleteAct)
 
-router.get('/my-all-service', authToken, myServiceAct)
-
-router.get('/all-service', authToken, listServiceAct)
+router.get('/', authToken, listServiceAct)
 
 export default router
