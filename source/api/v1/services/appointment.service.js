@@ -7,8 +7,9 @@ import {
     detailServiceUUID
 } from "../repositories/service.repo.js"
 
-import confirmEmail from '../../../helper/sendMail.js'
 import { getUserDetailById } from "../repositories/user.repo.js"
+
+import confirmEmail from '../../../helper/sendMail.js'
 
 export const create = async (req) => {
 

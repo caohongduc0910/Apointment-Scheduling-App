@@ -5,8 +5,7 @@ export const createCategory = async (category) => {
     await Category.create(category)
 }
 
-
-export const detailCategory = async (id) => {
+export const detailCategoryID = async (id) => {
     const category = await Category.findOne({
         where: {
             id: id
@@ -17,6 +16,16 @@ export const detailCategory = async (id) => {
             as: 'service',
             attributes: { exclude: ['id', 'uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         }
+    })
+    return category
+}
+
+export const detailCategoryUUID = async (uuid) => {
+    const category = await Category.findOne({
+        where: {
+            uuid: uuid
+        },
+        attributes: { exclude: ['admin_id'] }
     })
     return category
 }
@@ -49,11 +58,4 @@ export const getListCategory = async () => {
     return category
 }
 
-export const getCategoryByUUID = async (uuid) => {
-    const category = await Category.findOne({
-        where: {
-            uuid: uuid
-        },
-    })
-    return category
-}
+
