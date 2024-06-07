@@ -1,5 +1,4 @@
 import Discount from '../models/mysql/discounts.js'
-import User from '../models/mysql/users.js'
 
 export const createDiscount = async (discount) => {
     await Discount.create(discount)

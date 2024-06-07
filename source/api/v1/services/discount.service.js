@@ -56,4 +56,3 @@ export const detail = async (data) => {
         return answer
     }
 }
-

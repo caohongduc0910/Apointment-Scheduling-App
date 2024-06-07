@@ -27,7 +27,7 @@ export const detailServiceID = async (id) => {
         where: {
             id: id
         },
-        attributes: { exclude: ['id', 'uuid', 'provider_id', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['uuid', 'category_id', 'created_at', 'updated_at', 'deleted_at'] },
         include: {
             model: Category,
             as: 'category',
@@ -39,7 +39,7 @@ export const detailServiceID = async (id) => {
 }
 
 
-export const updateService = async (service, uuid) => {
+export const updateService = async (uuid, service) => {
     console.log(service)
     await Service.update(service, {
         where: {
@@ -76,7 +76,7 @@ export const getAllServiceByProviderID = async (id) => {
 
 export const getAllService = async (id) => {
 
-    const whereClause = id != 0 ? { category_id: id } : {}
+    const whereClause = id != 0 ? { provider_id: id } : {}
 
     const service = await Service.findAll({
         where: whereClause,
