@@ -1,6 +1,7 @@
 import {
   getUserByUsername,
   getUserByEmail,
+  getUserDetailById,
   createUser,
   updateUserStatus,
   changePasswordById
@@ -18,7 +19,6 @@ import {
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
 import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
-
 
 
 export const register = async (data, role) => {
@@ -154,7 +154,6 @@ export const login = async (data, role) => {
 
 
 export const logout = async (data) => {
-  console.log(data)
 
   await deleleTokenByToken(data.split(" ")[1])
 
@@ -273,5 +272,47 @@ export const resetPassword = async (req) => {
     }
     return answer
   }
+}
+
+
+export const changePassword = async (req) => {
+  const id = req.user.id
+  const password = req.body.password
+  const newPassword = req.body.newpassword
+  const cfPassword = req.body.cfpassword
+
+  const user = await getUserDetailById(id)
+
+  const validPassword = await bcrypt.compare(password, user.password)
+  if (!validPassword) {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Mật khẩu không chính xác",
+      }
+    }
+    return answer
+  }
+
+  if (newPassword != cfPassword) {
+    const answer = {
+      status: 400,
+      info: {
+        msg: "Mật khẩu xác nhận không khớp",
+      }
+    }
+    return answer
+  }
+  const salt = await bcrypt.genSalt(10)
+  const hashed = await bcrypt.hash(newPassword, salt)
+  await changePasswordById(id, hashed)
+  await deleteTokenByUserId(id)
+  const answer = {
+    status: 200,
+    info: {
+      msg: "Đổi mật khẩu thành công",
+    }
+  }
+  return answer
 }
 
