@@ -3,7 +3,7 @@ import {
     getAllDiscountByProviderID, getAllDiscount
 } from "../repositories/discount.repo.js"
 
-import { getUserByUUID } from "../repositories/user.repo.js"
+import { getUserByID, getUserByUUID } from "../repositories/user.repo.js"
 
 export const create = async (req) => {
 
@@ -138,9 +138,21 @@ export const myDiscount = async (req) => {
 
 export const listDiscount = async (req) => {
     let arr = []
+    const user = await getUserByID(req.user.id)
 
     if (req.query.provider_uuid) {
+        if (user.role_id == 2 && user.uuid != req.query.provider_uuid) {
+            const answer = {
+                status: 401,
+                info: {
+                    msg: "Không có quyền",
+                }
+            }
+            return answer
+        }
+
         const provider = await getUserByUUID(req.query.provider_uuid)
+        
         arr = await getAllDiscountByProviderID(provider.id)
     }
     else if (req.query.provider_id) {

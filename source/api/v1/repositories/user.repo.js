@@ -1,15 +1,32 @@
 import User from '../models/mysql/users.js'
 import Role from '../models/mysql/roles.js'
 
-export const getUserById = async (id) => {
+export const getUserByID = async (id) => {
     const user = await User.findOne({
         where: {
             id: id,
         },
-        attributes: { exclude: ['id', 'password', 'uuid', 'verified_at', 'deleted_at'] },
+        attributes: { exclude: ['password', 'uuid'] },
         include: {
             model: Role,
-            as: 'role'
+            as: 'role',
+            attributes: { exclude: ['id', 'uuid'] },
+        }
+    })
+    return user
+}
+
+
+export const getUserByUUID = async (uuid) => {
+    const user = await User.findOne({
+        where: {
+            uuid: uuid,
+        },
+        attributes: { exclude: ['password', 'uuid'] },
+        include: {
+            model: Role,
+            as: 'role',
+            attributes: { exclude: ['id', 'uuid'] },
         }
     })
     return user
@@ -37,22 +54,12 @@ export const getUserDetailById = async (id) => {
 }
 
 
-export const getUserByUUID = async (uuid) => {
-    const user = await User.findOne({
-        where: {
-            uuid: uuid,
-        },
-    })
-    return user
-}
-
-
 export const getAllUserByRole = async (role) => {
     const users = await User.findAll({
         where: {
             role_id: role
         },
-        attributes: { exclude: ['id', 'password', 'uuid'] }
+        attributes: { exclude: ['password', 'uuid'] }
     })
     return users
 }
@@ -86,7 +93,7 @@ export const updateUserStatus = async (id) => {
 }
 
 
-export const updateUserById = async (id, user) => {
+export const updateUserByID = async (id, user) => {
     await User.update(user, {
         where: {
             id: id
@@ -99,6 +106,16 @@ export const deleteUserById = async (id) => {
     await User.destroy({
         where: {
             id: id
+        }
+    })
+}
+
+
+
+export const updateUserByUUID = async (uuid, user) => {
+    await User.update(user, {
+        where: {
+            uuid: uuid
         }
     })
 }
