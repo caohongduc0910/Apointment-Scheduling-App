@@ -5,9 +5,9 @@ import { createAct, detailAct } from '../../controllers/client/appointment.contr
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create/:uuid', authToken, createAct)
+router.post('/', authToken, createAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
 export default router
 

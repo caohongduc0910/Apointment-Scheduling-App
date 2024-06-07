@@ -7,6 +7,18 @@ export const createAppointment = async (appointment) => {
     await Appointment.create(appointment)
 }
 
+
+export const getAppointmentByClientIDandServiceID = async (clID, svID) => {
+    const appointment = await Appointment.findOne({
+        where: {
+            client_id: clID,
+            service_id: svID
+        }
+    })
+    return appointment
+}
+
+
 export const detailAppointmentUUID = async (uuid) => {
     const appointment = await Appointment.findOne({
         where: {
@@ -57,6 +69,4 @@ export const detailAppointmentID = async (id) => {
             }
         ]
     })
-
-    return appointment
 }

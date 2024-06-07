@@ -1,37 +1,37 @@
-import { deleteTokenByUserId } from "../repositories/token.repo.js"
 import {
-    getUserById,
-    updateUserById,
-    deleteUserById,
-    getUserDetailById,
-    changePasswordById,
-    getAllUserByRole
+    getUserByID, getUserByUUID, updateUserByID, updateUserByUUID,
+    deleteUserById, getAllUserByRole
 } from "../repositories/user.repo.js"
 
-import bcrypt from 'bcrypt'
 
-
-
-export const detail = async (data) => {
-
-    const id = data.id
-    const user = await getUserById(id)
-    const detailUser = {
-        username: user.username,
-        email: user.email,
-        fullname: user.fullname,
-        image: user.image,
-        address: user.address,
-        phone: user.phone,
-        role: user.role.role_name
+export const detail = async (req) => {
+    
+    let user
+    if (req.params.id) {
+        user = await getUserByID(req.params.id)
+    }
+    else {
+        const existUser = await getUserByUUID(req.params.uuid)
+        if (existUser.id != req.user.id) {
+            const answer = {
+                status: 401,
+                info: {
+                    msg: "Không có quyền",
+                }
+            }
+            return answer
+        }
+        else {
+            user = existUser
+        }
     }
 
-    if (detailUser) {
+    if (user) {
         const answer = {
             status: 200,
             info: {
                 msg: "Lấy thành công chi tiết User",
-                user: detailUser
+                user: user
             }
         }
         return answer
@@ -49,17 +49,36 @@ export const detail = async (data) => {
 
 
 export const update = async (req) => {
-    const id = req.user.id
 
-    const user = {
-        email: req.body.email,
-        fullname: req.body.fullname,
+    const user = req.file ? {
+        email: req.body.email || null,
+        fullname: req.body.fullname || null,
         image: `http://localhost:3000/images/${req.file.filename}`,
-        address: req.body.address,
-        phone: req.body.phone
+        address: req.body.address || null,
+        phone: req.body.phone || null
+    } : {
+        email: req.body.email || null,
+        fullname: req.body.fullname || null,
+        address: req.body.address || null,
+        phone: req.body.phone || null
     }
 
-    await updateUserById(id, user)
+    if (req.params.id) {
+        await updateUserByID(req.params.id, user)
+    }
+    else {
+        const existUser = await getUserByUUID(req.params.uuid)
+        if (req.user.id != existUser.id) {
+            const answer = {
+                status: 401,
+                info: {
+                    msg: "Không có quyền",
+                }
+            }
+            return answer
+        }
+        await updateUserByUUID(req.params.uuid, user)
+    }
 
     const answer = {
         status: 200,
@@ -72,52 +91,23 @@ export const update = async (req) => {
 }
 
 
-export const changePassword = async (req) => {
-    const id = req.user.id
-    const password = req.body.password
-    const newPassword = req.body.newpassword
-    const cfPassword = req.body.cfpassword
+export const deleteAcc = async (req) => {
 
-    const user = await getUserDetailById(id)
+    const uuid = req.params.uuid
+    const existUser = await getUserByUUID(uuid)
 
-    const validPassword = await bcrypt.compare(password, user.password)
-    if (!validPassword) {
+    if (existUser.id != req.user.id) {
         const answer = {
-            status: 400,
+            status: 401,
             info: {
-                msg: "Mật khẩu không chính xác",
+                msg: "Không có quyền",
             }
         }
         return answer
     }
 
-    if (newPassword != cfPassword) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Mật khẩu xác nhận không khớp",
-            }
-        }
-        return answer
-    }
-    const salt = await bcrypt.genSalt(10)
-    const hashed = await bcrypt.hash(newPassword, salt)
-    await changePasswordById(id, hashed)
-    await deleteTokenByUserId(id)
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Đổi mật khẩu thành công",
-        }
-    }
-    return answer
-}
-
-
-export const deleteAcc = async (data) => {
-    const id = data.id
-    await deleteUserById(id)
-    await deleteTokenByUserId(id)
+    await deleteUserById(existUser.id)
+    await deleteTokenByUserId(existUser.id)
     const answer = {
         status: 200,
         info: {
@@ -128,8 +118,8 @@ export const deleteAcc = async (data) => {
 }
 
 
-export const getListUser = async (role) => {
-    const arr = await getAllUserByRole(role)
+export const getListUser = async (req) => {
+    const arr = await getAllUserByRole(req.query.user_role)
     if(arr.length == 0) {
         const answer = {
             status: 200,
@@ -148,13 +138,3 @@ export const getListUser = async (role) => {
     }
     return answer
 }
-
-
-
-
-
-
-
-
-
-

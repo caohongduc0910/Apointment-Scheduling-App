@@ -38,6 +38,7 @@ export const countTokenByUserId = async (id) => {
 }
 
 
+
 export const deleteTokenByUserId = async (id) => {
     await Token.destroy({
         where: {

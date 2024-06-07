@@ -1,13 +1,13 @@
-import { detail } from '../../services/appointment.service.js'
+import { detailUUID } from '../../services/category.service.js'
 
 export const detailAct = async (req, res) => {
     try {
-        const msg = await detail(req.params)
+        const msg = await detailUUID(req)
         res.status(msg.status).json(msg.info)
     }
     catch (error) {
         res.status(500).json({
-            msg: "Lỗi xem cuộc hẹn",
+            msg: "Lỗi xem chi tiết danh mục"
         })
     }
 }
