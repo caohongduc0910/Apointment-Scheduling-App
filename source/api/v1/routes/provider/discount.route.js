@@ -16,7 +16,7 @@ router.get('/:uuid', authToken, detailAct)
 
 router.patch('/:uuid', authToken, updateAct)
 
-router.delete('/delete/:uuid', authToken, deleteAct)
+router.delete(':uuid', authToken, deleteAct)
 
 export default router
 
