@@ -3,7 +3,7 @@ import {
 } from "../repositories/order.repo.js"
 
 import {
-    detailAppointmentUUID, updateAppointmentStatus
+    detailAppointmentID, detailAppointmentUUID, updateAppointmentStatus
 } from "../repositories/appointment.repo.js"
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";

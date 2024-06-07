@@ -2,6 +2,7 @@ import {
     create, detail, update, deleteDiscount, myDiscount, listDiscount
 } from '../../services/discount.service.js'
 
+
 export const createAct = async (req, res) => {
     try {
         const msg = await create(req)
@@ -51,20 +52,6 @@ export const deleteAct = async (req, res) => {
         console.log(error)
         res.status(500).json({
             msg: "Lỗi xóa mã giảm giá"
-        })
-    }
-}
-
-
-export const myDiscountAct = async (req, res) => {
-    try {
-        const msg = await myDiscount(req)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: "Lỗi xem danh sách giảm giá"
         })
     }
 }

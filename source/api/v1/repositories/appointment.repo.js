@@ -7,6 +7,18 @@ export const createAppointment = async (appointment) => {
     await Appointment.create(appointment)
 }
 
+
+export const getAppointmentByClientIDandServiceID = async (clID, svID) => {
+    const appointment = await Appointment.findOne({
+        where: {
+            client_id: clID,
+            service_id: svID
+        }
+    })
+    return appointment
+}
+
+
 export const detailAppointmentUUID = async (uuid) => {
     const appointment = await Appointment.findOne({
         where: {
@@ -57,30 +69,12 @@ export const detailAppointmentID = async (id) => {
             }
         ]
     })
-
     return appointment
 }
 
 
-export const updateAppointmentClient = async (uuid, name, note, time, method) => {
-    await Appointment.update({
-        name: name,
-        note: note,
-        time: time,
-        method: method
-    }, {
-        where: {
-            uuid: uuid
-        },
-    })
-}
-
-
-export const updateAppointmentProvider = async (uuid, status, url) => {
-    await Appointment.update({
-        status_id: status,
-        url: url
-    }, {
+export const updateAppointment = async (uuid, data) => {
+    await Appointment.update(data, {
         where: {
             uuid: uuid
         },
@@ -108,14 +102,7 @@ export const deleteAppointment = async (uuid) => {
 }
 
 
-export const getAllAppointmentByClientID = async (clientID, serviceID) => {
-
-    const whereClause = serviceID ? {
-        client_id: clientID,
-        service_id: serviceID
-    } : {
-        client_id: clientID,
-    }
+export const getAllAppointmentByClientID = async (whereClause) => {
 
     const arr = await Appointment.findAll({
         where: whereClause,
@@ -140,14 +127,7 @@ export const getAllAppointmentByClientID = async (clientID, serviceID) => {
 }
 
 
-export const getAllAppointmentByProviderID = async (providerID, serviceID) => {
-
-    const whereClause = serviceID ? {
-        provider_id: providerID,
-        service_id: serviceID
-    } : {
-        provider_id: providerID,
-    }
+export const getAllAppointmentByProviderID = async (whereClause) => {
 
     const arr = await Appointment.findAll({
         where: whereClause,
@@ -172,13 +152,7 @@ export const getAllAppointmentByProviderID = async (providerID, serviceID) => {
 }
 
 
-export const getAllAppointment = async (serviceID, clientID, providerID) => {
-
-    const whereClause = {
-        ...(serviceID && { service_id: serviceID }),
-        ...(providerID && { provider_id: providerID }),
-        ...(clientID && { client_id: clientID })
-    }
+export const getAllAppointment = async (whereClause) => {
 
     const arr = await Appointment.findAll({
         where: whereClause,
