@@ -5,7 +5,7 @@ import Payment_method from '../models/mysql/payment_methods.js'
 import Service from '../models/mysql/services.js'
 
 export const createOrder = async (order) => {
-    await Order.create(order)
+    return await Order.create(order)
 }
 
 

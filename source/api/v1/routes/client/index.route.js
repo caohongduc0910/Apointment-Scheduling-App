@@ -7,7 +7,6 @@ import categoryRouter from './category.route.js'
 import serviceRouter from './service.route.js'
 import appointmentRouter from './appointment.route.js'
 import discountRouter from './discount.route.js'
-import orderRouter from './order.route.js'
 
 const v1 = `/api/v1`
 
@@ -22,7 +21,5 @@ router.use(v1 + "/services", serviceRouter)
 router.use(v1 + "/appointments", appointmentRouter)
 
 router.use(v1 + "/discounts", discountRouter)
-
-router.use(v1 + "/orders", orderRouter)
 
 export default router
