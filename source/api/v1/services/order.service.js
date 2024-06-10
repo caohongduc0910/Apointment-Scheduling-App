@@ -1,6 +1,6 @@
 import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder } 
 from "../repositories/order.repo.js"
-import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus,getAllAppointment } 
+import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus, getAllAppointment } 
 from "../repositories/appointment.repo.js"
 import { detailServiceUUID } from '../repositories/service.repo.js'
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
@@ -337,7 +337,6 @@ export const update = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-
 
     await updateOrder(uuid, order)
 

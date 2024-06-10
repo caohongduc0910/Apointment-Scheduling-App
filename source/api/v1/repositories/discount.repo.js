@@ -59,7 +59,7 @@ export const getAllDiscountByProviderID = async (id) => {
 
 export const getDiscountByCode = async (code) => {
     const discount = await Discount.findOne({
-        attributes: { exclude: ['uuid', 'created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['id', 'uuid', 'provider_id', 'created_at', 'updated_at', 'deleted_at'] },
         where: {
             code: code,
             expiry: {

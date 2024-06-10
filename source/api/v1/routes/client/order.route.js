@@ -7,16 +7,16 @@ import {
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create/:uuid', authToken, createAct)
+router.post('/:uuid', authToken, createAct)
 
-router.post('/checkout/:uuid', authToken, checkoutAct)
+router.post('/:uuid', authToken, checkoutAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.patch('/update/:uuid', authToken, updateAct)
+router.patch('/:uuid', authToken, updateAct)
 
-router.delete('/delete/:uuid', authToken, deleteAct)
+router.delete('/:uuid', authToken, deleteAct)
 
-router.get('/all-order', authToken, listOrderAct)
+router.get('/', authToken, listOrderAct)
 
 export default router
