@@ -8,9 +8,15 @@ import { createAct,
     getAllAct, 
 } from '../../controllers/client/appointment.controller.js'
 
+import {
+    createAct as createActOrder
+} from '../../controllers/client/order.controller.js'
+
 import authToken from '../../middlewares/auth.middleware.js'
 
 router.post('/', authToken, createAct)
+
+router.post('/:uuid/orders', authToken, createActOrder)
 
 router.get('/:uuid', authToken, detailAct)
 

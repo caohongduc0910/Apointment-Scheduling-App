@@ -3,7 +3,7 @@ import {
 } from "../repositories/order.repo.js"
 
 import {
-    detailAppointmentID, detailAppointmentUUID, updateAppointmentStatus
+    detailAppointmentUUID, updateAppointmentStatus
 } from "../repositories/appointment.repo.js"
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
@@ -16,7 +16,7 @@ export const create = async (req) => {
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
 
-    if(!appointment) {
+    if (!appointment) {
         const answer = {
             status: 400,
             info: {
@@ -26,7 +26,7 @@ export const create = async (req) => {
         return answer
     }
     // nếu cuộc hẹn đã được thanh toán
-    if(appointment.status_id >= 2) {
+    if (appointment.status_id >= 2) {
         const answer = {
             status: 400,
             info: {
@@ -41,8 +41,8 @@ export const create = async (req) => {
     // nếu người dùng nhập code giảm giá
     if (req.body.discount_code) {
         discount = await getDiscountByCode(req.body.discount_code)
-        
-        if (discount == null ||discount.provider_id != appointment.provider_id) {
+
+        if (discount == null || discount.provider_id != appointment.provider_id) {
             const answer = {
                 status: 400,
                 info: {
@@ -65,57 +65,13 @@ export const create = async (req) => {
             amount: req.body.amount,
             client_id: req.user.id,
             appointment_id: appointment.id,
-            discount_id: req.body.discount_id || 0,
+            discount_id: req.body.discount_id || null,
             payment_method_id: req.body.payment_method_id
         }
     }
 
-    await createOrder(newOrder)
-
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Thành công, vui lòng thanh toán để hoàn tất dịch vụ",
-            order: newOrder
-        }
-    }
-    return answer
-}
-
-
-export const checkout = async (req) => {
-
-    const order = await detailOrderUUID(req.params.uuid)
-    if (!order) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Đơn hàng không tồn tại",
-            }
-        }
-        return answer
-    }
-    const appointment = await detailAppointmentID(order.appointment_id)
-
-    if (!appointment) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Cuộc hẹn không tồn tại",
-            }
-        }
-        return answer
-    }
-    // nếu cuộc hẹn đã được thanh toán
-    if (appointment.status_id >= 2) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Cuộc hẹn đã được thanh toán, không thể thanh toán",
-            }
-        }
-        return answer
-    }
+    const temp = await createOrder(newOrder)
+    const order = await detailOrderUUID(temp.uuid)
 
     let discountUUID = null
 
@@ -148,7 +104,7 @@ export const checkout = async (req) => {
             success_url: `http://localhost:3000/success.html`,
             cancel_url: `http://localhost:3000/cancel.html`,
             metadata: {
-                appointmentUUID: order.appointment.uuid,
+                appointmentUUID: uuid,
                 discountUUID: discountUUID
             }
         })
@@ -156,7 +112,8 @@ export const checkout = async (req) => {
         const answer = {
             status: 200,
             info: {
-                msg: "Thanh toán thành công",
+                msg: "Thành công, vui lòng thanh toán để hoàn tất dịch vụ",
+                order: newOrder,
                 stripe_link: session.url
             }
         }
@@ -205,6 +162,7 @@ export const handleWebhook = async (req) => {
             console.log(`Checkout Session was completed!`)
             break
         case 'payment_intent.canceled':
+            await updateAppointmentStatus(sessionCompleted.metadata.appointmentUUID, 5)
             console.log(`PaymentIntent was canceled!`)
             break
         case 'payment_intent.payment_failed':

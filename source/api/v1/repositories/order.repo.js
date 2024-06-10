@@ -5,7 +5,7 @@ import Payment_method from '../models/mysql/payment_methods.js'
 import Service from '../models/mysql/services.js'
 
 export const createOrder = async (order) => {
-    await Order.create(order)
+    return await Order.create(order)
 }
 
 
@@ -46,7 +46,7 @@ export const detailOrderID = async (uuid) => {
         where: {
             uuid: uuid
         },
-        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        attributes: { exclude: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at'] },
         include: [
             {
                 model: Appointment,

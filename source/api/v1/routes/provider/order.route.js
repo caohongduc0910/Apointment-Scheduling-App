@@ -7,7 +7,7 @@ import {
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
 export default router
 

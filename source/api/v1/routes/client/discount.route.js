@@ -12,5 +12,3 @@ router.get('/:uuid', authToken, detailAct)
 router.get('/', authToken, listDiscountAct)
 
 export default router
-
-

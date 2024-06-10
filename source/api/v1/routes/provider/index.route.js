@@ -25,6 +25,6 @@ router.use(v1 + "/appointments", appointmentRouter)
 
 router.use(v1 + "/discounts", discountRouter)
 
-router.use(v1 + "/order", orderRouter)
+router.use(v1 + "/orders", orderRouter)
 
 export default router
