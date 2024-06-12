@@ -7,13 +7,17 @@ import {
 import {
   createToken,
   deleleTokenByToken,
-  countTokenByUserId
+  countTokenByUserId,
+  getTheFirstToken,
+  deleleTokenByID,
+  getTokenByID
 } from '../repositories/token.repo.js'
+
 
 import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
 import bcrypt from 'bcrypt'
 import confirmEmail from '../../../helper/sendMail.js'
-
+import cron from 'node-cron'
 
 export const register = async (data, role) => {
 
@@ -57,7 +61,7 @@ export const register = async (data, role) => {
   const subject = "Email xác nhận kích hoạt tài khoản"
 
   let link = role == 3 ? `http://localhost:3000/api/v1/auth/confirm?token=${token}`
-  : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
+    : `http://localhost:3000/api/v1/provider/auth/confirm?token=${token}`
 
   const html = `
     <h3> Xin chào bạn ${newUser.username}, vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản </h3>
@@ -112,20 +116,24 @@ export const login = async (data, role) => {
       }
     }
   }
-  
+
   const count = await countTokenByUserId(user.id)
-  if(count >= 5) {
-    const answer = {
-      status: 400,
-      info: {
-        msg: "Tài khoản đã quá số lượng đăng nhập"
-      }
-    }
-    return answer
+  if (count >= 5) {
+    const firstToken = await getTheFirstToken(user.id)
+    await firstToken.destroy()
   }
 
   const accessToken = createAccessToken(user.id)
-  await createToken(accessToken, user.id)
+  const newToken = await createToken(accessToken, user.id)
+
+  if (await getTokenByID(newToken.id)) {
+    const task = cron.schedule('0 */12 * * *', async () => {
+      await deleleTokenByID(newToken.id)
+      console.log("Token deleted")
+      task.stop()
+    })
+  }
+
 
   const returnUser = {
     id: user.id,

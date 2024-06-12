@@ -9,8 +9,30 @@ export const getTokenByToken = async (token) => {
     return existToken
 }
 
+
+export const getTokenByID = async (id) => {
+    const token = await Token.findOne({
+        where: {
+            id: id
+        },
+    })
+    return token
+}
+
+
+export const getTheFirstToken = async (userID) => {
+    const lastToken = await Token.findOne({
+        where: {
+            user_id: userID
+        },
+        order: [['created_at', 'ASC']],
+    })
+    return lastToken
+}
+
+
 export const createToken = async (token, id) => {
-    await Token.create({
+    return await Token.create({
         token: token,
         user_id: id
     })
@@ -24,6 +46,16 @@ export const deleleTokenByToken = async (token) => {
         }
     })
 }
+
+
+export const deleleTokenByID = async (id) => {
+    await Token.destroy({
+        where: {
+            id: id
+        }
+    })
+}
+
 
 export const countTokenByUserId = async (id) => {
     const count = await Token.count({
