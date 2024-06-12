@@ -39,3 +39,12 @@ export const detailOrderUUID = async (uuid) => {
     })
     return order
 }
+
+
+export const deleteOrderByUUID = async (uuid) => {
+    await Order.destroy({
+        where: {
+            uuid: uuid
+        }
+    })
+}

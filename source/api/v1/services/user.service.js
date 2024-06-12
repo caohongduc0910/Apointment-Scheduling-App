@@ -1,11 +1,15 @@
 import {
-    getUserByID, getUserByUUID, updateUserByID, updateUserByUUID,
-    deleteUserById, getAllUserByRole
+    getUserByID,
+    getUserByUUID,
+    updateUserByID,
+    updateUserByUUID,
+    deleteUserByID,
+    getAllUserByRole
 } from "../repositories/user.repo.js"
 
 
 export const detail = async (req) => {
-    
+
     let user
     if (req.params.id) {
         user = await getUserByID(req.params.id)
@@ -106,7 +110,7 @@ export const deleteAcc = async (req) => {
         return answer
     }
 
-    await deleteUserById(existUser.id)
+    await deleteUserByID(existUser.id)
     await deleteTokenByUserId(existUser.id)
     const answer = {
         status: 200,
@@ -120,7 +124,7 @@ export const deleteAcc = async (req) => {
 
 export const getListUser = async (req) => {
     const arr = await getAllUserByRole(req.query.user_role)
-    if(arr.length == 0) {
+    if (arr.length == 0) {
         const answer = {
             status: 200,
             info: {

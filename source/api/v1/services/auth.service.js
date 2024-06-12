@@ -1,24 +1,28 @@
+import bcrypt from 'bcrypt'
+import confirmEmail from '../../../helper/sendMail.js'
+import cron from 'node-cron'
+import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
+
 import {
   getUserByUsername,
   getUserByEmail,
-  getUserDetailById,
+  getUserByID,
   createUser,
   updateUserStatus,
-  changePasswordById
+  changePasswordByID
 } from '../repositories/user.repo.js'
 
 import {
   createToken,
-  getTokenByUserId,
+  getTokenByUserID,
   getTokenByToken,
-  deleteTokenByUserId,
+  getTheFirstToken,
+  getTokenByID,
+  countTokenByUserID,
+  deleleTokenByID,
   deleleTokenByToken,
-  countTokenByUserId
+  deleteTokenByUserID
 } from '../repositories/token.repo.js'
-
-import { createAccessToken, decodeAccessToken } from '../../../helper/JWTtoken.js'
-import bcrypt from 'bcrypt'
-import confirmEmail from '../../../helper/sendMail.js'
 
 
 export const register = async (data, role) => {
@@ -82,7 +86,6 @@ export const register = async (data, role) => {
   return answer
 }
 
-
 export const login = async (data, role) => {
   const user = await getUserByUsername(data.username, role)
 
@@ -119,20 +122,24 @@ export const login = async (data, role) => {
       }
     }
   }
-  
-  const count = await countTokenByUserId(user.id)
+
+  const count = await countTokenByUserID(user.id)
   if (count >= 5) {
-    const answer = {
-      status: 400,
-      info: {
-        msg: "Tài khoản đã quá số lượng đăng nhập"
-      }
-    }
-    return answer
+    const firstToken = await getTheFirstToken(user.id)
+    await firstToken.destroy()
   }
 
   const accessToken = createAccessToken(user.id)
-  await createToken(accessToken, user.id)
+  const newToken = await createToken(accessToken, user.id)
+
+  if (await getTokenByID(newToken.id)) {
+    const task = cron.schedule('0 */12 * * *', async () => {
+      await deleleTokenByID(newToken.id)
+      console.log("Token deleted")
+      task.stop()
+    })
+  }
+
 
   const returnUser = {
     id: user.id,
@@ -211,7 +218,7 @@ export const forgetPassword = async (data, role) => {
   const user = await getUserByEmail(email, role)
 
   if (user) {
-    const token = await getTokenByUserId(user.id)
+    const token = await getTokenByUserID(user.id)
 
     const subject = "Email xác nhận đặt lại mật khẩu"
     let link = role == 3 ? `http://localhost:3000/api/v1/auth/reset?token=${token.token}`
@@ -252,8 +259,8 @@ export const resetPassword = async (req) => {
     const salt = await bcrypt.genSalt(10)
     const hashed = await bcrypt.hash(password, salt)
 
-    await changePasswordById(existToken.user_id, hashed)
-    await deleteTokenByUserId(existToken.user_id)
+    await changePasswordByID(existToken.user_id, hashed)
+    await deleteTokenByUserID(existToken.user_id)
 
     const answer = {
       status: 200,
@@ -281,7 +288,7 @@ export const changePassword = async (req) => {
   const newPassword = req.body.newpassword
   const cfPassword = req.body.cfpassword
 
-  const user = await getUserDetailById(id)
+  const user = await getUserByID(id)
 
   const validPassword = await bcrypt.compare(password, user.password)
   if (!validPassword) {
@@ -303,10 +310,13 @@ export const changePassword = async (req) => {
     }
     return answer
   }
+
   const salt = await bcrypt.genSalt(10)
   const hashed = await bcrypt.hash(newPassword, salt)
-  await changePasswordById(id, hashed)
+
+  await changePasswordByID(id, hashed)
   await deleteTokenByUserId(id)
+
   const answer = {
     status: 200,
     info: {

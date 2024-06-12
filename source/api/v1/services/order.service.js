@@ -1,15 +1,13 @@
-import {
-    createOrder, detailOrderUUID
-} from "../repositories/order.repo.js"
+import cron from 'node-cron'
+import Stripe from 'stripe'
+const stripe = new Stripe(`${process.env.STRIPE_SK}`)
 
-import {
-    detailAppointmentUUID, updateAppointmentStatus
-} from "../repositories/appointment.repo.js"
+import { createOrder, detailOrderUUID, deleteOrderByUUID } from "../repositories/order.repo.js"
+
+import { detailAppointmentUUID, updateAppointmentStatus } from "../repositories/appointment.repo.js"
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
 
-import Stripe from 'stripe'
-const stripe = new Stripe(`${process.env.STRIPE_SK}`)
 
 export const create = async (req) => {
 
@@ -72,6 +70,14 @@ export const create = async (req) => {
 
     const temp = await createOrder(newOrder)
     const order = await detailOrderUUID(temp.uuid)
+    
+    const task = cron.schedule('*/15 * * * *', async () => {
+        if (appointment.status_id == 1) {
+            await deleteOrderByUUID(order.uuid)
+            console.log("Order deleted")
+            task.stop()
+        }
+    })
 
     let discountUUID = null
 

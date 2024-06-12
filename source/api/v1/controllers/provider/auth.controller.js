@@ -8,6 +8,8 @@ import {
   changePassword
 } from '../../services/auth.service.js'
 
+
+
 export const registerAct = async (req, res) => {
   try {
     const msg = await register(req.body, 2)

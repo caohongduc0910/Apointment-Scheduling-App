@@ -1,22 +1,18 @@
 import express from 'express'
 const router = express.Router()
 
-import { createAct, 
+import {
     detailAct, 
     updateAct, 
     deleteAct, 
     getAllAct, 
 } from '../../controllers/client/appointment.controller.js'
 
-import {
-    createAct as createActOrder
-} from '../../controllers/client/order.controller.js'
+import { createAct } from '../../controllers/client/order.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/', authToken, createAct)
-
-router.post('/:uuid/orders', authToken, createActOrder)
+router.post('/:uuid/orders', authToken, createAct)
 
 router.get('/:uuid', authToken, detailAct)
 
