@@ -8,8 +8,8 @@ import {
 
 import { deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js";
 
-import Stripe from 'stripe';
-const stripe = new Stripe(`${process.env.STRIPE_SK}`);
+import Stripe from 'stripe'
+const stripe = new Stripe(`${process.env.STRIPE_SK}`)
 
 export const create = async (req) => {
 

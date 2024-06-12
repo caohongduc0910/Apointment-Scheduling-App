@@ -9,9 +9,7 @@ const port = process.env.PORT || 3000
 import cors from 'cors'
 app.use(cors())
 
-import { 
-  handleWebhookAct
-} from './api/v1/controllers/client/order.controller.js'
+import { handleWebhookAct } from './api/v1/controllers/client/order.controller.js'
 app.post('/webhook', express.raw({ type: 'application/json' }), handleWebhookAct)
 
 import bodyParser from 'body-parser'
