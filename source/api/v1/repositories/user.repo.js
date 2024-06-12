@@ -1,17 +1,23 @@
 import User from '../models/mysql/users.js'
 import Role from '../models/mysql/roles.js'
+import Service from '../models/mysql/services.js'
 
 export const getUserByID = async (id) => {
     const user = await User.findOne({
         where: {
             id: id,
         },
-        attributes: { exclude: ['password', 'uuid'] },
-        include: {
-            model: Role,
-            as: 'role',
-            attributes: { exclude: ['id', 'uuid'] },
-        }
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        include: [
+            {
+                model: Role,
+                as: 'role'
+            }, {
+                model: Service,
+                as: 'services',
+                attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+            }
+        ]
     })
     return user
 }
@@ -22,12 +28,16 @@ export const getUserByUUID = async (uuid) => {
         where: {
             uuid: uuid,
         },
-        attributes: { exclude: ['password', 'uuid'] },
-        include: {
-            model: Role,
-            as: 'role',
-            attributes: { exclude: ['id', 'uuid'] },
-        }
+        include: [
+            {
+                model: Role,
+                as: 'role'
+            }, {
+                model: Service,
+                as: 'services',
+                attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+            }
+        ]
     })
     return user
 }
@@ -39,16 +49,6 @@ export const getUserByUsername = async (username, role) => {
             username: username,
             role_id: role
         }
-    })
-    return user
-}
-
-
-export const getUserDetailById = async (id) => {
-    const user = await User.findOne({
-        where: {
-            id: id,
-        },
     })
     return user
 }
@@ -102,16 +102,6 @@ export const updateUserByID = async (id, user) => {
 }
 
 
-export const deleteUserById = async (id) => {
-    await User.destroy({
-        where: {
-            id: id
-        }
-    })
-}
-
-
-
 export const updateUserByUUID = async (uuid, user) => {
     await User.update(user, {
         where: {
@@ -121,7 +111,16 @@ export const updateUserByUUID = async (uuid, user) => {
 }
 
 
-export const changePasswordById = async (id, password) => {
+export const deleteUserByID = async (id) => {
+    await User.destroy({
+        where: {
+            id: id
+        }
+    })
+}
+
+
+export const changePasswordByID = async (id, password) => {
     await User.update({
         password: password
     }, {

@@ -7,7 +7,6 @@ import {
     getAllService
 } from '../repositories/service.repo.js'
 
-import { detailCategoryUUID } from '../repositories/category.repo.js'
 import { getUserByID, getUserByUUID } from '../repositories/user.repo.js'
 
 export const create = async (req) => {
@@ -15,6 +14,7 @@ export const create = async (req) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
+        duration: req.body.duration,
         image: `http://localhost:3000/images/${req.file.filename}`,
         provider_id: req.user.id,
         category_id: req.body.category_id,
@@ -70,6 +70,7 @@ export const update = async (req) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
+        duration: req.body.duration,
         image: `http://localhost:3000/images/${req.file.filename}`,
         category_id: req.body.category_id,
         status: req.body.status

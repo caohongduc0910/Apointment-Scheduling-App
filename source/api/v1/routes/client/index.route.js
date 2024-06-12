@@ -4,7 +4,6 @@ const router = express.Router()
 import authRouter from './auth.route.js'
 import userRouter from './user.route.js'
 import serviceRouter from './service.route.js'
-import appointmentRouter from './appointment.route.js'
 import categoryRouter from './category.route.js'
 
 const v1 = `/api/v1`
@@ -16,7 +15,5 @@ router.use(v1 + "/users", userRouter)
 router.use(v1 + "/categories", categoryRouter)
 
 router.use(v1 + "/services", serviceRouter)
-
-router.use(v1 + "/appointments", appointmentRouter)
 
 export default router

@@ -1,15 +1,19 @@
+import moment from 'moment'
+import cron from 'node-cron'
+import confirmEmail from '../../../helper/sendMail.js'
+
 import {
     createAppointment,
-    getAppointmentByClientIDandServiceID,
+    detailAppointment,
+    deleteAppointment
 } from "../repositories/appointment.repo.js"
 
 import {
     detailServiceUUID
 } from "../repositories/service.repo.js"
 
-import { getUserDetailById } from "../repositories/user.repo.js"
+import { getUserByID } from "../repositories/user.repo.js"
 
-import confirmEmail from '../../../helper/sendMail.js'
 
 export const create = async (req) => {
 
@@ -26,13 +30,15 @@ export const create = async (req) => {
         return answer
     }
 
+    const date = new Date(req.body.time)
+    const endTime = moment(date).add(service.duration, 'minutes').toDate()
+    const existAppointment = await detailAppointment(service.id, date, endTime)
 
-    const appointment = await getAppointmentByClientIDandServiceID(req.user.id, service.id)
-    if (appointment && appointment.status_id == 1 && appointment.time == req.body.time) {
+    if (existAppointment) {
         const answer = {
             status: 400,
             info: {
-                msg: "Đã có hẹn với dịch vụ, vui lòng thanh toán trước khi đặt hẹn mới",
+                msg: "Đã có hẹn với dịch vụ",
             }
         }
         return answer
@@ -41,7 +47,7 @@ export const create = async (req) => {
     const newAppointment = {
         name: req.body.name,
         note: req.body.note,
-        time: req.body.time,
+        time: date,
         status_id: 1,
         service_id: service.id,
         method: req.body.method,
@@ -49,12 +55,20 @@ export const create = async (req) => {
         provider_id: service.provider_id
     }
 
-    await createAppointment(newAppointment)
+    const appointment = await createAppointment(newAppointment)
 
-    const provider = await getUserDetailById(service.provider_id)
+    const task = cron.schedule('* * * * * *', async () => {
+        if (appointment.status_id == 1) {
+            await deleteAppointment(appointment.uuid)
+            console.log("Appointment deleted")
+            task.stop()
+        }
+    })
+
+    const provider = await getUserByID(service.provider_id)
 
     const subject = "Email thông báo lịch hẹn mới"
-    let link = `http://localhost:3000/api/v1/provider/appointment/detail/${appointment.uuid}`
+    let link = `${process.env.BASE_URL}/provider/appointment/detail/${appointment.uuid}`
 
     const html = `
     <h3> Bạn có một lịch hẹn mới: ${req.body.name}, vui lòng nhấn vào nút bên dưới để xem chi tiết </h3>
@@ -66,7 +80,7 @@ export const create = async (req) => {
         status: 200,
         info: {
             msg: "Đặt lịch thành công, vui lòng thanh toán",
-            appoitment: createAppointment
+            appointment: appointment
         }
     }
     return answer
