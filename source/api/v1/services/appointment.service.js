@@ -57,7 +57,7 @@ export const create = async (req) => {
 
     const appointment = await createAppointment(newAppointment)
 
-    const task = cron.schedule('* * * * * *', async () => {
+    const task = cron.schedule('*/15 * * * * *', async () => {
         if (appointment.status_id == 1) {
             await deleteAppointment(appointment.uuid)
             console.log("Appointment deleted")
