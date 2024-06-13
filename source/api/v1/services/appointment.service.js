@@ -39,8 +39,9 @@ export const create = async (req) => {
     }
 
     const date = new Date(req.body.time)
+    const startTime = moment(date).subtract(service.duration, 'minutes').toDate()
     const endTime = moment(date).add(service.duration, 'minutes').toDate()
-    const existAppointment = await detailAppointment(service.id, date, endTime)
+    const existAppointment = await detailAppointment(service.id, startTime, endTime)
 
     if (existAppointment) {
         const answer = {
@@ -52,18 +53,6 @@ export const create = async (req) => {
         return answer
     }
 
-    const newNotification = {
-        url: `${process.env.BASE_URL}/appointment/detail/${appointment.uuid}`,
-        is_read: 0,
-        title: "Lịch hẹn mới",
-        description: "Bạn có lịch hẹn mới",
-        receiver_id: service.provider_id,
-        notification_type_id: "1"
-    }
-
-    await createNotification(newNotification)
-
-    _io.emit('notification', newNotification)
 
     const newAppointment = {
         name: req.body.name,
@@ -85,6 +74,20 @@ export const create = async (req) => {
             task.stop()
         }
     })
+
+    const newNotification = {
+        url: `${process.env.BASE_URL}/appointment/detail/${appointment.uuid}`,
+        is_read: 0,
+        title: "Lịch hẹn mới",
+        description: "Bạn có lịch hẹn mới",
+        receiver_id: service.provider_id,
+        notification_type_id: "1"
+    }
+
+    await createNotification(newNotification)
+
+    _io.emit('notification', newNotification)
+    
 
     const provider = await getUserByID(service.provider_id)
 
