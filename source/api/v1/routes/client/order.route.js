@@ -1,22 +1,16 @@
 import express from 'express'
 const router = express.Router()
 
-import { 
-    createAct, checkoutAct, detailAct, updateAct, deleteAct, listOrderAct
-} from '../../controllers/client/order.controller.js'
+import { detailAct, updateAct, deleteAct, listOrderAct } from '../../controllers/client/order.controller.js'
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.post('/create/:uuid', authToken, createAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.post('/checkout/:uuid', authToken, checkoutAct)
+router.patch('/:uuid', authToken, updateAct)
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.delete('/:uuid', authToken, deleteAct)
 
-router.patch('/update/:uuid', authToken, updateAct)
-
-router.delete('/delete/:uuid', authToken, deleteAct)
-
-router.get('/all-order', authToken, listOrderAct)
+router.get('/', authToken, listOrderAct)
 
 export default router

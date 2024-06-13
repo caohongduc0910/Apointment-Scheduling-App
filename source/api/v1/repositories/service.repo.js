@@ -63,7 +63,7 @@ export const detailServiceID = async (id) => {
 }
 
 
-export const updateService = async (service, uuid) => {
+export const updateService = async (uuid, service) => {
     console.log(service)
     await Service.update(service, {
         where: {
@@ -112,7 +112,7 @@ export const getAllServiceByProviderID = async (id) => {
 
 export const getAllService = async (id) => {
 
-    const whereClause = id != 0 ? { category_id: id } : {}
+    const whereClause = id != 0 ? { provider_id: id } : {}
 
     const service = await Service.findAll({
         where: whereClause,

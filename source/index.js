@@ -22,9 +22,7 @@ _io.on('connection', (socket) => {
 import cors from 'cors'
 app.use(cors())
 
-import {
-  handleWebhookAct
-} from './api/v1/controllers/client/order.controller.js'
+import { handleWebhookAct } from './api/v1/controllers/client/order.controller.js'
 app.post('/webhook', express.raw({ type: 'application/json' }), handleWebhookAct)
 
 import bodyParser from 'body-parser'

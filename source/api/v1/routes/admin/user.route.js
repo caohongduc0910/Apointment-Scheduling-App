@@ -1,22 +1,19 @@
 import express from 'express'
 const router = express.Router()
 
-import { createAct, detailAct, updateAct, deleteAct, getAllAct } from '../../controllers/admin/category.controller.js'
-
 import multer from 'multer'
 const upload = multer()
 import uploadToCloudinary from '../../middlewares/cloudinary.middleware.js'
 
-import authToken from '../../middlewares/auth.middleware.js'
+import { detailAct, updateAct, listUserAct } from '../../controllers/admin/user.controller.js'
 
-router.post('/', authToken, upload.single('image'), uploadToCloudinary, createAct)
+import authToken from '../../middlewares/auth.middleware.js'
 
 router.get('/:id', authToken, detailAct)
 
 router.patch('/:id', authToken, upload.single('image'), uploadToCloudinary, updateAct)
 
-router.delete('/:id', authToken, deleteAct)
-
-router.get('/', authToken, getAllAct)
+router.get('/', authToken, listUserAct)
 
 export default router
+

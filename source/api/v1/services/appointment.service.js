@@ -1,4 +1,6 @@
-import moment from "moment"
+import moment from 'moment'
+import cron from 'node-cron'
+import confirmEmail from '../../../helper/sendMail.js'
 
 import {
     createAppointment,
@@ -12,21 +14,19 @@ import {
     getAllAppointmentByProviderID,
     getAllAppointment,
 } from "../repositories/appointment.repo.js"
+
 import { createNotification } from "../repositories/notification.repo.js"
 
 import {
-    detailServiceUUID
+    detailServiceID, detailServiceUUID
 } from "../repositories/service.repo.js"
 
-import { getUserByUUID, getUserById } from "../repositories/user.repo.js"
-import confirmEmail from '../../../helper/sendMail.js'
+import { getUserByUUID, getUserByID } from "../repositories/user.repo.js"
 
 export const create = async (req) => {
 
     const uuid = req.params.uuid
     const service = await detailServiceUUID(uuid)
-
-    const date = new Date(req.body.time)
 
     if (!service) {
         const answer = {
@@ -38,33 +38,19 @@ export const create = async (req) => {
         return answer
     }
 
-    const newAppointment = {
-        name: req.body.name,
-        note: req.body.note,
-        time: date,
-        status_id: 1,
-        service_id: service.id,
-        method: req.body.method,
-        client_id: req.user.id,
-        provider_id: service.provider_id
-    }
+    const date = new Date(req.body.time)
+    const endTime = moment(date).add(service.duration, 'minutes').toDate()
+    const existAppointment = await detailAppointment(service.id, date, endTime)
 
-
-    const existAppointment = await detailAppointment(req.user.id, service.provider_id, service.id, date)
-    
-    if (existAppointment && existAppointment.status_id == 1 && moment(existAppointment.time).isSame(date)) {
+    if (existAppointment) {
         const answer = {
             status: 400,
             info: {
-                msg: "Đã có hẹn với dịch vụ, vui lòng thanh toán trước khi đặt hẹn mới",
+                msg: "Đã có hẹn với dịch vụ",
             }
         }
         return answer
     }
-
-    await createAppointment(newAppointment)
-
-    const appointment = await detailAppointment(req.user.id, service.provider_id, service.id, date)
 
     const newNotification = {
         url: `${process.env.BASE_URL}/appointment/detail/${appointment.uuid}`,
@@ -79,7 +65,28 @@ export const create = async (req) => {
 
     _io.emit('notification', newNotification)
 
-    const provider = await getUserById(service.provider_id)
+    const newAppointment = {
+        name: req.body.name,
+        note: req.body.note,
+        time: date,
+        status_id: 1,
+        service_id: service.id,
+        method: req.body.method,
+        client_id: req.user.id,
+        provider_id: service.provider_id
+    }
+
+    const appointment = await createAppointment(newAppointment)
+
+    const task = cron.schedule('*/15 * * * *', async () => {
+        if (appointment.status_id == 1) {
+            await deleteAppointment(appointment.uuid)
+            console.log("Appointment deleted")
+            task.stop()
+        }
+    })
+
+    const provider = await getUserByID(service.provider_id)
 
     const subject = "Email thông báo lịch hẹn mới"
     let link = `${process.env.BASE_URL}/provider/appointment/detail/${appointment.uuid}`
@@ -94,7 +101,7 @@ export const create = async (req) => {
         status: 200,
         info: {
             msg: "Đặt lịch thành công, vui lòng thanh toán",
-            appoitment: createAppointment
+            appointment: appointment
         }
     }
     return answer
@@ -158,22 +165,33 @@ export const updateClient = async (req) => {
 
 export const updateProvider = async (req) => {
 
-    const status = req.body.status
-    let url = null
-    const appointment = await detailAppointmentUUID(req.params.uuid)
-
-    const method = appointment.method
-
-    if (method) {
-        url = req.body.url
+    let data = {
+        status: 1
     }
 
-    await updateAppointmentProvider(req.params.uuid, status, url)
+    const existAppointment = await detailAppointmentUUID(req.params.uuid)
+
+    if (!existAppointment) {
+        const answer = {
+            status: 400,
+            info: {
+                msg: "Lịch hẹn không tồn tại",
+            }
+        }
+        return answer
+    }
+
+    if (existAppointment.method) {
+        data.url = req.body.url
+    }
+
+    await updateAppointmentProvider(req.params.uuid, data)
 
     const answer = {
         status: 200,
         info: {
             msg: "Cập nhật lịch thành công",
+            data: data
         }
     }
     return answer
@@ -196,15 +214,16 @@ export const deleteApp = async (uuid) => {
 
 export const getAllByClientID = async (req) => {
 
-    const userID = req.user.id
-    let serviceID = null
+    let whereClause = {
+        client_id: req.user.id
+    }
 
     if (req.query.service_uuid) {
         const service = await detailServiceUUID(req.query.service_uuid)
-        serviceID = service.id
+        whereClause.service_id = service.id
     }
 
-    const arr = await getAllAppointmentByClientID(userID, serviceID)
+    const arr = await getAllAppointmentByClientID(whereClause)
 
     const info = arr.length > 0 ? {
         msg: "Lấy danh sách lịch hẹn thành công",
@@ -223,15 +242,16 @@ export const getAllByClientID = async (req) => {
 
 export const getAllByProviderID = async (req) => {
 
-    const userID = req.user.id
-    let serviceID = null
+    let whereClause = {
+        provider_id: req.user.id
+    }
 
     if (req.query.service_uuid) {
         const service = await detailServiceUUID(req.query.service_uuid)
-        serviceID = service.id
+        whereClause.service_id = service.id
     }
-    console.log(serviceID)
-    const arr = await getAllAppointmentByProviderID(userID, serviceID)
+
+    const arr = await getAllAppointmentByProviderID(whereClause)
 
     const info = arr.length > 0 ? {
         msg: "Lấy danh sách lịch hẹn thành công",
@@ -250,26 +270,24 @@ export const getAllByProviderID = async (req) => {
 
 export const getAll = async (req) => {
 
-    let serviceID = null
-    let clientID = null
-    let providerID = null
+    let whereClause = {}
 
     if (req.query.service_uuid) {
-        const service = await detailServiceUUID(req.query.service_uuid)
-        serviceID = service.id
+        const service = await detailServiceID(req.query.service_uuid)
+        whereClause.service_id = service.id
     }
 
     if (req.query.client_uuid) {
         const client = await getUserByUUID(req.query.client_uuid)
-        clientID = client.id
+        whereClause.client_id = client.id
     }
 
     if (req.query.provider_uuid) {
         const provider = await getUserByUUID(req.query.provider_uuid)
-        providerID = provider.id
+        whereClause.provider_id = provider.id
     }
 
-    const arr = await getAllAppointment(serviceID, clientID, providerID)
+    const arr = await getAllAppointment(whereClause)
 
     const info = arr.length > 0 ? {
         msg: "Lấy danh sách lịch hẹn thành công",

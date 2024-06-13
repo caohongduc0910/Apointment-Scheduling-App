@@ -10,7 +10,7 @@ export const getTokenByToken = async (token) => {
 }
 
 
-export const getTokenByUserId = async (id) => {
+export const getTokenByUserID = async (id) => {
     const existToken = await Token.findOne({
         where: {
             user_id: id
@@ -20,15 +20,36 @@ export const getTokenByUserId = async (id) => {
 }
 
 
+export const getTokenByID = async (id) => {
+    const token = await Token.findOne({
+        where: {
+            id: id
+        },
+    })
+    return token
+}
+
+
+export const getTheFirstToken = async (userID) => {
+    const lastToken = await Token.findOne({
+        where: {
+            user_id: userID
+        },
+        order: [['created_at', 'ASC']],
+    })
+    return lastToken
+}
+
+
 export const createToken = async (token, id) => {
-    await Token.create({
+    return await Token.create({
         token: token,
         user_id: id
     })
 }
 
 
-export const countTokenByUserId = async (id) => {
+export const countTokenByUserID = async (id) => {
     const count = await Token.count({
         where: {
             user_id: id,
@@ -38,7 +59,7 @@ export const countTokenByUserId = async (id) => {
 }
 
 
-export const deleteTokenByUserId = async (id) => {
+export const deleteTokenByUserID = async (id) => {
     await Token.destroy({
         where: {
             user_id: id
@@ -54,3 +75,15 @@ export const deleleTokenByToken = async (token) => {
         }
     })
 }
+
+
+export const deleleTokenByID = async (id) => {
+    await Token.destroy({
+        where: {
+            id: id
+        }
+    })
+}
+
+
+

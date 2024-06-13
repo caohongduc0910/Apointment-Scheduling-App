@@ -19,6 +19,7 @@ Service.init({
   description: DataTypes.TEXT,
   image: DataTypes.TEXT,
   price: DataTypes.DOUBLE,
+  duration: DataTypes.INTEGER,
   status: {
     type: DataTypes.BOOLEAN,
     defaultValue: true

@@ -3,7 +3,6 @@ import {
     detail,
     update,
     deleteService,
-    myService,
     listService
 } from '../../services/service.service.js'
 
@@ -55,19 +54,6 @@ export const deleteAct = async (req, res) => {
     catch (error) {
         res.status(500).json({
             msg: "Lỗi xóa dịch vụ"
-        })
-    }
-}
-
-
-export const myServiceAct = async (req, res) => {
-    try {
-        const msg = await myService(req.user)
-        res.status(msg.status).json(msg.info)
-    }
-    catch (error) {
-        res.status(500).json({
-            msg: "Lỗi xem danh sách dịch vụ của tôi"
         })
     }
 }

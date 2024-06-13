@@ -147,7 +147,7 @@ export const deleteCate = async (req) => {
 }
 
 
-export const getAll = async (req) => {
+export const getAll = async () => {
     const arr = await getListCategory()
 
     if (arr.length == 0) {

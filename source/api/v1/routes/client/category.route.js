@@ -5,8 +5,8 @@ import { detailAct, getAllAct } from '../../controllers/client/category.controll
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail/:uuid', authToken, detailAct)
+router.get('/:uuid', authToken, detailAct)
 
-router.get('/all', authToken, getAllAct)
+router.get('/', authToken, getAllAct)
 
 export default router

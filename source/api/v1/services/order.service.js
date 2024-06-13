@@ -1,20 +1,21 @@
+import cron from 'node-cron'
+import Stripe from 'stripe'
+const stripe = new Stripe(`${process.env.STRIPE_SK}`)
+
 import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder }
     from "../repositories/order.repo.js"
 import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus, getAllAppointment }
     from "../repositories/appointment.repo.js"
 import { detailServiceUUID } from '../repositories/service.repo.js'
 import { detailDiscountID, deleteDiscountByUUID, getDiscountByCode } from "../repositories/discount.repo.js"
-import { getUserByUUID, getUserById } from '../repositories/user.repo.js'
-
-import Stripe from 'stripe'
-const stripe = new Stripe(`${process.env.STRIPE_SK}`)
+import { getUserByUUID, getUserByID } from '../repositories/user.repo.js'
 
 
 export const create = async (req) => {
 
     const uuid = req.params.uuid
     const appointment = await detailAppointmentUUID(uuid)
-    const client = await getUserById(req.user.id)
+    const client = await getUserByID(req.user.id)
 
     if (!appointment) {
         const answer = {
@@ -93,7 +94,6 @@ export const create = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-
     //nếu không chọn gì
     else {
         newOrder = {
@@ -105,52 +105,16 @@ export const create = async (req) => {
         }
     }
 
-    await createOrder(newOrder)
+    const temp = await createOrder(newOrder)
+    const order = await detailOrderUUID(temp.uuid)
 
-    const answer = {
-        status: 200,
-        info: {
-            msg: "Thành công, vui lòng thanh toán để hoàn tất dịch vụ",
-            order: newOrder
+    const task = cron.schedule('*/15 * * * *', async () => {
+        if (appointment.status_id == 1) {
+            await deleteOrderByUUID(order.uuid)
+            console.log("Order deleted")
+            task.stop()
         }
-    }
-    return answer
-}
-
-
-export const checkout = async (req) => {
-
-    const order = await detailOrderUUID(req.params.uuid)
-    if (!order) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Đơn hàng không tồn tại",
-            }
-        }
-        return answer
-    }
-    const appointment = await detailAppointmentID(order.appointment_id)
-
-    if (!appointment) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Cuộc hẹn không tồn tại",
-            }
-        }
-        return answer
-    }
-    // nếu cuộc hẹn đã được thanh toán
-    if (appointment.status_id >= 2) {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Cuộc hẹn đã được thanh toán, không thể thanh toán",
-            }
-        }
-        return answer
-    }
+    })
 
     let discountUUID = null
 
@@ -174,6 +138,7 @@ export const checkout = async (req) => {
             }
             return answer
         }
+        discountUUID = order.discount.uuid
     }
 
     try {
@@ -195,7 +160,7 @@ export const checkout = async (req) => {
             success_url: `http://localhost:3000/success.html`,
             cancel_url: `http://localhost:3000/cancel.html`,
             metadata: {
-                appointmentUUID: order.appointment.uuid,
+                appointmentUUID: uuid,
                 discountUUID: discountUUID
             }
         })
@@ -203,7 +168,8 @@ export const checkout = async (req) => {
         const answer = {
             status: 200,
             info: {
-                msg: "Thanh toán thành công",
+                msg: "Thành công, vui lòng thanh toán để hoàn tất dịch vụ",
+                order: newOrder,
                 stripe_link: session.url
             }
         }
@@ -252,6 +218,7 @@ export const handleWebhook = async (req) => {
             console.log(`Checkout Session was completed!`)
             break
         case 'payment_intent.canceled':
+            await updateAppointmentStatus(sessionCompleted.metadata.appointmentUUID, 5)
             console.log(`PaymentIntent was canceled!`)
             break
         case 'payment_intent.payment_failed':

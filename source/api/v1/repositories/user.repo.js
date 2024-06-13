@@ -2,21 +2,22 @@ import User from '../models/mysql/users.js'
 import Role from '../models/mysql/roles.js'
 import Service from '../models/mysql/services.js'
 
-export const getUserById = async (id) => {
+export const getUserByID = async (id) => {
     const user = await User.findOne({
         where: {
             id: id,
         },
         attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
-        include: {
-            model: Role,
-            as: 'role'
-        },
-        include: {
-            model: Service,
-            as: 'services',
-            attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
-        }
+        include: [
+            {
+                model: Role,
+                as: 'role'
+            }, {
+                model: Service,
+                as: 'services',
+                attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+            }
+        ]
     })
     return user
 }
@@ -27,33 +28,20 @@ export const getUserByUUID = async (uuid) => {
         where: {
             uuid: uuid,
         },
-        include: {
-            model: Role,
-            as: 'role'
-        },
-        include: {
-            model: Service,
-            as: 'services',
-            attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
-        }
+        attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        include: [
+            {
+                model: Role,
+                as: 'role'
+            }, {
+                model: Service,
+                as: 'services',
+                attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
+            }
+        ]
     })
     return user
 }
-
-
-// export const getUserDetailById = async (id) => {
-//     const user = await User.findOne({
-//         where: {
-//             id: id,
-//         },
-//         include: {
-//             model: Service,
-//             as: 'services',
-//             attributes: { exclude: ['provider_id', 'created_at', 'updated_at', 'deleted_at'] }
-//         }
-//     })
-//     return user
-// }
 
 
 export const getUserByUsername = async (username, role) => {
@@ -72,7 +60,7 @@ export const getAllUserByRole = async (role) => {
         where: {
             role_id: role
         },
-        attributes: { exclude: ['id', 'password', 'uuid'] }
+        attributes: { exclude: ['password', 'uuid'] }
     })
     return users
 }
@@ -106,7 +94,7 @@ export const updateUserStatus = async (id) => {
 }
 
 
-export const updateUserById = async (id, user) => {
+export const updateUserByID = async (id, user) => {
     await User.update(user, {
         where: {
             id: id
@@ -115,7 +103,16 @@ export const updateUserById = async (id, user) => {
 }
 
 
-export const deleteUserById = async (id) => {
+export const updateUserByUUID = async (uuid, user) => {
+    await User.update(user, {
+        where: {
+            uuid: uuid
+        }
+    })
+}
+
+
+export const deleteUserByID = async (id) => {
     await User.destroy({
         where: {
             id: id
@@ -124,7 +121,7 @@ export const deleteUserById = async (id) => {
 }
 
 
-export const changePasswordById = async (id, password) => {
+export const changePasswordByID = async (id, password) => {
     await User.update({
         password: password
     }, {

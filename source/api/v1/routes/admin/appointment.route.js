@@ -5,10 +5,8 @@ import { detailAct, getAllAct } from '../../controllers/admin/appointment.contro
 
 import authToken from '../../middlewares/auth.middleware.js'
 
-router.get('/detail/:id', authToken, detailAct)
+router.get('/:id', authToken, detailAct)
 
-router.get('/get-all-appointment', authToken, getAllAct)
+router.get('/', authToken, getAllAct)
 
 export default router
-
-

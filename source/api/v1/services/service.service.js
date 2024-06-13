@@ -4,12 +4,10 @@ import {
     detailServiceUUID,
     updateService,
     deleteServiceByUUID,
-    getAllServiceByProviderID,
     getAllService
 } from '../repositories/service.repo.js'
 
-import { detailCategoryUUID } from '../repositories/category.repo.js'
-import { getUserByUUID, getUserById } from '../repositories/user.repo.js'
+import { getUserByUUID, getUserByID } from '../repositories/user.repo.js'
 
 export const create = async (req) => {
     const newService = {
@@ -83,7 +81,7 @@ export const update = async (req) => {
         status: req.body.status
     }
 
-    await updateService(service, req.params.uuid)
+    await updateService(req.params.uuid, service)
 
     const answer = {
         status: 200,
@@ -124,37 +122,25 @@ export const deleteService = async (req) => {
 }
 
 
-export const myService = async (data) => {
-    const arr = await getAllServiceByProviderID(data.id)
-
-    if (arr.length > 0) {
-        const answer = {
-            status: 200,
-            info: {
-                msg: "Lấy danh sách dịch vụ thành công",
-                service: arr
-            }
-        }
-        return answer
-    }
-    else {
-        const answer = {
-            status: 400,
-            info: {
-                msg: "Danh sách dịch vụ trống",
-            }
-        }
-        return answer
-    }
-}
-
-
 export const listService = async (req) => {
     let arr = []
 
-    if (req.query.category_uuid) {
-        const category = await detailCategoryUUID(req.query.category_uuid)
-        const id = category.id
+    if (req.query.uuid) {
+        const provider = await getUserByUUID(req.query.uuid)
+        const id = provider.id
+
+        const user = await getUserByID(req.user.id)
+
+        if (user.role_id == 2 && user.id != id) {
+            const answer = {
+                status: 401,
+                info: {
+                    msg: "Không có quyền thực hiện",
+                }
+            }
+            return answer
+        }
+
         arr = await getAllService(id)
     }
     else if (req.query.category_id) {
@@ -165,7 +151,7 @@ export const listService = async (req) => {
         arr = provider.services
     }
     else if (req.query.provider_id) {
-        const provider = await getUserById(req.query.provider_id)
+        const provider = await getUserByID(req.query.provider_id)
         arr = provider.services
     }
     else {

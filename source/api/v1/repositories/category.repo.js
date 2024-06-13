@@ -6,7 +6,6 @@ export const createCategory = async (category) => {
     await Category.create(category)
 }
 
-
 export const detailCategoryID = async (id) => {
     const category = await Category.findOne({
         where: {
@@ -89,4 +88,3 @@ export const getListCategoryProviderID = async (providerID) => {
     })
     return category
 }
-
