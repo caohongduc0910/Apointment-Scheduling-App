@@ -15,6 +15,7 @@ export const create = async (req) => {
         description: req.body.description,
         price: req.body.price,
         image: req.body.image,
+        duration: req.body.duration,
         provider_id: req.user.id,
         category_id: req.body.category_id,
     }
