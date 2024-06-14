@@ -2,7 +2,7 @@ import cron from 'node-cron'
 import Stripe from 'stripe'
 const stripe = new Stripe(`${process.env.STRIPE_SK}`)
 
-import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder }
+import { createOrder, detailOrderUUID, detailOrderID, updateOrder, deleteOrderByUUID, getAllOrder, getOrderByAppointmentID }
     from "../repositories/order.repo.js"
 import { detailAppointmentUUID, detailAppointmentID, updateAppointmentStatus, getAllAppointment }
     from "../repositories/appointment.repo.js"
@@ -103,6 +103,17 @@ export const create = async (req) => {
             discount_id: null,
             payment_method_id: req.body.payment_method_id
         }
+    }
+
+    const existOrder = await getOrderByAppointmentID(appointment.id)
+    if (existOrder) {
+        const answer = {
+            status: 200,
+            info: {
+                msg: "Đơn hàng đã tồn tại. Vui lòng thanh toán!",
+            }
+        }
+        return answer
     }
     
     const temp = await createOrder(newOrder)
