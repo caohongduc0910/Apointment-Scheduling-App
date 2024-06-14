@@ -104,7 +104,7 @@ export const create = async (req) => {
             payment_method_id: req.body.payment_method_id
         }
     }
-
+    
     const temp = await createOrder(newOrder)
     const order = await detailOrderUUID(temp.uuid)
 
