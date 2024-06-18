@@ -18,7 +18,7 @@ export const create = async (req) => {
     await createDiscount(newDiscount)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Tạo mã giảm giá thành công",
             discount: newDiscount

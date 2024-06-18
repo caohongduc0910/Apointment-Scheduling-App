@@ -74,7 +74,7 @@ export const create = async (req) => {
     await createFeedback(newFeedback)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Đánh giá thành công",
             feedback: newFeedback
@@ -123,7 +123,7 @@ export const update = async (req) => {
 
     if (!existFeedback) {
         const answer = {
-            status: 200,
+            status: 404,
             info: {
                 msg: "Không tồn tại đánh giá",
             }
@@ -157,7 +157,7 @@ export const deleteFeedback = async (data) => {
 
     if (!existFeedback) {
         const answer = {
-            status: 200,
+            status: 404,
             info: {
                 msg: "Không tồn tại đánh giá",
             }
@@ -186,7 +186,7 @@ export const listFeedbackClient = async (req) => {
         const service = await detailServiceUUID(req.query.service_uuid)
         if (!service) {
             const answer = {
-                status: 200,
+                status: 404,
                 info: {
                     msg: "Không tồn tại dịch vụ",
                 }
@@ -240,7 +240,7 @@ export const listFeedbackProvider = async (req) => {
         const service = await detailServiceUUID(req.query.service_uuid)
         if (!service) {
             const answer = {
-                status: 200,
+                status: 404,
                 info: {
                     msg: "Không tồn tại dịch vụ",
                 }
@@ -300,7 +300,7 @@ export const listFeedbackAdmin = async (req) => {
         const service = await detailServiceUUID(req.query.service_uuid)
         if (!service) {
             const answer = {
-                status: 200,
+                status: 404,
                 info: {
                     msg: "Không tồn tại dịch vụ",
                 }
@@ -315,7 +315,7 @@ export const listFeedbackAdmin = async (req) => {
         const client = await getUserByUUID(req.query.client_uuid)
         if (!client) {
             const answer = {
-                status: 200,
+                status: 404,
                 info: {
                     msg: "Không tồn tại người dùng",
                 }

@@ -76,7 +76,7 @@ export const register = async (data, role) => {
   confirmEmail(newUser.email, subject, html)
 
   const answer = {
-    status: 200,
+    status: 201,
     info: {
       msg: 'Đăng kí thành công, vui lòng kiểm tra email để kích hoạt tài khoản',
       user: newUser,

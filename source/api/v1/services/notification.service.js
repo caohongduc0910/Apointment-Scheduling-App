@@ -15,7 +15,7 @@ export const detail = async (data) => {
 
     if (notification.receiver_id != req.user.id) {
         const answer = {
-            status: 200,
+            status: 403,
             info: {
                 msg: "Không có quyền đọc thông báo này",
             }

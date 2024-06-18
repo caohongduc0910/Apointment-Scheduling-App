@@ -20,7 +20,7 @@ export const create = async (req) => {
     await createFavoriteService(data)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Tạo thành công dịch vụ yêu thích",
             FavoriteService: data

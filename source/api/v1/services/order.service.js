@@ -108,7 +108,7 @@ export const create = async (req) => {
     const existOrder = await getOrderByAppointmentID(appointment.id)
     if (existOrder) {
         const answer = {
-            status: 200,
+            status: 409,
             info: {
                 msg: "Đơn hàng đã tồn tại. Vui lòng thanh toán!",
             }
@@ -121,6 +121,7 @@ export const create = async (req) => {
 
     const task = cron.schedule('*/15 * * * *', async () => {
         if (appointment.status_id == 1) {
+            console.log(appointment.status_id)
             await deleteOrderByUUID(order.uuid)
             console.log("Order deleted")
             task.stop()
@@ -177,7 +178,7 @@ export const create = async (req) => {
         })
 
         const answer = {
-            status: 200,
+            status: 201,
             info: {
                 msg: "Thành công, vui lòng thanh toán để hoàn tất dịch vụ",
                 order: newOrder,

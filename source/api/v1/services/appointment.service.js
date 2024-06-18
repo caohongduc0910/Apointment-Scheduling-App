@@ -43,7 +43,7 @@ export const create = async (req) => {
     const endTime = moment(date).add(service.duration, 'minutes').toDate()
     const existAppointment = await detailAppointment(service.id, startTime, endTime)
 
-    if (existAppointment) {
+    if (existAppointment && existAppointment.status_id == 1) {
         const answer = {
             status: 400,
             info: {
@@ -68,7 +68,9 @@ export const create = async (req) => {
     const appointment = await createAppointment(newAppointment)
 
     const task = cron.schedule('*/15 * * * *', async () => {
-        if (appointment.status_id == 1) {
+        const appointmentStatus = await detailAppointmentUUID(appointment.uuid)
+        if (appointmentStatus.status_id == 1) {
+            console.log(appointment.status_id)
             await deleteAppointment(appointment.uuid)
             console.log("Appointment deleted")
             task.stop()
@@ -86,7 +88,7 @@ export const create = async (req) => {
 
     await createNotification(newNotification)
 
-    _io.emit('notification', newNotification)
+    // _io.emit('notification', newNotification)
     
 
     const provider = await getUserByID(service.provider_id)
@@ -101,7 +103,7 @@ export const create = async (req) => {
     confirmEmail(provider.email, subject, html)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Đặt lịch thành công, vui lòng thanh toán",
             appointment: appointment

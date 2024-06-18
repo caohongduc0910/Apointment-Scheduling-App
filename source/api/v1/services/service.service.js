@@ -23,7 +23,7 @@ export const create = async (req) => {
     await createService(newService)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Tạo mới dịch vụ thành công",
             service: newService

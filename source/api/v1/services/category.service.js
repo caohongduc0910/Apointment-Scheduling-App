@@ -30,7 +30,7 @@ export const create = async (req) => {
     await createCategory(newCategory)
 
     const answer = {
-        status: 200,
+        status: 201,
         info: {
             msg: "Tạo danh mục thành công",
             category: newCategory

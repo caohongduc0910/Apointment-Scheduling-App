@@ -11,10 +11,15 @@ const port = process.env.PORT || 3000
 //SOCKET.IO
 import { Server } from "socket.io"
 const io = new Server(httpServer)
-global._io = io
-_io.on('connection', (socket) => {
-  console.log(socket.id)
-  // socket.join(service.provider_id)
+const privateNamspace = io.of('api/v1/private/services')
+privateNamspace.on('connection', (socket) => {
+  console.log("OK 😊")
+  privateNamspace.emit('notification', {
+    greeting: "hello"
+  })
+  socket.on('msg_from_client', (m1, m2) => {
+    console.log(m1, m2)
+  })
 })
 
 
