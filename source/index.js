@@ -10,10 +10,11 @@ const port = process.env.PORT || 3000
 
 //SOCKET.IO
 import { Server } from "socket.io"
-
 const io = new Server(httpServer)
-global._io = io 
-
+const privateNamspace = io.of('api/v1/private/services')
+privateNamspace.on('connection', (socket) => {
+  console.log("OK 😊")
+})
 
 //CORS
 import cors from 'cors'
