@@ -3,9 +3,9 @@ import cron from 'node-cron'
 import confirmEmail from '../../../helper/sendMail.js'
 
 import {
-    createAppointment, 
-    detailAppointmentID, 
-    detailAppointmentUUID, 
+    createAppointment,
+    detailAppointmentID,
+    detailAppointmentUUID,
     updateAppointment,
     deleteAppointment,
     getAllAppointmentByClientID,
@@ -62,7 +62,17 @@ export const create = async (req) => {
 
     const appointment = await createAppointment(newAppointment)
 
-    const task = cron.schedule('*/15 * * * *', async () => {
+    const now = new Date();
+    const alarm = moment(now).add(15, 'minutes')
+
+    const minute = alarm.minute()
+    const hour = alarm.hour()
+    const dayOfMonth = alarm.date()
+    const month = alarm.month() + 1
+
+    const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} *`
+
+    const task = cron.schedule(cronExpression, async () => {
         if (appointment.status_id == 1) {
             await deleteAppointment(appointment.uuid)
             console.log("Appointment deleted")
