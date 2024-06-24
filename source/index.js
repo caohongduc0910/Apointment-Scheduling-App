@@ -44,7 +44,7 @@ import './api/v1/models/mysql/associations/index.js'
 
 //public folder
 app.use(express.static('public'));
-app.use('/images', express.static('images'));
+app.use('/images', express.static('images'))
 
 
 //Routing

@@ -67,7 +67,17 @@ export const create = async (req) => {
 
     const appointment = await createAppointment(newAppointment)
 
-    const task = cron.schedule('*/15 * * * *', async () => {
+    const now = new Date();
+    const alarm = moment(now).add(15, 'minutes');
+
+    const minute = alarm.minute();
+    const hour = alarm.hour();
+    const dayOfMonth = alarm.date();
+    const month = alarm.month() + 1;
+
+    const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} *`
+
+    const task = cron.schedule(cronExpression, async () => {
         const appointmentStatus = await detailAppointmentUUID(appointment.uuid)
         if (appointmentStatus.status_id == 1) {
             console.log(appointment.status_id)

@@ -115,11 +115,22 @@ export const create = async (req) => {
         }
         return answer
     }
-    
+
     const temp = await createOrder(newOrder)
+
+    const now = new Date();
+    const alarm = moment(now).add(15, 'minutes');
+
+    const minute = alarm.minute();
+    const hour = alarm.hour();
+    const dayOfMonth = alarm.date();
+    const month = alarm.month() + 1;
+
+    const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} *`
+
     const order = await detailOrderUUID(temp.uuid)
 
-    const task = cron.schedule('*/15 * * * *', async () => {
+    const task = cron.schedule(cronExpression, async () => {
         if (appointment.status_id == 1) {
             console.log(appointment.status_id)
             await deleteOrderByUUID(order.uuid)
