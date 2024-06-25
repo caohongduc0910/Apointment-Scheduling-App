@@ -131,7 +131,8 @@ export const create = async (req) => {
     const order = await detailOrderUUID(temp.uuid)
 
     const task = cron.schedule(cronExpression, async () => {
-        if (appointment.status_id == 1) {
+        const appointmentStatus = await detailAppointmentUUID(appointment.uuid)
+        if (appointmentStatus.status_id == 1) {
             console.log(appointment.status_id)
             await deleteOrderByUUID(order.uuid)
             console.log("Order deleted")

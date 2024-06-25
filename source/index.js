@@ -1,27 +1,19 @@
 //Express
 import express from 'express'
-import { createServer } from "http"
 const app = express()
+import { createServer } from 'http'
 const httpServer = createServer(app)
-
 
 //PORT
 const port = process.env.PORT || 3000
 
 //SOCKET.IO
-import { Server } from "socket.io"
+import { Server } from 'socket.io'
 const io = new Server(httpServer)
-const privateNamspace = io.of('api/v1/private/services')
-privateNamspace.on('connection', (socket) => {
-  console.log("OK 😊")
-  privateNamspace.emit('notification', {
-    greeting: "hello"
-  })
-  socket.on('msg_from_client', (m1, m2) => {
-    console.log(m1, m2)
-  })
-})
-
+app.use((req, res, next) => {
+  req.io = io
+  next()
+})  
 
 //CORS
 import cors from 'cors'
@@ -39,13 +31,12 @@ import { connectionMongo } from './database/mongodb/connection.js'
 import { connectionMySQL } from './database/mysql/connection.js'
 connectionMongo()
 await connectionMySQL()
-// define associations
+//define associations
 import './api/v1/models/mysql/associations/index.js'
 
 //public folder
 app.use(express.static('public'));
 app.use('/images', express.static('images'))
-
 
 //Routing
 import routeClientV1 from './api/v1/routes/client/index.route.js'

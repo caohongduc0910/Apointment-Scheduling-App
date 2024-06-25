@@ -317,7 +317,7 @@ export const changePassword = async (req) => {
   const hashed = await bcrypt.hash(newPassword, salt)
 
   await changePasswordByID(id, hashed)
-  await deleteTokenByUserId(id)
+  await deleteTokenByUserID(id)
 
   const answer = {
     status: 200,
@@ -327,4 +327,3 @@ export const changePassword = async (req) => {
   }
   return answer
 }
-

@@ -42,8 +42,8 @@ export const create = async (req) => {
     const startTime = moment(date).subtract(service.duration, 'minutes').toDate()
     const endTime = moment(date).add(service.duration, 'minutes').toDate()
     const existAppointment = await detailAppointment(service.id, startTime, endTime)
-
-    if (existAppointment && existAppointment.status_id == 1) {
+    
+    if (existAppointment) {
         const answer = {
             status: 400,
             info: {
@@ -98,8 +98,13 @@ export const create = async (req) => {
 
     await createNotification(newNotification)
 
-    // _io.emit('notification', newNotification)
-    
+    const io = req.io
+
+    io.on('connection', (socket) => {
+        socket.join(service.provider_id)
+        console.log("OK 😊")
+        io.to(service.provider_id).emit('notification', newNotification)
+    })
 
     const provider = await getUserByID(service.provider_id)
 
@@ -157,7 +162,7 @@ export const detail = async (data) => {
 
 
 export const updateClient = async (req) => {
-    
+
     const newAppointment = {
         name: req.body.name,
         note: req.body.note,

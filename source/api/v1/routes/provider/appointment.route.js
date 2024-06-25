@@ -9,7 +9,6 @@ router.get('/:uuid', authToken, detailAct)
 
 router.patch('/:uuid', authToken, updateAct)
 
-
 router.get('/get-all-appointment', authToken, getAllAct)
 
 export default router
